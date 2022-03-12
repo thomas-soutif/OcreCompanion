@@ -9,9 +9,9 @@ AccountManagment(){
 	Gui, Add, ListView, x152 y20 w480 h290  LV0x1 vListViewContent
 	Gui, Add, Edit, x12 y40 w130 h20 vPseudo, 
 	Gui, Add, Text, x12 y20 w130 h20, Pseudo du personnage
-	Gui, Add, Button, x12 y170 w130 h40 gAdd, Add
-	Gui, Add, Button, x12 y220 w130 h40 gRemove, Remove
-	Gui, Add, Button, x12 y330 w130 h40 gSave, Sauvegarder
+	Gui, Add, Button, x12 y170 w130 h40 gAddCharacter, Add
+	Gui, Add, Button, x12 y220 w130 h40 gRemoveCharacter, Remove
+	Gui, Add, Button, x12 y330 w130 h40 gSaveCharacter, Sauvegarder
 	LV_InsertCol(1, 100, "Personnage")
 
 
@@ -34,16 +34,16 @@ AccountManagment(){
 	GuiControl, Focus, Name
 	return
 
-	Add:
+	AddCharacter:
 		Gui, Submit, NoHide
 		LV_Add("", Pseudo)
 		return
 
-	Remove:
+	RemoveCharacter:
 		LV_Delete(LV_GetNext())
 		return
 	
-	Save:
+	SaveCharacter:
 	ControlGet, ListViewContent, List,, SysListView321
 	if !(ListViewContent = Content) ; to prevent storing data when nothing has changed
 	{
