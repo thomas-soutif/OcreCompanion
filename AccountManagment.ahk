@@ -2,9 +2,8 @@
 SendMode Input
 SetWorkingDir, %A_ScriptDir%
 
-AccountManagment:
-{
-
+AccountManagment(){
+	global
 	Gui, AccountManagment:New,+Resize -MaximizeBox
 	
 	Gui, Add, ListView, x152 y20 w480 h290  LV0x1 vListViewContent

@@ -1,8 +1,12 @@
 #include %A_ScriptDir%\CommonFunction.ahk
+#include %A_ScriptDir%\AccountManagment.ahk
+#include %A_ScriptDir%\AdvancedOptions.ahk
+
 
 Gui, Main:New, +Resize -MaximizeBox
 
 Gui, Main:Add, Button, x12 y19 w110 h30 gAccountManagment , Personnages
+Gui, Main:Add, Button, x150 y19 w110 h30 gAdvancedOptionsGui , Options avancées
 Gui, Main:Add, GroupBox, x22 y299 w150 h100 , Options rapide
 Gui, Main:Add, CheckBox, x52 y329 w80 h20 , Follow auto
 Gui, Main:Add, Button, x22 y119 w100 h40 , REJOINDRE COMBAT
@@ -21,11 +25,9 @@ characterNames = %characterNames%
 Loop, Parse, characterNames, "|"
 {
 	;Pour chaque personnage
-	MsgBox, %A_LoopField%
+	;MsgBox, %A_LoopField%
 
 }
-
-
 
 
 Gui, Main:Show,x500 y361 w269 h454, DofusMultiAccountTool
@@ -37,7 +39,6 @@ GuiClose:
 Quitter:
 ExitApp
 
-#include %A_ScriptDir%\AccountManagment.ahk
 
 
 DetectWindowsByName(str)
@@ -72,4 +73,3 @@ GetCharacterNames(){
 
 
 }
-
