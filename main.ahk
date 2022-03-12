@@ -74,6 +74,7 @@ AccountManagment:
 		sleep 1000
 		Fileappend, %ListViewContent%, %A_ScriptDir%\CharacterConfig.conf, UTF-8
 	}
+		Gui, Hide
 		return
 
 }
