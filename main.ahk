@@ -128,17 +128,18 @@ GroupCharacters(){
 
 		TextEncrypt := value
 		; Text récupéré
-		MsgBox, "C'est la première fois que vous utilisez la fonctionnalité Groupe. Ne toucher à rien pendant les prochaines secondes, nous allons automatiquement s'occuper de detecter la position de votre bouton Accepter."
+		MsgBox, "C'est la premiere fois que vous utilisez la fonctionnalite Groupe. Nous allons effectue des reglages automatiquement une fois que vous aurez appuye sur le bouton Ok. `n N'oubliez pas de réinitialiser vos positions d'interface pour chacun de vos personnages avant de continuer. (Option/Interface/Reinitialiser les positions d'interface)"
 
 	}
 
-
+	
 
 	SetTitleMatchMode 2
 	if(WinExist(groupChefCharacter)){
 
 		WinActivate
-
+		IniRead, MinvalueTimer, %A_ScriptDir%\config.ini,Timers, GroupMin
+		IniRead, MaxValueTimer, %A_ScriptDir%\config.ini,Timers, GroupMax
 		Loop, Parse, characterNames, "|"
 			{
 				;Pour chaque personnage qui n'est pas le chef de groupe
@@ -157,8 +158,7 @@ GroupCharacters(){
 				Sleep 200
 				Send {Enter}
 
-				IniRead, MinvalueTimer, %A_ScriptDir%\config.ini,Timers, GroupMin
-				IniRead, MaxValueTimer, %A_ScriptDir%\config.ini,Timers, GroupMax
+				
 				Random, timerValue, MinvalueTimer, MaxValueTimer
 
 				Sleep timerValue
@@ -184,7 +184,7 @@ GroupCharacters(){
 						while(try_num < 5){
 							Text := TextEncrypt
 							ok:=FindText(X, Y, A_ScreenWidth, 0, -1, A_ScreenHeight, 0, 0, Text)
-							MsgBox, %X%,%Y%, %Text%
+							;MsgBox, %X%,%Y%, %Text%
 							if(ok.Length())
 							{
 								;Le bouton accepté a été trouvé
@@ -193,14 +193,14 @@ GroupCharacters(){
 								IniWrite, %Y%, %A_ScriptDir%\config.ini, Position, AcceptGroupButtonY
 								TextEncrypt := ""
 								FindText().Click(X, Y, "L")
-								try_nm := 10
+								try_num := 10
 							}else{
-								try_nm := try_nm + 1
+								try_num := try_num +1
+								sleep 200
 							}
 
 								
-						}
-						
+						}	
 						
 					}
 					else{
@@ -213,7 +213,7 @@ GroupCharacters(){
 
 				}
 				
-				
+				sleep 500
 
 			}
 

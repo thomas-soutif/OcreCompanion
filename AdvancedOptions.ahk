@@ -49,7 +49,20 @@ AdvancedOptionsGui(){
     Gui, Add, Button, x122 y199 w100 h30 gResetDefault , Reset Default
     Gui, Add, Button, x22 y199 w100 h30 gSaveAdvancedOptions , Sauvegarder
 
+
+
+    Gui, Add, GroupBox, x262 y19 w210 h160 , Position
+    Gui, Add, Text, x352 y29 w30 h20 , X
+    Gui, Add, Text, x402 y29 w30 h20 , Y
+    Gui, Add, Edit, x342 y49 w50 h20 , En cours de dev
+    Gui, Add, Edit, x392 y49 w50 h20 , En cours de dev
+    Gui, Add, Text, x272 y49 w60 h30 , Accepter (Groupe)
+    Gui, Add, Button, x372 y199 w100 h30 , Reset Default
+
+
     Gui, Show, w664 h379, Options avancees - DofusMultiAccountTool
+
+
 
     return
 
