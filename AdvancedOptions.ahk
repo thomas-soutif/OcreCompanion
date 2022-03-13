@@ -46,6 +46,7 @@ AdvancedOptionsGui(){
     Gui, Add, Edit, x122 y140 w50 h20 vJoinFightMin, %JoinFightMin%
     Gui, Add, Edit, x172 y140 w50 h20 vJoinFightMax, %JoinFightMax%
 
+    Gui, Add, Button, x122 y199 w100 h30 gResetDefault , Reset Default
     Gui, Add, Button, x22 y199 w100 h30 gSaveAdvancedOptions , Sauvegarder
 
     Gui, Show, w664 h379, Options avancees - DofusMultiAccountTool
@@ -77,4 +78,16 @@ AdvancedOptionsGui(){
         Gui, Hide
         return
 
+    ResetDefault:
+         Loop, Parse, allVName, "|"
+         {
+            IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Timers, %A_LoopField%
+                IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Timers, %A_LoopField%
+                IniWrite, %value%, %A_ScriptDir%\config.ini, Timers, %A_LoopField%
+                IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Timers, %A_LoopField%
+        
+        }
+          Gui, Hide
+          AdvancedOptionsGui()
+         return
 }
