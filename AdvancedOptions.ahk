@@ -79,15 +79,15 @@ AdvancedOptionsGui(){
         return
 
     ResetDefault:
-         Loop, Parse, allVName, "|"
-         {
+        Loop, Parse, allVName, "|"
+        {
+        IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Timers, %A_LoopField%
+            IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Timers, %A_LoopField%
+            IniWrite, %value%, %A_ScriptDir%\config.ini, Timers, %A_LoopField%
             IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Timers, %A_LoopField%
-                IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Timers, %A_LoopField%
-                IniWrite, %value%, %A_ScriptDir%\config.ini, Timers, %A_LoopField%
-                IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Timers, %A_LoopField%
-        
+    
         }
-          Gui, Hide
-          AdvancedOptionsGui()
-         return
+        Gui, Hide
+        AdvancedOptionsGui()
+        return
 }
