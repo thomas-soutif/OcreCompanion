@@ -58,11 +58,42 @@ AdvancedOptionsGui(){
     return
 
 
-
-
+   
+ test:
+        ;^!Backspace::
+           ; KeyWait, Alt
+            ;Send ^{Delete}
 
     SaveAdvancedOptions:
+        Gui, Submit, NoHide
+        Loop, Parse, allVName, "|"
+        {   
+            value := %A_LoopField%
+            valueRound := floor(value)
+            if !(valueRound == 0)
+            {
+                IniWrite, %valueRound%, %A_ScriptDir%\config.ini, Timers, %A_LoopField%
+            }
+            else{
+                 GuiControl, focus, %A_LoopField%,
+                send {Ctrl Down}a{Ctrl Up}
+                send {BackSpace}
+                IniRead, oldValue, %A_ScriptDir%\config.ini,Timers, %A_LoopField%
+
+
+                send %oldValue%
+               
+            }
+            
+            
+            
+           
+               
+            
+                
+            
+        }
+        Gui, Hide
         return
-    
 
 }
