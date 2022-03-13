@@ -48,21 +48,10 @@ AdvancedOptionsGui(){
 
     Gui, Add, Button, x22 y199 w100 h30 gSaveAdvancedOptions , Sauvegarder
 
-
-    
-
-
-
     Gui, Show, w664 h379, Options avancees - DofusMultiAccountTool
 
     return
 
-
-   
- test:
-        ;^!Backspace::
-           ; KeyWait, Alt
-            ;Send ^{Delete}
 
     SaveAdvancedOptions:
         Gui, Submit, NoHide
@@ -84,14 +73,6 @@ AdvancedOptionsGui(){
                 send %oldValue%
                
             }
-            
-            
-            
-           
-               
-            
-                
-            
         }
         Gui, Hide
         return
