@@ -82,7 +82,7 @@ Gui, Add, Button, x262 y179 w210 h40 gDetectAutomatically , Detecter automatique
                 IniWrite, %valueRound%, %A_ScriptDir%\config.ini, Timers, %A_LoopField%
             }
             else{
-                 GuiControl, focus, %A_LoopField%,
+                GuiControl, focus, %A_LoopField%,
                 send {Ctrl Down}a{Ctrl Up}
                 send {BackSpace}
                 IniRead, oldValue, %A_ScriptDir%\config.ini,Timers, %A_LoopField%
@@ -130,6 +130,14 @@ Gui, Add, Button, x262 y179 w210 h40 gDetectAutomatically , Detecter automatique
 
     DetectAutomatically:
         MsgBox, "Au prochain lancement d'une fonctionnalité, le programme essayera de detecter les positions des différents éléments et le sauvegarder.`n Vous pourrez toujours le modifier par la suite"
+        Loop, Parse, allVNamePositionOption, "|"
+        {
+            GuiControl, focus, %A_LoopField%,
+            send {Ctrl Down}a{Ctrl Up}
+            send {BackSpace}
+            IniWrite, "", %A_ScriptDir%\config.ini, Position, %A_LoopField%
+            GuiControl, focus, %DetectAutomatically%
+        }
         return
 }
        
