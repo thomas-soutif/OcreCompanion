@@ -1,4 +1,4 @@
-#include %A_ScriptDir%\CommonFunction.ahk
+﻿#include %A_ScriptDir%\CommonFunction.ahk
 #include %A_ScriptDir%\AccountManagment.ahk
 #include %A_ScriptDir%\AdvancedOptions.ahk
 

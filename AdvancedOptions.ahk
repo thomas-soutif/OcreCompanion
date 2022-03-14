@@ -1,4 +1,4 @@
-#SingleInstance, Force
+﻿#SingleInstance, Force
 SendMode Input
 SetWorkingDir, %A_ScriptDir%
 
@@ -129,7 +129,7 @@ Gui, Add, Button, x262 y179 w210 h40 gDetectAutomatically , Detecter automatique
         return
 
     DetectAutomatically:
-        MsgBox, "Au prochain lancement d'une fonctionnalité, le programme essayera de detecter les positions des différents éléments et le sauvegardera.`n Vous pourrez toujours le modifier par la suite"
+        MsgBox, "Au prochain lancement d'une fonctionnalité, le programme essayera de detecter les positions des différents éléments et le sauvegarder.`n Vous pourrez toujours le modifier par la suite"
         return
 }
        
