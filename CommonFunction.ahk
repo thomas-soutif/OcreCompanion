@@ -13,6 +13,7 @@ List(listName,integer)
  return returnValue
 }
 
+
 ;/*
 ;===========================================
 ;  FindText - Capture screen image into text and then find it

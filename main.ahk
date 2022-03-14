@@ -3,6 +3,9 @@
 #include %A_ScriptDir%\AdvancedOptions.ahk
 
 
+; Chargement des chemins d'image utilisées
+dofus_icon_imageLocation = %A_ScriptDir%\images\dofus_icon.png
+
 Gui, Main:New, +Resize -MaximizeBox
 
 Gui, Main:Add, Button, x12 y19 w110 h30 gAccountManagment , Personnages
@@ -13,7 +16,7 @@ Gui, Main:Add, Button,disabled x22 y119 w100 h40 , REJOINDRE COMBAT
 Gui, Main:Add, Button, x132 y119 w90 h40 gGroupCharacters , GROUPER
 Gui, Main:Add, Button,disabled x22 y179 w100 h40 , PRET
 Gui, Main:Add, CheckBox, disabled x52 y359 w90 h30 , Mode combat
-
+Gui, Add, Picture, x180 y330 w50 h40, %dofus_icon_imageLocation%
 
 idd := DetectWindowsByName("Ankama")
 
@@ -22,6 +25,8 @@ characterNames := GetCharacterNames()
 characterNames = %characterNames%
 
 ;MsgBox, %idd%
+
+
 
 
 
