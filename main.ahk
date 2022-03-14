@@ -144,7 +144,7 @@ GroupCharacters(){
 		Loop, Parse, characterNames, "|"
 			{
 				;Pour chaque personnage qui n'est pas le chef de groupe
-				if(A_LoopField == groupChefCharacter )
+				if(A_LoopField == groupChefCharacter)
 					Continue
 				; On va les inviter dans le groupe après avoir focus la zone de tchat du personnage en question  
 				
@@ -170,16 +170,15 @@ GroupCharacters(){
 			Loop, Parse, characterNames, "|"
 			{
 				;Pour chaque personnage qui n'est pas le chef de groupe
-				if(A_LoopField == groupChefCharacter )
+				if(A_LoopField == groupChefCharacter)
 					Continue
 				
 				;On focus
 				if(WinExist(A_LoopField)){
-					WinActivate
-
 					
 					t1:=A_TickCount, X:=Y:=""
 					if (TextEncrypt){
+						WinActivate
 						sleep 1000
 						try_num := 1
 						while(try_num < 5){
@@ -228,7 +227,8 @@ GroupCharacters(){
 						;On connait les coordonnées
 						IniRead, PositionAcceptGroupX, %A_ScriptDir%\config.ini,Position, AcceptGroupButtonX
 						IniRead, PositionAcceptGroupY,%A_ScriptDir%\config.ini,Position, AcceptGroupButtonY
-						FindText().Click(PositionAcceptGroupX, PositionAcceptGroupY, "L")
+						;FindText().Click(PositionAcceptGroupX, PositionAcceptGroupY, "L")
+						ControlClick x%PositionAcceptGroupX% y%PositionAcceptGroupY%, %A_LoopField%
 					}
 
 
