@@ -63,22 +63,9 @@ DetectWindowsByName(str)
 
 
 GetCharacterNames(){
-
-	ifexist, %A_ScriptDir%\CharacterConfig.conf
-		{
-			final_string := ""
-			Fileread, Content, %A_ScriptDir%\CharacterConfig.conf
-			Loop, parse, Content, `n, `r
-			{
-				StringSplit, i_, A_LoopField, `t
-				final_string .= i_1
-				final_string .= "|"
-			}
-			final_string:=SubStr(final_string, 1, StrLen(final_string)-1)
-			return final_string
-		
-		}
-	return ""
+	
+	IniRead, CharacterNameList, %A_ScriptDir%\config.ini, CharactersList, listCharacters
+	return CharacterNameList
 
 
 
@@ -90,6 +77,7 @@ GroupCharacters(){
 	
 	if !(List(characterNames,2)){
 		;Si il n'y a pas au moins 2 personnages, alors on arrête
+		MsgBox, "Il vous faut au moins 2 personnages configurés pour pouvoir utiliser cette option"
 		return
 	}
 	
@@ -180,9 +168,9 @@ GroupCharacters(){
 				
 				;On focus
 				if(WinExist(A_LoopField)){
-					
 					t1:=A_TickCount, X:=Y:=""
 					if (TextEncrypt){
+						MsgBox, "Coucou"
 						WinActivate
 						sleep 1000
 						try_num := 1
