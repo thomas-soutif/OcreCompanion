@@ -127,6 +127,7 @@ GroupCharacters(){
 		}
 
 		TextEncrypt := value
+		
 		; Text récupéré
 		MsgBox, "C'est la premiere fois que vous utilisez la fonctionnalite Groupe. Nous allons effectue des reglages automatiquement une fois que vous aurez appuye sur le bouton Ok. `n N'oubliez pas de réinitialiser vos positions d'interface pour chacun de vos personnages avant de continuer. (Option/Interface/Reinitialiser les positions d'interface)"
 
@@ -180,7 +181,7 @@ GroupCharacters(){
 					t1:=A_TickCount, X:=Y:=""
 					if (TextEncrypt){
 						sleep 1000
-						try_nm := 1
+						try_num := 1
 						while(try_num < 5){
 							Text := TextEncrypt
 							ok:=FindText(X, Y, A_ScreenWidth, 0, -1, A_ScreenHeight, 0, 0, Text)
@@ -200,7 +201,27 @@ GroupCharacters(){
 							}
 
 								
-						}	
+						}
+						if(TextEncrypt){
+							;Alors la detection automatique n'a pas marché. On va alors demander à l'utilisateur de cliquer sur le bouton Accepter pour faire les reglages
+							MsgBox, "Nous n'avons pas pu cette fois detecté automatiquement la position du bouton Accepter.`n Après avoir appuyer sur le bouton Ok de cette popup, faites un clique gauche sur le bouton accepter sur votre fenêtre de jeu afin que nous enregistrions la position.` Vous avez 10 secondes pour effectuer cette action, après celà le script s'annulera."
+							KeyWait, LButton , D T10
+							if(ErrorLevel == 1){
+								;L'utilisateur n'a pas appuyé sur le bon bouton au bon moment
+								MsgBox, "Il semblerait que vous n'ayez pas cliqué sur le bouton accepté ! Annulation du script."
+								return
+							}
+							MouseGetPos, MouseX, MouseY, MouseWin, MouseCtl, 2
+							IniWrite, %MouseX%, %A_ScriptDir%\config.ini, Position, AcceptGroupButtonX
+							IniWrite, %MouseY%, %A_ScriptDir%\config.ini, Position, AcceptGroupButtonY
+							TextEncrypt := ""
+							; On va appuyer pour ce cas ici sur le bouton accepter
+							Sleep, 500
+							FindText().Click(MouseX, MouseY, "L")
+							
+							
+
+						}
 						
 					}
 					else{
@@ -212,8 +233,8 @@ GroupCharacters(){
 
 
 				}
-				
-				sleep 500
+				Random, timerValue, 500, 1500
+				Sleep timerValue
 
 			}
 
@@ -221,9 +242,14 @@ GroupCharacters(){
 
 	}
 	
+	;On retourne sur la fenetre du chef de groupe
+	if(WinExist(groupChefCharacter)){
 
+		WinActivate
+
+	
+	}
 	return ""
-
 }
 
 
