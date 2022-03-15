@@ -170,7 +170,6 @@ GroupCharacters(){
 				if(WinExist(A_LoopField)){
 					t1:=A_TickCount, X:=Y:=""
 					if (TextEncrypt){
-						MsgBox, "Coucou"
 						WinActivate
 						sleep 1000
 						try_num := 1
