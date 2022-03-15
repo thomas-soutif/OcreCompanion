@@ -5,18 +5,23 @@
 
 ; Chargement des chemins d'image utilisées
 dofus_icon_imageLocation = %A_ScriptDir%\images\dofus_icon.png
-
+group_icon_imageLocation = %A_ScriptDir%\images\group_icon.png
+ready_fight_imageLocation = %A_ScriptDir%\images\ready_fight.png
+join_fight_icon_imageLocation = %A_ScriptDir%\images\join_fight_icon.png
 Gui, Main:New, +Resize -MaximizeBox
 
 Gui, Main:Add, Button, x12 y19 w110 h30 gAccountManagment , Personnages
 Gui, Main:Add, Button, x150 y19 w110 h30 gAdvancedOptionsGui , Options avancées
 Gui, Main:Add, GroupBox, x22 y299 w150 h100 , Options rapide
 Gui, Main:Add, CheckBox, disabled x52 y329 w80 h20 , Follow auto
-Gui, Main:Add, Button,disabled x22 y119 w100 h40 , REJOINDRE COMBAT
-Gui, Main:Add, Button, x132 y119 w90 h40 gGroupCharacters , GROUPER
-Gui, Main:Add, Button,disabled x22 y179 w100 h40 , PRET
+;Gui, Main:Add, Button,disabled x22 y119 w100 h40 , REJOINDRE COMBAT
+;Gui, Main:Add, Button, x180 y77 w75 h75 gGroupCharacters gGroupCharacters , GROUPER
+;Gui, Main:Add, Button,disabled x22 y179 w100 h40 , PRET
 Gui, Main:Add, CheckBox, disabled x52 y359 w90 h30 , Mode combat
 Gui, Add, Picture, x180 y330 w50 h40, %dofus_icon_imageLocation%
+Gui, Add, Picture, x180 y77 w75 h75 gGroupCharacters, %group_icon_imageLocation%
+Gui, Add, Picture, x100 y80 w70 h70, %join_fight_icon_imageLocation%
+Gui, Add, Picture, x20 y80 w70 h70, %ready_fight_imageLocation%
 
 idd := DetectWindowsByName("Ankama")
 
@@ -41,15 +46,13 @@ Loop, Parse, characterNames, "|"
 
 
 Gui, Main:Show,x500 y361 w269 h454, DofusMultiAccountTool
-
+OnMessage(0x200, "WM_MOUSEMOVE")
 Return
 
 GuiEscape:
 GuiClose:
 Quitter:
 ExitApp
-
-
 
 DetectWindowsByName(str)
 {
