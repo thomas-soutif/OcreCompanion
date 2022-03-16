@@ -78,6 +78,24 @@ GetCharacterNames(){
 
 }
 
+GetCharacterDetectedInGame(){
+	IniRead, CharacterNameList, %A_ScriptDir%\config.ini, CharactersList, listCharacters
+	finalList := "" 
+	Loop, Parse, CharacterNameList, "|"
+	{
+		if (WinExist(A_LoopField)){
+			if (finalList ==""){
+				finalList = %A_LoopField%|
+			}
+			else{
+				finalList = %finalList%%A_LoopField%|
+			}
+		}
+	}
+	return finalList
+
+}
+
 GroupCharacters(){
 	characterNames := GetCharacterNames()
 	characterNames = %characterNames%  
@@ -258,19 +276,20 @@ DetectAndShowCharacterBox(){
 		width:=70
 		height:=40
 
-
-
-
-	characterNames := GetCharacterNames()
+		Gui, Main:Hide
+		Gui,Main:Show
+	
+	characterNames := GetCharacterDetectedInGame()
 	characterNames = %characterNames%  
 	Gui, Main:Add, Button,hide x22 y180 w0 h0 ; Permet de définir le début où sera positionné les boutons
 	GUI, Main:Margin, 22,180
 	i := 1
+	listCharacterNotDetect := ""
 	Loop, Parse, characterNames, "|"
 	{
 		;GUI, Add, Text, Section xm ym w52 h52
-		
-		
+		if(A_LoopField == "")
+			Continue
 		if(i < 4)
 			GUI, Main:Add, Button, X+5 w70 h40 gSelectCharacter, % A_LoopField
 		if(i ==4)
@@ -295,12 +314,13 @@ DetectAndShowCharacterBox(){
 	return
 }
 
-SelectCharacter:
+SelectCharacter(){
  	;MsgBox, %A_GuiControl%
 	SetTitleMatchMode 2
 	if (WinExist(A_GuiControl)){
 		WinActivate
 	}
 	return
+}
 ;Si jamais la position pour accepter les invitations n'ai pas configuré
 			
