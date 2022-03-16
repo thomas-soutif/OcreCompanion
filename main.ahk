@@ -14,11 +14,14 @@ Gui, Main:Add, Button, x12 y19 w110 h30 gAccountManagment , Personnages
 Gui, Main:Add, Button, x150 y19 w110 h30 gAdvancedOptionsGui , Options avancées
 Gui, Main:Add, GroupBox, x22 y299 w150 h100 , Options rapide
 Gui, Main:Add, CheckBox, disabled x52 y329 w80 h20 , Follow auto
-;Gui, Main:Add, Button,disabled x22 y119 w100 h40 , REJOINDRE COMBAT
+;Gui, Main:Add, Button,disabled x100 y180 w70 h40 , PERSONNAGE2
+;Gui, Main:Add, Button,hide x22 y180 w70 h40 , PERSONNAGE1START
+;Gui, Main:Add, Button,disabled x178 y180 w70 h40 , PERSONNAGE3
+;Gui, Main:Add, Button,disabled x22 y240 w70 h40 , PERSONNAGE4
 ;Gui, Main:Add, Button, x180 y77 w75 h75 gGroupCharacters gGroupCharacters , GROUPER
 ;Gui, Main:Add, Button,disabled x22 y179 w100 h40 , PRET
 Gui, Main:Add, CheckBox, disabled x52 y359 w90 h30 , Mode combat
-Gui, Add, Picture, x180 y330 w50 h40, %dofus_icon_imageLocation%
+Gui, Add, Picture, x180 y330 w50 h40 gDetectAndShowCharacterBox, %dofus_icon_imageLocation%
 Gui, Add, Picture, x180 y77 w75 h75 gGroupCharacters, %group_icon_imageLocation%
 Gui, Add, Picture, x100 y80 w70 h70, %join_fight_icon_imageLocation%
 Gui, Add, Picture, x20 y80 w70 h70, %ready_fight_imageLocation%
@@ -44,8 +47,9 @@ Loop, Parse, characterNames, "|"
 
 }
 
+Gui, Main:+AlwaysOnTop
+Gui, Main:Show,x500 y361 w269 h454 , DofusMultiAccountTool
 
-Gui, Main:Show,x500 y361 w269 h454, DofusMultiAccountTool
 OnMessage(0x200, "WM_MOUSEMOVE")
 Return
 
@@ -247,6 +251,56 @@ GroupCharacters(){
 	return ""
 }
 
+DetectAndShowCharacterBox(){
+		global
+		xaxe:=100
+		yaxe:=50
+		width:=70
+		height:=40
 
+
+
+
+	characterNames := GetCharacterNames()
+	characterNames = %characterNames%  
+	Gui, Main:Add, Button,hide x22 y180 w0 h0 ; Permet de définir le début où sera positionné les boutons
+	GUI, Main:Margin, 22,180
+	i := 1
+	Loop, Parse, characterNames, "|"
+	{
+		;GUI, Add, Text, Section xm ym w52 h52
+		
+		
+		if(i < 4)
+			GUI, Main:Add, Button, X+5 w70 h40 gSelectCharacter, % A_LoopField
+		if(i ==4)
+			;GUI, Main:Add, Button, xm+10 ym+10 w10 h0, Section
+			GUI, Main:Add, Button, ym+60 xm+5 w70 h40 gSelectCharacter , % A_LoopField
+		
+		if(i > 4)
+			GUI, Main:Add, Button,X+5 w70 h40 gSelectCharacter , % A_LoopField
+			
+
+		i := i+1
+
+
+		CharacterSelect_%A_Index%: 
+		CurrentCharacterSelect = %A_LoopField%
+	}
+
+	
+
+
+
+	return
+}
+
+SelectCharacter:
+ 	;MsgBox, %A_GuiControl%
+	SetTitleMatchMode 2
+	if (WinExist(A_GuiControl)){
+		WinActivate
+	}
+	return
 ;Si jamais la position pour accepter les invitations n'ai pas configuré
 			
