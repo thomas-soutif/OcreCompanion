@@ -7,7 +7,7 @@ AdvancedOptionsGui(){
     global
     Gui, AdvancedOptions:New,+Resize -MaximizeBox
     allVNameTimerOption = FollowMin|FollowMax|GroupMin|GroupMax|SkipMin|SkipMax|JoinFightMin|JoinFightMax
-    allVNamePositionOption = AcceptGroupButtonX|AcceptGroupButtonY
+    allVNamePositionOption = AcceptGroupButtonX|AcceptGroupButtonY|JoinFightButtonX|JoinFightButtonY
     ;Chargement des paramètres
 
     ifexist, %A_ScriptDir%\config.ini
@@ -60,7 +60,12 @@ Gui, Add, Text, x352 y29 w30 h20 , X
 Gui, Add, Text, x402 y29 w30 h20 , Y
 Gui, Add, Edit, x342 y49 w50 h20 vAcceptGroupButtonX, %AcceptGroupButtonX%
 Gui, Add, Edit, x392 y49 w50 h20 vAcceptGroupButtonY, %AcceptGroupButtonY%
+
+Gui, Add, Edit, x342 y85 w50 h20 vJoinFightButtonX, %JoinFightButtonX%
+Gui, Add, Edit, x392 y85 w50 h20 vJoinFightButtonY, %JoinFightButtonY%
+
 Gui, Add, Text, x272 y49 w60 h30 , Accepter (Groupe)
+Gui, Add, Text, x272 y85 w60 h30, Rejoindre (Fight) 
 Gui, Add, Button, x262 y179 w210 h40 gDetectAutomatically , Detecter automatiquement
 
 
