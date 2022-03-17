@@ -2,14 +2,30 @@
 #include %A_ScriptDir%\AccountManagment.ahk
 #include %A_ScriptDir%\AdvancedOptions.ahk
 
+;global parameter of Window
+SetDefaults(void)
+{
+	global
+	MainWindowsX :=500 
+	MainWindowsY :=361 
+	MainWindowsW :=269 
+	MainWindowsH :=454
+	return
+}
 
+	MainWindowsX :=500 
+	MainWindowsY :=361 
+	MainWindowsW :=269 
+	MainWindowsH :=454
+
+START:
+Gui, Main:Hide
 ; Chargement des chemins d'image utilisées
 dofus_icon_imageLocation = %A_ScriptDir%\images\dofus_icon.png
 group_icon_imageLocation = %A_ScriptDir%\images\group_icon.png
 ready_fight_imageLocation = %A_ScriptDir%\images\ready_fight.png
 join_fight_icon_imageLocation = %A_ScriptDir%\images\join_fight_icon.png
 Gui, Main:New, +Resize -MaximizeBox
-
 Gui, Main:Add, Button, x12 y19 w110 h30 gAccountManagment , Personnages
 Gui, Main:Add, Button, x150 y19 w110 h30 gAdvancedOptionsGui , Options avancées
 Gui, Main:Add, GroupBox, x22 y299 w150 h100 , Options rapide
@@ -21,11 +37,10 @@ Gui, Main:Add, CheckBox, disabled x52 y329 w80 h20 , Follow auto
 ;Gui, Main:Add, Button, x180 y77 w75 h75 gGroupCharacters gGroupCharacters , GROUPER
 ;Gui, Main:Add, Button,disabled x22 y179 w100 h40 , PRET
 Gui, Main:Add, CheckBox, disabled x52 y359 w90 h30 , Mode combat
-Gui, Add, Picture, x180 y330 w50 h40 gDetectAndShowCharacterBox, %dofus_icon_imageLocation%
+Gui, Add, Picture, x180 y330 w50 h40 gReloadGui, %dofus_icon_imageLocation%
 Gui, Add, Picture, x180 y77 w75 h75 gGroupCharacters, %group_icon_imageLocation%
 Gui, Add, Picture, x100 y80 w70 h70, %join_fight_icon_imageLocation%
 Gui, Add, Picture, x20 y80 w70 h70, %ready_fight_imageLocation%
-
 idd := DetectWindowsByName("Ankama")
 
 ;Detection des personnages configurés et récupération de leur id de fenêtre
@@ -46,11 +61,14 @@ Loop, Parse, characterNames, "|"
 	;MsgBox, %A_LoopField%
 
 }
+CreateShowCharacterBox()
+
+;MsgBox, "Stop"
 
 Gui, Main:+AlwaysOnTop
-Gui, Main:Show,x500 y361 w269 h454 , DofusMultiAccountTool
+Gui, Main:Show, x%MainWindowsX% y%MainWindowsY% w%MainWindowsW% h%MainWindowsH% , DofusMultiAccountTool
 
-OnMessage(0x200, "WM_MOUSEMOVE")
+
 Return
 
 GuiEscape:
@@ -269,22 +287,22 @@ GroupCharacters(){
 	return ""
 }
 
-DetectAndShowCharacterBox(){
-		global
+
+CreateShowCharacterBox(){
+
+
 		xaxe:=100
 		yaxe:=50
 		width:=70
 		height:=40
 
-		Gui, Main:Hide
-		Gui,Main:Show
-	
 	characterNames := GetCharacterDetectedInGame()
 	characterNames = %characterNames%  
 	Gui, Main:Add, Button,hide x22 y180 w0 h0 ; Permet de définir le début où sera positionné les boutons
 	GUI, Main:Margin, 22,180
 	i := 1
 	listCharacterNotDetect := ""
+	
 	Loop, Parse, characterNames, "|"
 	{
 		;GUI, Add, Text, Section xm ym w52 h52
@@ -305,14 +323,29 @@ DetectAndShowCharacterBox(){
 
 		CharacterSelect_%A_Index%: 
 		CurrentCharacterSelect = %A_LoopField%
+
+		Gui, Main:Show
 	}
-
-	
-
-
 
 	return
 }
+
+ReloadGui:
+	WinGetPos, xPos,yPos,wPos,hPos
+	MainWindowsX :=xPos 
+	MainWindowsY :=yPos
+	Gui, Main:Destroy
+	;MsgBox , stop
+	goto start
+	
+	
+	return
+
+
+
+
+
+
 
 SelectCharacter(){
  	;MsgBox, %A_GuiControl%
