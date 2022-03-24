@@ -29,8 +29,7 @@ AdvancedOptionsGui(){
         {
             IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Position, %A_LoopField%
              if(%A_LoopField% == "ERROR"){
-                IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Position, %A_LoopField%
-                IniWrite, %value%, %A_ScriptDir%\config.ini, Position, %A_LoopField%
+                IniWrite, "", %A_ScriptDir%\config.ini, Position, %A_LoopField%
                 IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Position, %A_LoopField%
             }
         }
