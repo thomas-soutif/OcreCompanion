@@ -19,6 +19,12 @@ SetDefaults(void)
 	MainWindowsH :=454
 
 START:
+
+if !FileExist("%A_ScriptDir%\config.ini"){
+	FileAppend,, %A_ScriptDir%\config.ini
+
+}
+
 Gui, Main:Hide
 ; Chargement des chemins d'image utilisées
 dofus_icon_imageLocation = %A_ScriptDir%\images\dofus_icon.png
@@ -40,7 +46,7 @@ Gui, Main:Add, CheckBox, disabled x52 y359 w90 h30 , Mode combat
 Gui, Add, Picture, x180 y330 w50 h40 gReloadGui, %dofus_icon_imageLocation%
 Gui, Add, Picture, x180 y77 w75 h75 gGroupCharacters, %group_icon_imageLocation%
 Gui, Add, Picture, x100 y80 w70 h70 gJoinFightForAllCharacters, %join_fight_icon_imageLocation%
-Gui, Add, Picture, x20 y80 w70 h70, %ready_fight_imageLocation%
+Gui, Add, Picture, x20 y80 w70 h70  gFightReadyForAllCharacters, %ready_fight_imageLocation%
 idd := DetectWindowsByName("Ankama")
 
 ;Detection des personnages configurés et récupération de leur id de fenêtre
@@ -472,6 +478,58 @@ CreateShowCharacterBox(){
 	return
 }
 
+FightReadyForAllCharacters(){
+	SetTitleMatchMode 2
+	characterNames := GetCharacterNames()
+	characterNames = %characterNames% 
+
+	;On va vérifier si le timer setting qu'on a besoin est disponible
+	ifexist, %A_ScriptDir%\config.ini
+	{
+        
+		IniRead,value,%A_ScriptDir%\config.ini,Timers, SkipMin
+		if(value == "ERROR"){
+			IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Timers, SkipMin
+			IniWrite, %value%, %A_ScriptDir%\config.ini, Timers, SkipMin
+		}
+
+		IniRead,value,%A_ScriptDir%\config.ini,Timers, SkipMax
+		if(value == "ERROR"){
+			IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Timers, SkipMax
+			IniWrite, %value%, %A_ScriptDir%\config.ini, Timers, SkipMax
+		}
+        
+	}
+
+
+	IniRead,SkipMinTimer,%A_ScriptDir%\config.ini,Timers, SkipMin
+	IniRead,SkipMaxTimer,%A_ScriptDir%\config.ini,Timers, SkipMax
+	Loop, Parse, characterNames, "|"
+	{
+			
+			
+		if(WinExist(A_LoopField)){
+		
+			
+			;A rajouter plus tard, récupérer le raccourcie depuis la configuration
+			IniRead,skipMyTurnShortcut,%A_ScriptDir%\config.ini,Shortcut, SkipMyTurn
+			if(skipMyTurnShortcut == "ERROR"){
+				IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Shortcut, SkipMyTurn
+				IniWrite,%value%,%A_ScriptDir%\config.ini,Shortcut, SkipMyTurn
+				IniRead,skipMyTurnShortcut,%A_ScriptDir%\config.ini,Shortcut, SkipMyTurn
+			}
+
+			ControlSend, ahk_parent, {%skipMyTurnShortcut%}, %A_LoopField%
+			
+		}
+		Random, timerValue, SkipMinTimer, SkipMaxTimer
+		Sleep timerValue
+
+	}
+
+
+
+}
 ReloadGui:
 	WinGetPos, xPos,yPos,wPos,hPos
 	MainWindowsX :=xPos 
