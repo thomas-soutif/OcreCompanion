@@ -39,7 +39,7 @@ Gui, Main:Add, CheckBox, disabled x52 y329 w80 h20 , Follow auto
 Gui, Main:Add, CheckBox, disabled x52 y359 w90 h30 , Mode combat
 Gui, Add, Picture, x180 y330 w50 h40 gReloadGui, %dofus_icon_imageLocation%
 Gui, Add, Picture, x180 y77 w75 h75 gGroupCharacters, %group_icon_imageLocation%
-Gui, Add, Picture, x100 y80 w70 h70, %join_fight_icon_imageLocation%
+Gui, Add, Picture, x100 y80 w70 h70 gJoinFightForAllCharacters, %join_fight_icon_imageLocation%
 Gui, Add, Picture, x20 y80 w70 h70, %ready_fight_imageLocation%
 idd := DetectWindowsByName("Ankama")
 
@@ -158,14 +158,17 @@ GroupCharacters(){
 		;AcceptGroupButton_1560x1440
 		if(value == "ERROR"){
 			;Le texte n'existe pas pour la résolution actuel du joueur, on s'arrête là
-			MsgBox "Votre résolution actuelle n'est pas supporté pour pouvoir utiliser la fonctionnalité de Groupe, veuillez envoyer un message au support pour que nous puissions ajouter votre résolution au programme."
-			return
+			MsgBox " [Optionnel] Votre résolution actuelle n'est pas supporté pour pouvoir utiliser la reconnaissance d'image du bouton 'Rejoindre le Groupe', vous pouvez envoyer un message au support pour que nous puissions ajouter votre résolution au programme, ceci n'est que du confort. Appuyer sur Ok pour continuer d'executer le script"
+			
+		}else{
+			TextEncrypt := value
+		
+			; Text récupéré
+			MsgBox, "C'est la premiere fois que vous utilisez la fonctionnalite Groupe. Nous allons effectue des reglages automatiquement une fois que vous aurez appuye sur le bouton Ok. `n N'oubliez pas de réinitialiser vos positions d'interface pour chacun de vos personnages avant de continuer. (Option/Interface/Reinitialiser les positions d'interface)"
+			
 		}
 
-		TextEncrypt := value
 		
-		; Text récupéré
-		MsgBox, "C'est la premiere fois que vous utilisez la fonctionnalite Groupe. Nous allons effectue des reglages automatiquement une fois que vous aurez appuye sur le bouton Ok. `n N'oubliez pas de réinitialiser vos positions d'interface pour chacun de vos personnages avant de continuer. (Option/Interface/Reinitialiser les positions d'interface)"
 
 	}
 
@@ -287,6 +290,145 @@ GroupCharacters(){
 	return ""
 }
 
+JoinFightForAllCharacters(){
+
+	characterNames := GetCharacterNames()
+	characterNames = %characterNames%  
+	
+	if !(List(characterNames,2)){
+		;Si il n'y a pas au moins 2 personnages, alors on arrête
+		MsgBox, "Il vous faut au moins 2 personnages configurés pour pouvoir utiliser cette option"
+		return
+	}
+	
+	;On va vérifier si le timer setting qu'on a besoin est disponible
+	ifexist, %A_ScriptDir%\config.ini
+	{
+        
+		IniRead,value,%A_ScriptDir%\config.ini,Timers, JoinFightMin
+		if(value == "ERROR"){
+			IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Timers, JoinFightMin
+			IniWrite, %value%, %A_ScriptDir%\config.ini, Timers, JoinFightMin
+		}
+
+		IniRead,value,%A_ScriptDir%\config.ini,Timers, JoinFightMax
+		if(value == "ERROR"){
+			IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Timers, JoinFightMax
+			IniWrite, %value%, %A_ScriptDir%\config.ini, Timers, JoinFightMax
+		}
+        
+	}
+	
+	;On va tenter de récupérer l'image encrypté sous le format actuel de l'écran si jamais c'est la première fois que le joueur utilise cette fonction
+
+	IniRead, PositionJoinFightX, %A_ScriptDir%\config.ini,Position, JoinFightButtonX
+	IniRead, PositionJoinFightY,%A_ScriptDir%\config.ini,Position, JoinFightButtonY
+	TextEncrypt := ""
+	if(not PositionJoinFightX or not PositionJoinFightY or PositionJoinFightX == "ERROR" or PositionJoinFightY == "Error"){
+		;On va alors initialiser la procédure de detection du bouton accepter
+
+		IniRead,value,%A_ScriptDir%\defaultConfig\staticTextEncrypt.ini,JoinFightButton_%A_ScreenWidth%x%A_ScreenHeight%, Text
+		if(value == "ERROR"){
+			;Le texte n'existe pas pour la résolution actuel du joueur, on s'arrête là
+			MsgBox "[Optionnel] Votre résolution actuelle n'est pas supporté pour pouvoir utiliser la reconnaissance d'image du bouton 'Rejoindre le fight', vous pouvez envoyer un message au support pour que nous puissions ajouter votre résolution au programme, ceci n'est que du confort. `n Appuyer sur Ok pour continuer d'executer le script"
+			
+		}else{
+			TextEncrypt := value
+		
+			; Text récupéré
+			MsgBox, "C'est la premiere fois que vous utilisez la fonctionnalite rejoindre un fight. Nous allons effectue des reglages automatiquement une fois que vous aurez appuye sur le bouton Ok. `n N'oubliez pas de réinitialiser vos positions d'interface pour chacun de vos personnages avant de continuer. (Option/Interface/Reinitialiser les positions d'interface)"
+		}
+
+		
+
+	}
+
+	
+
+	SetTitleMatchMode 2
+	if(TextEncrypt){
+		;Si jamais on peut detecter le bouton Rejoindre
+		Loop, Parse, characterNames, "|"
+		{
+			
+			;On focus
+			if(WinExist(A_LoopField)){
+				t1:=A_TickCount, X:=Y:=""
+				
+				WinActivate
+				sleep 1000
+				try_num := 1
+				while(try_num < 2){
+					Text := TextEncrypt
+					ok:=FindText(X, Y, A_ScreenWidth, 0, -1, A_ScreenHeight, 0, 0, Text)
+					;MsgBox, %X%,%Y%, %Text%
+					if(ok.Length())
+					{
+						;Le bouton accepté a été trouvé
+						;On sauvegarde la position trouvé
+						IniWrite, %X%, %A_ScriptDir%\config.ini, Position, JoinFightButtonX
+						IniWrite, %Y%, %A_ScriptDir%\config.ini, Position, JoinFightButtonY
+						TextEncrypt := ""
+						;FindText().Click(X, Y, "L")
+						try_num := 10
+					}else{
+						try_num := try_num +1
+						sleep 200
+					}
+
+						
+				}
+						
+			}
+			Sleep 200
+
+		}
+
+		if(TextEncrypt){
+			;Alors la detection automatique n'a pas marché. On va alors demander à l'utilisateur de cliquer sur le bouton Rejoindre pour faire les reglages
+			MsgBox, "Nous n'avons pas pu cette fois detecté automatiquement la position du bouton Rejoindre.`n Mettez vous sur une fenêtre où le bouton Rejoindre d'affiche. `n Après avoir appuyer sur le bouton Ok de cette popup, faites un clique gauche sur le bouton Rejoindre sur votre fenêtre de jeu afin que nous enregistrions la position.` Vous avez 10 secondes pour effectuer cette action, après celà le script s'annulera."
+			KeyWait, LButton , D T10
+			if(ErrorLevel == 1){
+				;L'utilisateur n'a pas appuyé sur le bon bouton au bon moment
+				MsgBox, "Il semblerait que vous n'ayez pas cliqué sur le bouton accepté ! Annulation du script."
+				return
+			}
+			MouseGetPos, MouseX, MouseY, MouseWin, MouseCtl, 2
+			IniWrite, %MouseX%, %A_ScriptDir%\config.ini, Position, JoinFightButtonX
+			IniWrite, %MouseY%, %A_ScriptDir%\config.ini, Position, JoinFightButtonY
+			TextEncrypt := ""
+			; On va appuyer pour ce cas ici sur le bouton accepter
+			Sleep, 500
+			FindText().Click(MouseX, MouseY, "L")
+					
+		}
+
+		
+	}
+
+	IniRead, MinvalueTimer, %A_ScriptDir%\config.ini,Timers, JoinFightMin
+	IniRead, MaxValueTimer, %A_ScriptDir%\config.ini,Timers, JoinFightMax
+	Loop, Parse, characterNames, "|"
+	{
+			
+			
+		if(WinExist(A_LoopField)){
+		
+			
+			;On connait les coordonnées
+			IniRead, PositionAcceptGroupX, %A_ScriptDir%\config.ini,Position, JoinFightButtonX
+			IniRead, PositionAcceptGroupY,%A_ScriptDir%\config.ini,Position, JoinFightButtonY
+			;FindText().Click(PositionAcceptGroupX, PositionAcceptGroupY, "L")
+			ControlClick x%PositionAcceptGroupX% y%PositionAcceptGroupY%, %A_LoopField%
+			
+		}
+		Random, timerValue, MinvalueTimer, MaxValueTimer
+		Sleep timerValue
+
+	}
+
+	return ""
+}
 
 CreateShowCharacterBox(){
 
