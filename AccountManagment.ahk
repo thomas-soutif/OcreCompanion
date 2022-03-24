@@ -23,6 +23,7 @@ AccountManagment(){
 	LV_InsertCol(2, 100, "Classe")
 
 	IniRead, CharacterNameList, %A_ScriptDir%\config.ini, CharactersList, listCharacters
+	if CharacterNameList == 
 	Loop, Parse, CharacterNameList, "|"
         {
 			IniRead, ClassCharacter, %A_ScriptDir%\config.ini,ClassOfCharacter,%A_LoopField%
