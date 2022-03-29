@@ -34,16 +34,17 @@ join_fight_icon_imageLocation = %A_ScriptDir%\images\join_fight_icon.png
 Gui, Main:New, +Resize -MaximizeBox
 Gui, Main:Add, Button, x12 y19 w110 h30 gAccountManagment , Personnages
 Gui, Main:Add, Button, x150 y19 w110 h30 gAdvancedOptionsGui , Options avancées
-Gui, Main:Add, GroupBox, x22 y299 w150 h100 , Options rapide
-Gui, Main:Add, CheckBox, disabled x52 y329 w80 h20 , Follow auto
+Gui, Main:Add, GroupBox, x22 y320 w150 h100 , Options rapide
+Gui, Main:Add, GroupBox, x10 y160 w240 h155 , Personnages detectés en jeu
+Gui, Main:Add, CheckBox, disabled x52 y350 w80 h20 , Follow auto
 ;Gui, Main:Add, Button,disabled x100 y180 w70 h40 , PERSONNAGE2
 ;Gui, Main:Add, Button,hide x22 y180 w70 h40 , PERSONNAGE1START
 ;Gui, Main:Add, Button,disabled x178 y180 w70 h40 , PERSONNAGE3
 ;Gui, Main:Add, Button,disabled x22 y240 w70 h40 , PERSONNAGE4
 ;Gui, Main:Add, Button, x180 y77 w75 h75 gGroupCharacters gGroupCharacters , GROUPER
 ;Gui, Main:Add, Button,disabled x22 y179 w100 h40 , PRET
-Gui, Main:Add, CheckBox, disabled x52 y359 w90 h30 , Mode combat
-Gui, Add, Picture, x180 y330 w50 h40 gReloadGui, %dofus_icon_imageLocation%
+Gui, Main:Add, CheckBox, disabled x52 y370 w90 h30 , Mode combat
+Gui, Add, Picture, x180 y350 w50 h40 gReloadGui, %dofus_icon_imageLocation%
 Gui, Add, Picture, x180 y77 w75 h75 gGroupCharacters, %group_icon_imageLocation%
 Gui, Add, Picture, x100 y80 w70 h70 gJoinFightForAllCharacters, %join_fight_icon_imageLocation%
 Gui, Add, Picture, x20 y80 w70 h70  gFightReadyForAllCharacters, %ready_fight_imageLocation%
@@ -446,24 +447,44 @@ CreateShowCharacterBox(){
 
 	characterNames := GetCharacterDetectedInGame()
 	characterNames = %characterNames%  
-	Gui, Main:Add, Button,hide x22 y180 w0 h0 ; Permet de définir le début où sera positionné les boutons
+	Gui, Main:Add, Button,hide x14 y180 w0 h0 ; Permet de définir le début où sera positionné les boutons
 	GUI, Main:Margin, 22,180
 	i := 1
 	listCharacterNotDetect := ""
 	
 	Loop, Parse, characterNames, "|"
 	{
+		
 		;GUI, Add, Text, Section xm ym w52 h52
 		if(A_LoopField == "")
 			Continue
+		;Gui, Add, Picture, x180 y330 w50 h40 gReloadGui, %dofus_icon_imageLocation%
+		
+		IniRead, classCharacter,%A_ScriptDir%\config.ini,ClassOfCharacter, %A_LoopField%
+		
+		;Récupération du nombre de fichiers
+		CountItems := 0
+		Loop,  %A_ScriptDir%\images\characters_bank_images\%classCharacter%\*.*
+		{
+			CountItems++
+		}
+		;MsgBox, % CountItems
+		folder = %A_ScriptDir%\images\characters_bank_images\%classCharacter%
+		listFiles := list_files(folder)
+		
+		fileSelectToShow := get_element_in_list_file(1,listFiles) ; Pour le moment on prend tjrs la première image
+		;classCharacterImageLocation = %A_ScriptDir%\images\%classCharacter%.png
+		;MsgBox, %classCharacterImageLocation%
+		;MsgBox, %classCharacter%
 		if(i < 4)
-			GUI, Main:Add, Button, X+5 w70 h40 gSelectCharacter, % A_LoopField
+			;GUI, Main:Add, Button, X+5 w70 h40 gSelectCharacter, % A_LoopField
+			Gui,Add, Picture, X+15 w60 h60 gSelectCharacter,  %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%fileSelectToShow%
 		if(i ==4)
 			;GUI, Main:Add, Button, xm+10 ym+10 w10 h0, Section
-			GUI, Main:Add, Button, ym+60 xm+5 w70 h40 gSelectCharacter , % A_LoopField
+			GUI, Main:Add, Picture, ym+70 xm+10 w60 h60 gSelectCharacter , %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%fileSelectToShow%
 		
 		if(i > 4)
-			GUI, Main:Add, Button,X+5 w70 h40 gSelectCharacter , % A_LoopField
+			GUI, Main:Add, Picture,X+15 w60 h60 gSelectCharacter , %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%fileSelectToShow%
 			
 
 		i := i+1

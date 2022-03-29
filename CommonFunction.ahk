@@ -13,6 +13,33 @@ List(listName,integer)
  return returnValue
 }
 
+list_files(Directory)
+{
+	files =
+	Loop %Directory%\*.*
+	{
+    if (files == ""){
+      files = %files%%A_LoopFileName%
+    }else{
+      files = %files%|%A_LoopFileName%
+    }
+		
+	}
+	return files
+}
+
+get_element_in_list_file(Index,ListFile){
+  Loop, Parse, ListFile, "|"
+  {
+    if(A_Index == Index){
+       return A_LoopField
+    }
+     
+
+  }
+  return ""
+
+}
 
 ;/*
 ;===========================================
