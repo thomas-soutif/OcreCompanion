@@ -10,6 +10,7 @@ SetDefaults(void)
 	MainWindowsY :=361 
 	MainWindowsW :=269 
 	MainWindowsH :=454
+	TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
 	return
 }
 
@@ -17,14 +18,17 @@ SetDefaults(void)
 	MainWindowsY :=361 
 	MainWindowsW :=269 
 	MainWindowsH :=454
-
+	TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
 START:
 
 if !FileExist("%A_ScriptDir%\config.ini"){
 	FileAppend,, %A_ScriptDir%\config.ini
 
 }
+TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
 
+IfNotExist, %TempLocationForCharacter%
+   FileCreateDir, %TempLocationForCharacter%
 Gui, Main:Hide
 ; Chargement des chemins d'image utilisées
 dofus_icon_imageLocation = %A_ScriptDir%\images\dofus_icon.png
@@ -438,12 +442,13 @@ JoinFightForAllCharacters(){
 }
 
 CreateShowCharacterBox(){
-
+global
 
 		xaxe:=100
 		yaxe:=50
 		width:=70
 		height:=40
+	
 
 	characterNames := GetCharacterDetectedInGame()
 	characterNames = %characterNames%  
@@ -473,19 +478,25 @@ CreateShowCharacterBox(){
 		listFiles := list_files(folder)
 		
 		fileSelectToShow := get_element_in_list_file(1,listFiles) ; Pour le moment on prend tjrs la première image
+		fullPathPicture = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%fileSelectToShow%
 		;classCharacterImageLocation = %A_ScriptDir%\images\%classCharacter%.png
 		;MsgBox, %classCharacterImageLocation%
 		;MsgBox, %classCharacter%
+		;TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
+		;fullPathPicture = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%fileSelectToShow%
+		;pictureToTempPath = %TempLocationForCharacter%%A_LoopField%.png
+		;FileCopy, %fullPathPicture%,%pictureToTempPath%, 1
 		if(i < 4)
 			;GUI, Main:Add, Button, X+5 w70 h40 gSelectCharacter, % A_LoopField
-			Gui,Add, Picture, X+15 w60 h60 gSelectCharacter,  %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%fileSelectToShow%
+			Gui,Add, Picture, X+15 w60 h60 vCharacterPic_%A_Index%, %fullPathPicture%
+			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%
 		if(i ==4)
 			;GUI, Main:Add, Button, xm+10 ym+10 w10 h0, Section
-			GUI, Main:Add, Picture, ym+70 xm+10 w60 h60 gSelectCharacter , %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%fileSelectToShow%
-		
+			GUI, Main:Add, Picture, ym+70 xm+10 w60 h60 vCharacterPic_%A_Index% ,%fullPathPicture%
+			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%
 		if(i > 4)
-			GUI, Main:Add, Picture,X+15 w60 h60 gSelectCharacter , %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%fileSelectToShow%
-			
+			GUI, Main:Add, Picture,X+15 w60 h60 vCharacterPic_%A_Index% ,%fullPathPicture%
+			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%
 
 		i := i+1
 
@@ -569,11 +580,31 @@ ReloadGui:
 
 
 SelectCharacter(){
- 	;MsgBox, %A_GuiControl%
-	SetTitleMatchMode 2
-	if (WinExist(A_GuiControl)){
-		WinActivate
+	;TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\Lesipe.png
+	IndexOfCharacter = 0
+	Loop, Parse, A_GuiControl, _,
+	{
+		if (A_Index == 2){
+			IndexOfCharacter = %A_LoopField%
+		}
 	}
+	if(IndexOfCharacter == 0){
+		;Si l'index n'est pas trouvé
+		return
+	}
+	SetTitleMatchMode 2
+	characterNames := GetCharacterDetectedInGame()
+	characterNames = %characterNames%  
+	Loop, Parse, characterNames, "|"
+	{
+		if(A_Index == IndexOfCharacter ){
+			if (WinExist(A_LoopField)){
+				WinActivate
+			}
+		}
+	}
+	
+	
 	return
 }
 ;Si jamais la position pour accepter les invitations n'ai pas configuré
