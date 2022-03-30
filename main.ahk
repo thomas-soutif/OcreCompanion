@@ -41,6 +41,8 @@ Gui, Main:Add, Button, x150 y19 w110 h30 gAdvancedOptionsGui , Options avancées
 Gui, Main:Add, GroupBox, x22 y320 w150 h100 , Options rapide
 Gui, Main:Add, GroupBox, x10 y160 w240 h155 , Personnages detectés en jeu
 Gui, Main:Add, CheckBox, disabled x52 y350 w80 h20 , Follow auto
+Gui, Main:Add, Text, x180 y392 , Detecter les 
+Gui, Main:Add, Text, x180 y405 , personnages
 ;Gui, Main:Add, Button,disabled x100 y180 w70 h40 , PERSONNAGE2
 ;Gui, Main:Add, Button,hide x22 y180 w70 h40 , PERSONNAGE1START
 ;Gui, Main:Add, Button,disabled x178 y180 w70 h40 , PERSONNAGE3
