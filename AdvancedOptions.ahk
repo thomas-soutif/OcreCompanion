@@ -8,6 +8,7 @@ AdvancedOptionsGui(){
     Gui, AdvancedOptions:New,+Resize -MaximizeBox
     allVNameTimerOption = FollowMin|FollowMax|GroupMin|GroupMax|SkipMin|SkipMax|JoinFightMin|JoinFightMax
     allVNamePositionOption = AcceptGroupButtonX|AcceptGroupButtonY|JoinFightButtonX|JoinFightButtonY
+    allVNameAccessibility = ConfirmCharactersAllReady
     ;Chargement des paramètres
 
     ifexist, %A_ScriptDir%\config.ini
@@ -35,6 +36,23 @@ AdvancedOptionsGui(){
         }
 	}
 
+     ifexist, %A_ScriptDir%\config.ini
+	{
+        Loop, Parse, allVNameAccessibility, "|"
+        {
+            IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Accessibility, %A_LoopField%
+             if(%A_LoopField% == "ERROR"){
+                IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Accessibility, %A_LoopField%
+                IniWrite, %value%, %A_ScriptDir%\config.ini, Accessibility, %A_LoopField%
+                IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Accessibility, %A_LoopField%
+            }
+        }
+	}
+
+
+    TextConfirmCharactersAllReady := "Confirmer avant de mettre Prêt tout les persos"
+
+    
 Gui, Add, GroupBox, x22 y19 w210 h160 , Timer
 Gui, Font, S8 CTeal, Verdana
 Gui, Add, Text, x132 y29 w30 h20 , Min
@@ -52,23 +70,35 @@ Gui, Add, Edit, x172 y110 w50 h20 vSkipMax, %SkipMax%
 Gui, Add, Text, x32 y140 w80 h30 , Rejoindre (fight)
 Gui, Add, Edit, x122 y140 w50 h20 vJoinFightMin, %JoinFightMin%
 Gui, Add, Edit, x172 y140 w50 h20 vJoinFightMax, %JoinFightMax%
-Gui, Add, Button, x32 y179 w100 h30 gResetDefault, Reset Default
 Gui, Add, Button, x32 y309 w100 h40 gSaveAdvancedOptions, Sauvegarder
 Gui, Add, GroupBox, x262 y19 w210 h160 , Position
 Gui, Add, Text, x352 y29 w30 h20 , X
 Gui, Add, Text, x402 y29 w30 h20 , Y
 Gui, Add, Edit, x342 y49 w50 h20 vAcceptGroupButtonX, %AcceptGroupButtonX%
 Gui, Add, Edit, x392 y49 w50 h20 vAcceptGroupButtonY, %AcceptGroupButtonY%
-
 Gui, Add, Edit, x342 y85 w50 h20 vJoinFightButtonX, %JoinFightButtonX%
 Gui, Add, Edit, x392 y85 w50 h20 vJoinFightButtonY, %JoinFightButtonY%
-
 Gui, Add, Text, x272 y49 w60 h30 , Accepter (Groupe)
-Gui, Add, Text, x272 y85 w60 h30, Rejoindre (Fight) 
-Gui, Add, Button, x262 y179 w210 h40 gDetectAutomatically , Detecter automatiquement
+Gui, Add, Text, x272 y85 w60 h30 , Rejoindre (Fight)
+Gui, Add, Button, x262 y179 w210 h40 gDetectAutomatically, Detecter automatiquement
+Gui, Add, GroupBox, x492 y19 w180 h160 , Accessibilité
+Gui, Add, Edit, x572 y69 w-594 h-200 , Edit
+Gui, Add, CheckBox, x502 y49 w160 h40 vConfirmCharactersAllReady ,%TextConfirmCharactersAllReady%
+Gui, Add, Button, x22 y179 w100 h40 , Reset Default
+;Gui, Add, Button, x492 y179 w100 h40 , Reset Default
+
+if(ConfirmCharactersAllReady == 1){
+        GuiControl,, %TextConfirmCharactersAllReady%, 1
+        
+}else{
+    GuiControl,, %TextConfirmCharactersAllReady%, 0
+}
 
 
-    Gui, Show, w664 h379, Options avancees - DofusMultiAccountTool
+
+
+    Gui, +AlwaysOnTop
+    Gui, Show, w680 h379, Options avancees - DofusMultiAccountTool
 
 
 
@@ -113,6 +143,15 @@ Gui, Add, Button, x262 y179 w210 h40 gDetectAutomatically , Detecter automatique
 
                 send %oldValue%
                
+            }
+        }
+
+        Loop, Parse, allVNameAccessibility, "|"
+        {   
+            value := %A_LoopField%
+            if (value == 0 || value == 1)
+            {
+                IniWrite, %value%, %A_ScriptDir%\config.ini, Accessibility, %A_LoopField%
             }
         }
 

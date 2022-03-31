@@ -535,7 +535,24 @@ FightReadyForAllCharacters(){
         
 	}
 
+	;Les options d'accessibilité lié
+	ifexist, %A_ScriptDir%\config.ini
+	{
+        IniRead,value,%A_ScriptDir%\config.ini,Accessibility, ConfirmCharactersAllReady
+		if(value == "ERROR"){
+			IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Accessibility, ConfirmCharactersAllReady
+			IniWrite, %value%, %A_ScriptDir%\config.ini, Accessibility, ConfirmCharactersAllReady
+		}
+        
+	}
 
+	;Vérifier si il faut lancer la boite de confirmation
+	IniRead,value,%A_ScriptDir%\config.ini,Accessibility, ConfirmCharactersAllReady
+	if(value == 1){
+		MsgBox, 4100,Confirmation, "Voulez vous vraiment que tout les personnages se mettent prêt en même temps ?"
+		IfMsgBox No
+			return
+	}
 	IniRead,SkipMinTimer,%A_ScriptDir%\config.ini,Timers, SkipMin
 	IniRead,SkipMaxTimer,%A_ScriptDir%\config.ini,Timers, SkipMax
 	Loop, Parse, characterNames, "|"
@@ -554,10 +571,10 @@ FightReadyForAllCharacters(){
 			}
 
 			ControlSend, ahk_parent, {%skipMyTurnShortcut%}, %A_LoopField%
-			
+			Random, timerValue, SkipMinTimer, SkipMaxTimer
+			Sleep timerValue
 		}
-		Random, timerValue, SkipMinTimer, SkipMaxTimer
-		Sleep timerValue
+		
 
 	}
 
