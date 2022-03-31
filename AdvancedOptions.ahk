@@ -130,20 +130,11 @@ if(ConfirmCharactersAllReady == 1){
         {   
             value := %A_LoopField%
             valueRound := floor(value)
-            if !(valueRound == 0)
-            {
+            if(valueRound == 0)
+                IniWrite, "", %A_ScriptDir%\config.ini, Position, %A_LoopField%
+            else
                 IniWrite, %valueRound%, %A_ScriptDir%\config.ini, Position, %A_LoopField%
-            }
-            else{
-                GuiControl, focus, %A_LoopField%,
-                send {Ctrl Down}a{Ctrl Up}
-                send {BackSpace}
-                IniRead, oldValue, %A_ScriptDir%\config.ini,Position, %A_LoopField%
-
-
-                send %oldValue%
-               
-            }
+            
         }
 
         Loop, Parse, allVNameAccessibility, "|"
@@ -172,7 +163,7 @@ if(ConfirmCharactersAllReady == 1){
         return
 
     DetectAutomatically:
-        MsgBox, "Au prochain lancement d'une fonctionnalité, le programme essayera de detecter les positions des différents éléments et le sauvegarder.`n Vous pourrez toujours le modifier par la suite"
+        MsgBox, 4096,Detection Automatique, "Au prochain lancement d'une fonctionnalité, le programme essayera de detecter les positions des différents éléments et le sauvegarder.`n Vous pourrez toujours le modifier par la suite"
         Loop, Parse, allVNamePositionOption, "|"
         {
             GuiControl, focus, %A_LoopField%,

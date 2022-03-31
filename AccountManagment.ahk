@@ -35,7 +35,7 @@ AccountManagment(){
 
 
 
-
+	Gui, +AlwaysOnTop
 	Gui, Show, w664 h379, Gestion de vos personnages - DofusMultiAccountTool
 	GuiControl, Focus, Name
 	return
