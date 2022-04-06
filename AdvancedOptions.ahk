@@ -8,6 +8,7 @@ AdvancedOptionsGui(){
     Gui, AdvancedOptions:New,+Resize -MaximizeBox
     allVNameTimerOption = FollowMin|FollowMax|GroupMin|GroupMax|SkipMin|SkipMax|JoinFightMin|JoinFightMax
     allVNamePositionOption = AcceptGroupButtonX|AcceptGroupButtonY|JoinFightButtonX|JoinFightButtonY
+    allVNamePositionFollowAuto = UpDirectionX|UpDirectionY|DownDirectionX|DownDirectionY|LeftDirectionX|LeftDirectionY|RightDirectionX|RightDirectionY
     allVNameAccessibility = ConfirmCharactersAllReady
     ;Chargement des paramètres
 
@@ -40,6 +41,16 @@ AdvancedOptionsGui(){
                 IniWrite, %value%, %A_ScriptDir%\config.ini, Accessibility, %A_LoopField%
                 IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Accessibility, %A_LoopField%
             }
+        }
+
+        Loop,Parse, allVNamePositionFollowAuto, "|"
+        {
+             IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,PositionFollowAuto, %A_LoopField%
+             if(%A_LoopField% == "ERROR"){
+                IniWrite, "", %A_ScriptDir%\config.ini, PositionFollowAuto, %A_LoopField%
+                IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,PositionFollowAuto, %A_LoopField%
+            }
+
         }
 
 	}
@@ -88,15 +99,15 @@ Gui, Add, Text, x272 y289 w60 h20 , Bas
 Gui, Add, Text, x272 y319 w60 h20 , Gauche
 Gui, Add, Text, x362 y239 w30 h20 , X
 Gui, Add, Text, x412 y239 w30 h20 , Y
-Gui, Add, Edit, x352 y259 w50 h20 , 
 Gui, Add, Text, x272 y349 w60 h20 , Droite
-Gui, Add, Edit, x402 y259 w50 h20 , 
-Gui, Add, Edit, x352 y289 w50 h20 , 
-Gui, Add, Edit, x402 y289 w50 h20 , 
-Gui, Add, Edit, x352 y319 w50 h20 , 
-Gui, Add, Edit, x402 y319 w50 h20 , 
-Gui, Add, Edit, x352 y349 w50 h20 , 
-Gui, Add, Edit, x402 y349 w50 h20 , 
+Gui, Add, Edit, x352 y259 w50 h20 vUpDirectionX , %UpDirectionX%
+Gui, Add, Edit, x402 y259 w50 h20 vUpDirectionY , %UpDirectionY%
+Gui, Add, Edit, x352 y289 w50 h20 vDownDirectionX , %DownDirectionX%
+Gui, Add, Edit, x402 y289 w50 h20 vDownDirectionY , %DownDirectionY%
+Gui, Add, Edit, x352 y319 w50 h20 vLeftDirectionX , %LeftDirectionX%
+Gui, Add, Edit, x402 y319 w50 h20 vLeftDirectionY , %LeftDirectionY%
+Gui, Add, Edit, x352 y349 w50 h20 vRightDirectionX , %RightDirectionX%
+Gui, Add, Edit, x402 y349 w50 h20 vRightDirectionY , %RightDirectionY%
 
 if(ConfirmCharactersAllReady == 1){
         GuiControl,, %TextConfirmCharactersAllReady%, 1
@@ -155,6 +166,18 @@ if(ConfirmCharactersAllReady == 1){
             {
                 IniWrite, %value%, %A_ScriptDir%\config.ini, Accessibility, %A_LoopField%
             }
+        }
+
+
+        Loop, Parse, allVNamePositionFollowAuto, "|"
+        {   
+            value := %A_LoopField%
+            valueRound := floor(value)
+            if(valueRound == 0)
+                IniWrite, "", %A_ScriptDir%\config.ini, PositionFollowAuto, %A_LoopField%
+            else
+                IniWrite, %valueRound%, %A_ScriptDir%\config.ini, PositionFollowAuto, %A_LoopField%
+            
         }
 
         Gui, Hide
