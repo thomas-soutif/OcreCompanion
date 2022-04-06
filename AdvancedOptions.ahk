@@ -22,11 +22,8 @@ AdvancedOptionsGui(){
                 IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Timers, %A_LoopField%
             }
         }
-	}
 
-    ifexist, %A_ScriptDir%\config.ini
-	{
-        Loop, Parse, allVNamePositionOption, "|"
+         Loop, Parse, allVNamePositionOption, "|"
         {
             IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Position, %A_LoopField%
              if(%A_LoopField% == "ERROR"){
@@ -34,10 +31,7 @@ AdvancedOptionsGui(){
                 IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Position, %A_LoopField%
             }
         }
-	}
 
-     ifexist, %A_ScriptDir%\config.ini
-	{
         Loop, Parse, allVNameAccessibility, "|"
         {
             IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Accessibility, %A_LoopField%
@@ -47,6 +41,7 @@ AdvancedOptionsGui(){
                 IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Accessibility, %A_LoopField%
             }
         }
+
 	}
 
 
