@@ -641,8 +641,7 @@ SelectCharacter(){
 
 ;Des que l'utilisateur fait un clique droit
 
-RButton::
-Send {RButton}
+~LButton::
 Gui, Main:Submit, NoHide
 if (FollowAutoActive == 0){
 	return
@@ -662,7 +661,7 @@ Loop, Parse, characterNames, "|"
 		;La fenetre actuel est bien celle d'un des personnages
 		;Tout les autres vont aller au même point
 		windowsFinId := characterWindowsId
-		ControlClick x%xpos% y%ypos%, %A_LoopField%
+		;ControlClick x%xpos% y%ypos%, %A_LoopField%
 		break
 	}
 
@@ -674,11 +673,16 @@ if(windowsFinId){
 	;Il s'agit d'un personnage configuré
 	Loop, Parse, characterNames, "|"
 	{
-		if (WinExist(A_LoopField)){
+		characterWindowsId := DetectWindowsByName(A_LoopField)
+		if( characterWindowsId != winid){
+			if (WinExist(A_LoopField)){
 			Random, timerValue, MinvalueTimer, MaxvalueTimer
 			Sleep timerValue
 			ControlClick x%xpos% y%ypos%, %A_LoopField%
 		}
+		}
+
+		
 
 	}
 	
