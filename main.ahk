@@ -20,7 +20,7 @@ SetDefaults(void)
 	MainWindowsH :=454
 	TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
 	FollowAutoActive := 0
-	FollowAutoText = Follow Auto
+	FollowAutoText = Follow Auto (R click)
 START:
 
 if !FileExist("%A_ScriptDir%\config.ini"){
@@ -42,7 +42,7 @@ Gui, Main:Add, Button, x12 y19 w110 h30 gAccountManagment , Personnages
 Gui, Main:Add, Button, x150 y19 w110 h30 gAdvancedOptionsGui , Options avancées
 Gui, Main:Add, GroupBox, x22 y320 w150 h100 , Options rapide
 Gui, Main:Add, GroupBox, x10 y160 w240 h155 , Personnages detectés en jeu
-Gui, Main:Add, CheckBox, x52 y350 w80 h20 vFollowAutoActive , %FollowAutoText%
+Gui, Main:Add, CheckBox, x52 y350 w125 h20 vFollowAutoActive , %FollowAutoText%
 Gui, Main:Add, Text, x180 y392 , Detecter les 
 Gui, Main:Add, Text, x180 y405 , personnages
 ;Gui, Main:Add, Button,disabled x100 y180 w70 h40 , PERSONNAGE2
@@ -641,18 +641,20 @@ SelectCharacter(){
 
 ;Des que l'utilisateur fait un clique droit
 
-MButton::
-MouseGetPos, xpos, ypos
+RButton::
+Send {RButton}
 Gui, Main:Submit, NoHide
 if (FollowAutoActive == 0){
 	return
 }
-
+MouseGetPos, xpos, ypos
 WinGet, winid,, A
 characterNames := GetCharacterNames()
 characterNames = %characterNames%  
 SetTitleMatchMode 2
 windowsFinId := ""
+IniRead, MinvalueTimer, %A_ScriptDir%\config.ini,Timers, FollowMin
+IniRead, MaxvalueTimer, %A_ScriptDir%\config.ini,Timers, FollowMax
 Loop, Parse, characterNames, "|"
 {
 	characterWindowsId := DetectWindowsByName(A_LoopField)
@@ -660,30 +662,23 @@ Loop, Parse, characterNames, "|"
 		;La fenetre actuel est bien celle d'un des personnages
 		;Tout les autres vont aller au même point
 		windowsFinId := characterWindowsId
+		ControlClick x%xpos% y%ypos%, %A_LoopField%
 		break
 	}
 
 }
 
-IniRead, MinvalueTimer, %A_ScriptDir%\config.ini,Timers, FollowMin
-IniRead, MaxvalueTimer, %A_ScriptDir%\config.ini,Timers, FollowMax
+
 
 if(windowsFinId){
 	;Il s'agit d'un personnage configuré
 	Loop, Parse, characterNames, "|"
 	{
-		characterWindowsId := DetectWindowsByName(A_LoopField)
-		if(characterWindowsId != windowsFinId){
-			
-			
-			if (WinExist(A_LoopField)){
-				Random, timerValue, MinvalueTimer, MaxvalueTimer
-				Sleep timerValue
-				ControlClick x%xpos% y%ypos%, %A_LoopField%
-			}
-
+		if (WinExist(A_LoopField)){
+			Random, timerValue, MinvalueTimer, MaxvalueTimer
+			Sleep timerValue
+			ControlClick x%xpos% y%ypos%, %A_LoopField%
 		}
-		
 
 	}
 	
