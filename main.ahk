@@ -78,6 +78,14 @@ totos.Add("10;10")
 totos.Poll()
 getToto := totos.GetAll()
 
+MsgBox, %getToto%
+yui := New DictCustom
+
+yui.Add("test",getToto)
+;yui.Remove("test")
+poi := yui.GetDictRepresentation()
+MsgBox, %poi%
+
 ;Check ou non Follow Auto lorsqu'on affiche pour la première fois le menu
 
 if(FollowAutoActive == 1){

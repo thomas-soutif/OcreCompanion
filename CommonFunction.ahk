@@ -73,7 +73,36 @@ Class ListCustom{
     }
   }
   SetList(listCustom){
-    This.listCustomAttr = listCustom
+    This.listCustomAttr := listCustom
+    return
+  }
+}
+
+
+Class DictCustom{
+
+  dictCustom := Object()
+
+  Add(key,value){
+
+    This.dictCustom[key] := value
+    return This.dictCustom
+  }
+  Remove(key){
+    This.dictCustom.Delete(key)
+    return This.dictCustom
+  }
+
+  Get(key){
+    return This.dictCustom[key]
+  }
+
+  GetDictRepresentation(){
+    final_dict := "{"
+    For key, value in This.dictCustom
+      final_dict := final_dict key ":" value ","
+    final_dict := final_dict "}"
+    return final_dict
   }
 }
 
