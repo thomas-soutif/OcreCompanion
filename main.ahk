@@ -1,7 +1,7 @@
 ﻿#include %A_ScriptDir%\CommonFunction.ahk
 #include %A_ScriptDir%\AccountManagment.ahk
 #include %A_ScriptDir%\AdvancedOptions.ahk
-
+#include %A_ScriptDir%\FollowAutoPosition.ahk
 ;global parameter of Window
 SetDefaults(void)
 {
@@ -99,43 +99,8 @@ GuiClose:
 Quitter:
 ExitApp
 
-DetectWindowsByName(str)
-{
-	; Prend en paramètre une string, et retourne l'id de la fenêtre si cette string est inclue dans l'un des noms de fenêtre Windows. 
-
-	SetTitleMatchMode 2
-	UniqueID := WinExist(str)
-	return UniqueID
-	
-}
 
 
-GetCharacterNames(){
-	
-	IniRead, CharacterNameList, %A_ScriptDir%\config.ini, CharactersList, listCharacters
-	return CharacterNameList
-
-
-
-}
-
-GetCharacterDetectedInGame(){
-	IniRead, CharacterNameList, %A_ScriptDir%\config.ini, CharactersList, listCharacters
-	finalList := "" 
-	Loop, Parse, CharacterNameList, "|"
-	{
-		if (WinExist(A_LoopField)){
-			if (finalList ==""){
-				finalList = %A_LoopField%|
-			}
-			else{
-				finalList = %finalList%%A_LoopField%|
-			}
-		}
-	}
-	return finalList
-
-}
 
 GroupCharacters(){
 	characterNames := GetCharacterNames()

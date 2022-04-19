@@ -41,6 +41,43 @@ get_element_in_list_file(Index,ListFile){
 
 }
 
+
+GetCharacterDetectedInGame(){
+	IniRead, CharacterNameList, %A_ScriptDir%\config.ini, CharactersList, listCharacters
+	finalList := "" 
+	Loop, Parse, CharacterNameList, "|"
+	{
+		if (WinExist(A_LoopField)){
+			if (finalList ==""){
+				finalList = %A_LoopField%|
+			}
+			else{
+				finalList = %finalList%%A_LoopField%|
+			}
+		}
+	}
+	return finalList
+
+}
+
+GetCharacterNames(){
+	
+	IniRead, CharacterNameList, %A_ScriptDir%\config.ini, CharactersList, listCharacters
+	return CharacterNameList
+
+
+
+}
+
+DetectWindowsByName(str)
+{
+	; Prend en paramètre une string, et retourne l'id de la fenêtre si cette string est inclue dans l'un des noms de fenêtre Windows. 
+
+	SetTitleMatchMode 2
+	UniqueID := WinExist(str)
+	return UniqueID
+	
+}
 ;/*
 ;===========================================
 ;  FindText - Capture screen image into text and then find it
