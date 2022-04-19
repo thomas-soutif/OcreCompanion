@@ -28,6 +28,55 @@ list_files(Directory)
 	return files
 }
 
+Class ListCustom{
+  listCustomAttr := "|"
+
+
+  Add(element){
+    if This.listCustomAttr == "|"
+       This.listCustomAttr := element
+    else
+       This.listCustomAttr := This.listCustomAttr "|" element
+    return This.listCustomAttr
+  }
+  Pop(){
+    return This.Remove(1)
+  }
+
+  Poll(){
+    This.Remove(1)
+    return This.GetALL()
+  }
+  Remove(index){
+
+    finalList := New ListCustom
+    listC := This.listCustomAttr
+    Loop, parse, listC , |
+    {
+      If (A_Index != index) {
+        finalList.Add(This.Get(A_Index))
+      }
+    }
+    This.listCustomAttr := finalList.GetAll()
+    return finalList.GetAll()
+  }
+  GetAll(){
+    return This.listCustomAttr
+  }
+  Get(index){
+    listC := This.listCustomAttr
+    Loop, parse, listC, |
+    {
+      If (index = A_Index) {
+      return A_LoopField
+      }
+    }
+  }
+  SetList(listCustom){
+    This.listCustomAttr = listCustom
+  }
+}
+
 get_element_in_list_file(Index,ListFile){
   Loop, Parse, ListFile, "|"
   {
@@ -78,6 +127,34 @@ DetectWindowsByName(str)
 	return UniqueID
 	
 }
+
+Class PositionScreen{
+
+  xPosition := 0
+  yPosition := 0
+
+PositionScreen(positionX=0, positionY=0){
+  This.xPosition := positionX
+  This.yPosition := positionY
+
+}
+
+  SavePosition(positionX, positionY){
+    This.xPosition := positionX
+    This.yPosition := positionY 
+    
+    }
+
+  GetPosition(){
+    return This.xPosition ";" This.yPosition
+  }
+
+  
+
+
+}
+
+
 ;/*
 ;===========================================
 ;  FindText - Capture screen image into text and then find it

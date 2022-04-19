@@ -21,6 +21,7 @@ SetDefaults(void)
 	TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
 	FollowAutoActive := 0
 	FollowAutoText = Follow Auto (R click)
+	ListPositionFollowCharacter := New ListCustom
 START:
 
 if !FileExist("%A_ScriptDir%\config.ini"){
@@ -64,6 +65,18 @@ characterNames = %characterNames%
 
 ;MsgBox, %idd%
 
+
+toto := New PositionScreen
+toto.SavePosition(30,40)
+totot := toto.GetPosition()
+
+
+totos := New ListCustom
+
+totos.Add("74;45")
+totos.Add("10;10")
+totos.Poll()
+getToto := totos.GetAll()
 
 ;Check ou non Follow Auto lorsqu'on affiche pour la première fois le menu
 
@@ -641,9 +654,11 @@ if(windowsFinId){
 		characterWindowsId := DetectWindowsByName(A_LoopField)
 		if( characterWindowsId != winid){
 			if (WinExist(A_LoopField)){
-			Random, timerValue, MinvalueTimer, MaxvalueTimer
-			Sleep timerValue
-			ControlClick x%xpos% y%ypos%, %A_LoopField%
+			;Random, timerValue, MinvalueTimer, MaxvalueTimer
+			;Sleep timerValue
+			;ControlClick x%xpos% y%ypos%, %A_LoopField%
+
+			;On va écrire
 		}
 		}
 
@@ -653,3 +668,14 @@ if(windowsFinId){
 	
 }
 return
+
+
+SetTimer,VerifyNewPositionFollowAuto, 10000
+
+
+VerifyNewPositionFollowAuto(){
+        ;MsgBox, %MainWindowsX%
+return
+}
+
+
