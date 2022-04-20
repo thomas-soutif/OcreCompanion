@@ -22,6 +22,7 @@ SetDefaults(void)
 	FollowAutoActive := 0
 	FollowAutoText = Follow Auto (R click)
 	DictPositionFollowCharacter := New DictCustom
+	VerifyNewPositionFollowAutoLock := 0
 START:
 
 if !FileExist("%A_ScriptDir%\config.ini"){
@@ -77,7 +78,7 @@ Gui, Main:+AlwaysOnTop
 Gui, Main:Show, x%MainWindowsX% y%MainWindowsY% w%MainWindowsW% h%MainWindowsH% , DofusMultiAccountTool
 
 
-SetTimer,testAuto, 1000
+SetTimer,VerifyNewPositionFollowAuto, 1000
 Return
 
 GuiEscape:
@@ -659,13 +660,20 @@ if(windowsFinId){
 return
 
 
-SetTimer,VerifyNewPositionFollowAuto, 10000
+
+
 VerifyNewPositionFollowAuto(){
 	global
+	if(VerifyNewPositionFollowAutoLock == 1)
+		return
+
 	Gui, Main:Submit, NoHide
 	if (FollowAutoActive == 0){
 		return
 	}
+
+	VerifyNewPositionFollowAutoLock := 1
+
 	SetTitleMatchMode 2
 	characterNames := GetCharacterDetectedInGame()
 	characterNames = %characterNames%  
@@ -709,8 +717,9 @@ VerifyNewPositionFollowAuto(){
 			;MsgBox, %xPosition%;%yPosition%
 
 			Random, timerValue, FollowMinTimer, FollowMaxTimer
-			ControlClick x%xPosition% y%yPosition%,%A_LoopField%
 			Sleep timerValue
+			ControlClick x%xPosition% y%yPosition%,%A_LoopField%
+			
 			;customListPosition := customList.GetAll()
 			
 			
@@ -719,6 +728,7 @@ VerifyNewPositionFollowAuto(){
 
 	}
 
+	VerifyNewPositionFollowAutoLock  := 0
 }
 
 
