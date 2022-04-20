@@ -44,8 +44,9 @@ Class ListCustom{
   }
 
   Poll(){
+    value := This.Get(1)
     This.Remove(1)
-    return This.GetALL()
+    return value
   }
   Remove(index){
 
@@ -54,7 +55,7 @@ Class ListCustom{
     Loop, parse, listC , |
     {
       If (A_Index != index) {
-        finalList.Add(This.Get(A_Index))
+        finalList.Add(A_LoopField)
       }
     }
     This.listCustomAttr := finalList.GetAll()
@@ -73,7 +74,10 @@ Class ListCustom{
     }
   }
   SetList(listCustom){
-    This.listCustomAttr := listCustom
+    if (listCustom == "")
+      This.listCustomAttr := "|"
+    else
+      This.listCustomAttr := listCustom
     return
   }
 }
@@ -89,7 +93,7 @@ Class DictCustom{
     return This.dictCustom
   }
   Remove(key){
-    This.dictCustom.Delete(key)
+    This.dictCustom := This.dictCustom.Delete(key)
     return This.dictCustom
   }
 
@@ -171,13 +175,24 @@ PositionScreen(positionX=0, positionY=0){
   SavePosition(positionX, positionY){
     This.xPosition := positionX
     This.yPosition := positionY 
-    
+    return This.GetPosition
     }
 
   GetPosition(){
     return This.xPosition ";" This.yPosition
   }
+  GetX(){
+    return This.xPosition
+  }
+  GetY(){
+    return This.yPosition
+  }
 
+  LoadPosition(position){
+    StringSplit, positionArray, position,";"
+    This.xPosition := positionArray1
+    This.yPosition := positionArray2
+  }
   
 
 

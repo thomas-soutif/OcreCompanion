@@ -21,7 +21,7 @@ SetDefaults(void)
 	TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
 	FollowAutoActive := 0
 	FollowAutoText = Follow Auto (R click)
-	ListPositionFollowCharacter := New ListCustom
+	DictPositionFollowCharacter := New DictCustom
 START:
 
 if !FileExist("%A_ScriptDir%\config.ini"){
@@ -59,33 +59,6 @@ Gui, Add, Picture, x100 y80 w70 h70 gJoinFightForAllCharacters, %join_fight_icon
 Gui, Add, Picture, x20 y80 w70 h70  gFightReadyForAllCharacters, %ready_fight_imageLocation%
 idd := DetectWindowsByName("Ankama")
 
-;Detection des personnages configurés et récupération de leur id de fenêtre
-characterNames := GetCharacterNames()
-characterNames = %characterNames%
-
-;MsgBox, %idd%
-
-
-toto := New PositionScreen
-toto.SavePosition(30,40)
-totot := toto.GetPosition()
-
-
-totos := New ListCustom
-
-totos.Add("74;45")
-totos.Add("10;10")
-totos.Poll()
-getToto := totos.GetAll()
-
-MsgBox, %getToto%
-yui := New DictCustom
-
-yui.Add("test",getToto)
-;yui.Remove("test")
-poi := yui.GetDictRepresentation()
-MsgBox, %poi%
-
 ;Check ou non Follow Auto lorsqu'on affiche pour la première fois le menu
 
 if(FollowAutoActive == 1){
@@ -96,15 +69,6 @@ if(FollowAutoActive == 1){
 }
 
 
-
-;MsgBox % List(characterNames,1)
-
-Loop, Parse, characterNames, "|"
-{
-	;Pour chaque personnage
-	;MsgBox, %A_LoopField%
-
-}
 CreateShowCharacterBox()
 
 ;MsgBox, "Stop"
@@ -113,6 +77,7 @@ Gui, Main:+AlwaysOnTop
 Gui, Main:Show, x%MainWindowsX% y%MainWindowsY% w%MainWindowsW% h%MainWindowsH% , DofusMultiAccountTool
 
 
+SetTimer,testAuto, 1000
 Return
 
 GuiEscape:
@@ -633,7 +598,7 @@ if (FollowAutoActive == 0){
 	return
 }
 MouseGetPos, xpos, ypos
-WinGet, winid,, A
+MouseGetPos, , , winid
 characterNames := GetCharacterNames()
 characterNames = %characterNames%  
 SetTitleMatchMode 2
@@ -656,6 +621,7 @@ Loop, Parse, characterNames, "|"
 
 
 if(windowsFinId){
+	
 	;Il s'agit d'un personnage configuré
 	Loop, Parse, characterNames, "|"
 	{
@@ -666,7 +632,22 @@ if(windowsFinId){
 			;Sleep timerValue
 			;ControlClick x%xpos% y%ypos%, %A_LoopField%
 
-			;On va écrire
+			;On va écrire dans le dictionnaire la prochaine position 
+			
+			currentPositionsWaiting := DictPositionFollowCharacter.Get(A_LoopField)
+			customList := New ListCustom
+			if(currentPositionsWaiting != ""){
+				customList.SetList(currentPositionsWaiting)
+			}
+				
+			;MsgBox, %customList%
+			positionScreen := New PositionScreen
+			positionScreen.SavePosition(xpos,ypos)
+			positionToWrite:= positionScreen.GetPosition()
+			customList.Add(positionToWrite)
+
+			customListPosition := customList.GetAll()
+			DictPositionFollowCharacter.Add(A_LoopField,customListPosition)
 		}
 		}
 
@@ -678,12 +659,93 @@ if(windowsFinId){
 return
 
 
-SetTimer,VerifyNewPositionFollowAuto, 10000
-
+;SetTimer,VerifyNewPositionFollowAuto, 10000
+SetTimer,testAuto, 10000
 
 VerifyNewPositionFollowAuto(){
-        ;MsgBox, %MainWindowsX%
+	SetTitleMatchMode 2
+	For key, value in DictPositionFollowCharacter{
+		customList := New ListCustom
+		if(WinExist(key)){
+			; Le personnage est en ligne
+			if(value){
+				customList.SetList(value)
+				position := customList.Poll()
+				;On a à présent la position à cliquer qui ressemble à "24;44"
+				StringSplit, positionArray, position,;
+				xPosition := positionArray1
+				yPosition := positionArray2
+				ControlClick x%xPosition% y%yPosition%,value
+				DictPositionFollowCharacter.Remove(key)
+				DictPositionFollowCharacter.Add(key,position)
+				}
+			}
+			
+	}
+    	
+        
 return
+}
+
+testAuto(){
+	global
+	Gui, Main:Submit, NoHide
+	if (FollowAutoActive == 0){
+		return
+	}
+	SetTitleMatchMode 2
+	characterNames := GetCharacterDetectedInGame()
+	characterNames = %characterNames%  
+	IniRead,FollowMinTimer,%A_ScriptDir%\config.ini,Timers, FollowMin
+	if(FollowMinTimer == "ERROR"){
+			IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Timers, FollowMin
+			IniWrite, %value%, %A_ScriptDir%\config.ini, Timers, FollowMin
+			IniRead,FollowMinTimer,%A_ScriptDir%\config.ini,Timers, FollowMin
+		}
+	IniRead,FollowMaxTimer,%A_ScriptDir%\config.ini,Timers, FollowMax
+	if(FollowMaxTimer == "ERROR"){
+			IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Timers, FollowMax
+			IniWrite, %value%, %A_ScriptDir%\config.ini, Timers, FollowMax
+			IniRead,FollowMinTimer,%A_ScriptDir%\config.ini,Timers, FollowMin
+		}
+
+	Loop, Parse, characterNames, "|"
+	{
+		if(WinExist(A_LoopField)){
+			currentPositionsWaiting := DictPositionFollowCharacter.Get(A_LoopField)
+			customList := New ListCustom
+			;MsgBox, %currentPositionsWaiting%
+			if(currentPositionsWaiting == "" or currentPositionsWaiting == "|"){
+				continue
+			}
+			customList.SetList(currentPositionsWaiting)
+			customListPosition := customList.GetAll()
+			;MsgBox, %customListPosition%
+			position := customList.Get(1)
+			customList.Pop()
+			customListPosition := customList.GetAll()
+			
+			DictPositionFollowCharacter.Add(A_LoopField,customListPosition)
+			dictContent := DictPositionFollowCharacter.GetDictRepresentation()
+			
+			;MsgBox, %position%
+			positionScreen := New PositionScreen
+			positionScreen.LoadPosition(position)
+			xPosition := positionScreen.GetX()
+			yPosition := positionScreen.GetY()
+			;MsgBox, %xPosition%;%yPosition%
+
+			Random, timerValue, FollowMinTimer, FollowMaxTimer
+			ControlClick x%xPosition% y%yPosition%,%A_LoopField%
+			Sleep timerValue
+			;customListPosition := customList.GetAll()
+			
+			
+
+		}
+
+	}
+
 }
 
 
