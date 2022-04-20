@@ -659,35 +659,8 @@ if(windowsFinId){
 return
 
 
-;SetTimer,VerifyNewPositionFollowAuto, 10000
-SetTimer,testAuto, 10000
-
+SetTimer,VerifyNewPositionFollowAuto, 10000
 VerifyNewPositionFollowAuto(){
-	SetTitleMatchMode 2
-	For key, value in DictPositionFollowCharacter{
-		customList := New ListCustom
-		if(WinExist(key)){
-			; Le personnage est en ligne
-			if(value){
-				customList.SetList(value)
-				position := customList.Poll()
-				;On a à présent la position à cliquer qui ressemble à "24;44"
-				StringSplit, positionArray, position,;
-				xPosition := positionArray1
-				yPosition := positionArray2
-				ControlClick x%xPosition% y%yPosition%,value
-				DictPositionFollowCharacter.Remove(key)
-				DictPositionFollowCharacter.Add(key,position)
-				}
-			}
-			
-	}
-    	
-        
-return
-}
-
-testAuto(){
 	global
 	Gui, Main:Submit, NoHide
 	if (FollowAutoActive == 0){
