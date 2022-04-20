@@ -22,7 +22,9 @@ SetDefaults(void)
 	FollowAutoActive := 0
 	FollowAutoText = Follow Auto (R click)
 	DictPositionFollowCharacter := New DictCustom
+	DictPositionFollowCharacterTick := New DictCustom
 	VerifyNewPositionFollowAutoLock := 0
+	timerVerifyNewPosition := 1000
 START:
 
 if !FileExist("%A_ScriptDir%\config.ini"){
@@ -78,7 +80,7 @@ Gui, Main:+AlwaysOnTop
 Gui, Main:Show, x%MainWindowsX% y%MainWindowsY% w%MainWindowsW% h%MainWindowsH% , DofusMultiAccountTool
 
 
-SetTimer,VerifyNewPositionFollowAuto, 1000
+SetTimer,VerifyNewPositionFollowAuto, %timerVerifyNewPosition%
 Return
 
 GuiEscape:
@@ -664,6 +666,8 @@ return
 
 VerifyNewPositionFollowAuto(){
 	global
+
+	
 	if(VerifyNewPositionFollowAutoLock == 1)
 		return
 
@@ -673,7 +677,8 @@ VerifyNewPositionFollowAuto(){
 	}
 
 	VerifyNewPositionFollowAutoLock := 1
-
+	tickMax := 3000 / timerVerifyNewPosition
+	tickMax := floor(tickMax)
 	SetTitleMatchMode 2
 	characterNames := GetCharacterDetectedInGame()
 	characterNames = %characterNames%  
@@ -693,12 +698,38 @@ VerifyNewPositionFollowAuto(){
 	Loop, Parse, characterNames, "|"
 	{
 		if(WinExist(A_LoopField)){
+			
+
+			
+			
+			;MsgBox, %tickCharacter%
 			currentPositionsWaiting := DictPositionFollowCharacter.Get(A_LoopField)
 			customList := New ListCustom
 			;MsgBox, %currentPositionsWaiting%
 			if(currentPositionsWaiting == "" or currentPositionsWaiting == "|"){
+				DictPositionFollowCharacterTick.Add(A_LoopField,tickMax)
 				continue
 			}
+
+
+			;On vérifie le tick
+			tickCharacter := DictPositionFollowCharacterTick.Get(A_LoopField)
+			if(tickCharacter != ""){
+				if(tickCharacter < tickMax){
+					tickCharacter := tickCharacter + 1
+					;MsgBox, %tickCharacter%
+					DictPositionFollowCharacterTick.Add(A_LoopField,tickCharacter)
+					Continue
+					;On ignore la position du personnage car il ne s'est pas écoulé assez de temps
+				}else{
+					DictPositionFollowCharacterTick.Add(A_LoopField,0)
+
+				}
+				
+			}else{
+				DictPositionFollowCharacterTick.Add(A_LoopField,0)
+			}
+
 			customList.SetList(currentPositionsWaiting)
 			customListPosition := customList.GetAll()
 			;MsgBox, %customListPosition%
@@ -720,6 +751,7 @@ VerifyNewPositionFollowAuto(){
 			Sleep timerValue
 			ControlClick x%xPosition% y%yPosition%,%A_LoopField%
 			
+
 			;customListPosition := customList.GetAll()
 			
 			
