@@ -161,6 +161,7 @@ DetectWindowsByName(str)
 	
 }
 
+
 Class PositionScreen{
 
   xPosition := 0

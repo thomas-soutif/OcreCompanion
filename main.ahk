@@ -20,7 +20,9 @@ SetDefaults(void)
 	MainWindowsH :=454
 	TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
 	FollowAutoActive := 0
+	FightModeActive := 0
 	FollowAutoText = Follow Auto (R click)
+	FightModeText = Mode combat
 	DictPositionFollowCharacter := New DictCustom
 	DictPositionFollowCharacterTick := New DictCustom
 	VerifyNewPositionFollowAutoLock := 0
@@ -55,7 +57,7 @@ Gui, Main:Add, Text, x180 y405 , personnages
 ;Gui, Main:Add, Button,disabled x22 y240 w70 h40 , PERSONNAGE4
 ;Gui, Main:Add, Button, x180 y77 w75 h75 gGroupCharacters gGroupCharacters , GROUPER
 ;Gui, Main:Add, Button,disabled x22 y179 w100 h40 , PRET
-Gui, Main:Add, CheckBox, disabled x52 y370 w90 h30 , Mode combat
+Gui, Main:Add, CheckBox, x52 y370 w90 h30 vFightModeActive ,%FightModeText%
 Gui, Add, Picture, x180 y350 w50 h40 gReloadGui, %dofus_icon_imageLocation%
 Gui, Add, Picture, x180 y77 w75 h75 gGroupCharacters, %group_icon_imageLocation%
 Gui, Add, Picture, x100 y80 w70 h70 gJoinFightForAllCharacters, %join_fight_icon_imageLocation%
@@ -72,6 +74,22 @@ if(FollowAutoActive == 1){
 }
 
 
+if(FightModeActive == 1){
+        GuiControl,, %FightModeText% , 1
+        
+}else{
+    GuiControl,, %FightModeText%, 0
+}
+
+
+DetectHiddenWindows, On
+Script_Hwnd := WinExist("ahk_class AutoHotkey ahk_pid " DllCall("GetCurrentProcessId"))
+DetectHiddenWindows, Off
+; Register shell hook to detect flashing windows.
+DllCall("RegisterShellHookWindow", "uint", Script_Hwnd)
+OnMessage(DllCall("RegisterWindowMessage", "str", "SHELLHOOK"), "ShellEvent")
+;...
+
 CreateShowCharacterBox()
 
 ;MsgBox, "Stop"
@@ -81,6 +99,7 @@ Gui, Main:Show, x%MainWindowsX% y%MainWindowsY% w%MainWindowsW% h%MainWindowsH% 
 
 
 SetTimer,VerifyNewPositionFollowAuto, %timerVerifyNewPosition%
+
 Return
 
 GuiEscape:
@@ -661,11 +680,40 @@ if(windowsFinId){
 }
 return
 
+ShellEvent(wParam, lParam) {
+	global
+	Gui, Main:Submit, NoHide
+	if(FightModeActive == 0)
+			return
+    if (wParam = 0x8006) ; HSHELL_FLASH
+    {   ; lParam contains the ID of the window which flashed:
+        ;WinActivate, ahk_id %lParam%
+		
+		WinGetTitle wt, ahk_id %lParam%
+		characterNames := GetCharacterDetectedInGame()
+		characterNames = %characterNames%
+		SetTitleMatchMode 2
+		Loop, Parse, characterNames, "|"
+		{
+			WinGet, id_character_w, , %A_LoopField%
+			if(id_character_w == lParam){
+				if(WinExist(A_LoopField)){
+					WinActivate
+				}
+			}
+		}
 
+
+    }
+}
 
 
 VerifyNewPositionFollowAuto(){
 	global
+
+	
+
+
 
 	
 	if(VerifyNewPositionFollowAutoLock == 1)
@@ -763,4 +811,20 @@ VerifyNewPositionFollowAuto(){
 	VerifyNewPositionFollowAutoLock  := 0
 }
 
+
+
+FollowAutoActiveClick(){
+	Gui, Main:Submit, NoHide
+	if(FollowAutoActive == 0)
+	{
+		;On retire toute les positions des personnages
+		characterNames := GetCharacterDetectedInGame()
+		characterNames = %characterNames%  
+		Loop, Parse, characterNames, "|"
+		{
+			DictPositionFollowCharacter.Add(A_LoopField,"|")
+		}
+
+	}
+}
 
