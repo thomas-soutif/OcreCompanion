@@ -10,6 +10,7 @@ AdvancedOptionsGui(){
     allVNamePositionOption = AcceptGroupButtonX|AcceptGroupButtonY|JoinFightButtonX|JoinFightButtonY
     allVNamePositionFollowAuto = UpDirectionX|UpDirectionY|DownDirectionX|DownDirectionY|LeftDirectionX|LeftDirectionY|RightDirectionX|RightDirectionY
     allVNameAccessibility = ConfirmCharactersAllReady
+    allVNamePositionResolution = AcceptGroupButtonResolution|JoinFightButtonResolution
     ;Chargement des paramètres
 
     ifexist, %A_ScriptDir%\config.ini
@@ -52,6 +53,14 @@ AdvancedOptionsGui(){
             }
 
         }
+        Loop,Parse, allVNamePositionResolution, "|"
+        {
+             IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,PositionResolution, %A_LoopField%
+             if(%A_LoopField% == "ERROR"){
+                %A_LoopField% := ""
+            }
+
+        }
 
 	}
 
@@ -82,8 +91,10 @@ Gui, Add, Text, x352 y29 w30 h20 , X
 Gui, Add, Text, x402 y29 w30 h20 , Y
 Gui, Add, Edit, x342 y49 w50 h20 vAcceptGroupButtonX, %AcceptGroupButtonX%
 Gui, Add, Edit, x392 y49 w50 h20 vAcceptGroupButtonY, %AcceptGroupButtonY%
+Gui, Add, Text, x448 y52 w72 h20 , (%AcceptGroupButtonResolution%)
 Gui, Add, Edit, x342 y85 w50 h20 vJoinFightButtonX, %JoinFightButtonX%
 Gui, Add, Edit, x392 y85 w50 h20 vJoinFightButtonY, %JoinFightButtonY%
+Gui, Add, Text, x448 y87 w72 h20 , (%JoinFightButtonResolution%)
 Gui, Add, Text, x272 y49 w60 h30 , Accepter (Groupe)
 Gui, Add, Text, x272 y85 w60 h30 , Rejoindre (Fight)
 Gui, Add, Button, x262 y179 w210 h30 gDetectAutomatically, Detecter automatiquement
