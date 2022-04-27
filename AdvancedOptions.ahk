@@ -77,7 +77,7 @@ Gui, Add, Text, x32 y140 w80 h30 , Rejoindre (fight)
 Gui, Add, Edit, x122 y140 w50 h20 vJoinFightMin, %JoinFightMin%
 Gui, Add, Edit, x172 y140 w50 h20 vJoinFightMax, %JoinFightMax%
 Gui, Add, Button, x32 y309 w100 h40 gSaveAdvancedOptions, Sauvegarder
-Gui, Add, GroupBox, x262 y19 w210 h160 , Position
+Gui, Add, GroupBox, x262 y19 w270 h150 , Position
 Gui, Add, Text, x352 y29 w30 h20 , X
 Gui, Add, Text, x402 y29 w30 h20 , Y
 Gui, Add, Edit, x342 y49 w50 h20 vAcceptGroupButtonX, %AcceptGroupButtonX%
@@ -87,27 +87,26 @@ Gui, Add, Edit, x392 y85 w50 h20 vJoinFightButtonY, %JoinFightButtonY%
 Gui, Add, Text, x272 y49 w60 h30 , Accepter (Groupe)
 Gui, Add, Text, x272 y85 w60 h30 , Rejoindre (Fight)
 Gui, Add, Button, x262 y179 w210 h30 gDetectAutomatically, Detecter automatiquement
-Gui, Add, GroupBox, x492 y19 w180 h160 , Accessibilité
 Gui, Add, Edit, x572 y69 w-594 h-200 , Edit
-Gui, Add, CheckBox, x502 y49 w160 h40 vConfirmCharactersAllReady ,%TextConfirmCharactersAllReady%
 Gui, Add, Button, x22 y179 w100 h40 , Reset Default
-;Gui, Add, Button, x492 y179 w100 h40 , Reset Default
 Gui, Add, GroupBox, x262 y219 w210 h160 , Follow auto position
-Gui, Add, Button, disabled x262 y379 w210 h30 , Configurer (pas utilisé)
+Gui, Add, Button, x262 y379 w210 h30 disabled, Configurer (pas utilisé)
 Gui, Add, Text, x272 y259 w60 h20 , Haut
 Gui, Add, Text, x272 y289 w60 h20 , Bas
 Gui, Add, Text, x272 y319 w60 h20 , Gauche
 Gui, Add, Text, x362 y239 w30 h20 , X
 Gui, Add, Text, x412 y239 w30 h20 , Y
 Gui, Add, Text, x272 y349 w60 h20 , Droite
-Gui, Add, Edit, disabled x352 y259 w50 h20 vUpDirectionX , %UpDirectionX%
-Gui, Add, Edit, disabled x402 y259 w50 h20 vUpDirectionY , %UpDirectionY%
-Gui, Add, Edit, disabled x352 y289 w50 h20 vDownDirectionX , %DownDirectionX%
-Gui, Add, Edit, disabled x402 y289 w50 h20 vDownDirectionY , %DownDirectionY%
-Gui, Add, Edit, disabled x352 y319 w50 h20 vLeftDirectionX , %LeftDirectionX%
-Gui, Add, Edit, disabled x402 y319 w50 h20 vLeftDirectionY , %LeftDirectionY%
-Gui, Add, Edit, disabled x352 y349 w50 h20 vRightDirectionX , %RightDirectionX%
-Gui, Add, Edit, disabled x402 y349 w50 h20 vRightDirectionY , %RightDirectionY%
+Gui, Add, Edit, x352 y259 w50 h20 disabled vUpDirectionX, %UpDirectionX%
+Gui, Add, Edit, x402 y259 w50 h20 disabled vUpDirectionY, %UpDirectionY%
+Gui, Add, Edit, x352 y289 w50 h20 disabled vDownDirectionX, %DownDirectionX%
+Gui, Add, Edit, x402 y289 w50 h20 disabled vDownDirectionY, %DownDirectionY%
+Gui, Add, Edit, x352 y319 w50 h20 disabled vLeftDirectionX, %LeftDirectionX%
+Gui, Add, Edit, x402 y319 w50 h20 disabled vLeftDirectionY, %LeftDirectionY%
+Gui, Add, Edit, x352 y349 w50 h20 disabled vRightDirectionX, %RightDirectionX%
+Gui, Add, Edit, x402 y349 w50 h20 disabled vRightDirectionY, %RightDirectionY%
+Gui, Add, GroupBox, x542 y19 w180 h150 , Accessibilité
+Gui, Add, CheckBox, x552 y49 w160 h40 , %TextConfirmCharactersAllReady%
 
 if(ConfirmCharactersAllReady == 1){
         GuiControl,, %TextConfirmCharactersAllReady%, 1
@@ -120,7 +119,7 @@ if(ConfirmCharactersAllReady == 1){
 
 
     Gui, +AlwaysOnTop
-    Gui, Show, w680 h430, Options avancees - DofusMultiAccountTool
+    Gui, Show, w750 h430, Options avancees - DofusMultiAccountTool
 
 
 
