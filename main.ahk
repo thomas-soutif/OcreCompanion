@@ -21,8 +21,10 @@ SetDefaults(void)
 	TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
 	FollowAutoActive := 0
 	FightModeActive := 0
+	NoDelayActive :=0
 	FollowAutoText = Follow Auto (R click)
 	FightModeText = Mode combat
+	NoDelayText = No Delay (R click)
 	DictPositionFollowCharacter := New DictCustom
 	DictPositionFollowCharacterTick := New DictCustom
 	VerifyNewPositionFollowAutoLock := 0
@@ -46,13 +48,13 @@ join_fight_icon_imageLocation = %A_ScriptDir%\images\join_fight_icon.png
 Gui, Main:New, +Resize -MaximizeBox
 Gui, Main:Add, Button, x12 y19 w110 h30 gAccountManagment , Personnages
 Gui, Main:Add, Button, x150 y19 w110 h30 gAdvancedOptionsGui , Options avancées
-Gui, Main:Add, GroupBox, x22 y320 w150 h100 , Options rapide
+Gui, Main:Add, GroupBox, x22 y320 w150 h110 , Options rapide
 Gui, Main:Add, GroupBox, x10 y160 w240 h155 , Personnages detectés en jeu
-Gui, Main:Add, CheckBox, x52 y350 w125 h20 vFollowAutoActive , %FollowAutoText%
+Gui, Main:Add, CheckBox, x40 y350 w125 h20 vFollowAutoActive gFollowAutoActiveClick , %FollowAutoText%
 Gui, Main:Add, Text, x180 y392 , Detecter les 
 Gui, Main:Add, Text, x180 y405 , personnages
-Gui, Main:Add, CheckBox, x52 y370 w90 h30 vFightModeActive ,%FightModeText%
-
+Gui, Main:Add, CheckBox, x40 y375 w90 h20 vFightModeActive ,%FightModeText%
+Gui, Main:Add, CheckBox, disabled x40 y400 w125 h20 vNoDelayActive gNoDelayClick ,%NoDelayText%
 Gui, Add, Picture, x180 y350 w50 h40 gReloadGui, %dofus_icon_imageLocation%
 Gui, Add, Picture, x180 y77 w75 h75 gGroupCharacters, %group_icon_imageLocation%
 Gui, Add, Picture, x100 y80 w70 h70 gJoinFightForAllCharacters, %join_fight_icon_imageLocation%
@@ -74,6 +76,13 @@ if(FightModeActive == 1){
         
 }else{
     GuiControl,, %FightModeText%, 0
+}
+
+if(NoDelayActive == 1){
+        GuiControl,, %NoDelayText% , 1
+        
+}else{
+    GuiControl,, %NoDelayText%, 0
 }
 
 
@@ -743,11 +752,6 @@ ShellEvent(wParam, lParam) {
 VerifyNewPositionFollowAuto(){
 	global
 
-	
-
-
-
-	
 	if(VerifyNewPositionFollowAutoLock == 1)
 		return
 
@@ -846,9 +850,11 @@ VerifyNewPositionFollowAuto(){
 
 
 FollowAutoActiveClick(){
+	global
 	Gui, Main:Submit, NoHide
 	if(FollowAutoActive == 0)
 	{
+		
 		;On retire toute les positions des personnages
 		characterNames := GetCharacterDetectedInGame()
 		characterNames = %characterNames%  
@@ -858,5 +864,13 @@ FollowAutoActiveClick(){
 		}
 
 	}
+}
+
+NoDelayClick(){
+	global
+	Gui, Main:Submit, NoHide
+	if(NoDelayActive == 1){
+		MsgBox,4096, Mode no delay prévention, "Attention, le mode delay permet de reproduire instantanément tout vos clicks sur vos autres personnages. `n Utilisez le pour accepter vos quetes,les valider, mais évitez de vous déplacer avec car c'est passible de bannissement. "
+}
 }
 
