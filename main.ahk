@@ -225,6 +225,9 @@ GroupCharacters(){
 								;On sauvegarde la position trouvé
 								IniWrite, %X%, %A_ScriptDir%\config.ini, Position, AcceptGroupButtonX
 								IniWrite, %Y%, %A_ScriptDir%\config.ini, Position, AcceptGroupButtonY
+								;On sauvegarde la résolution utilisé pour cette position
+								resolution := A_ScreenWidth "x" A_ScreenHeight
+								 IniWrite, %resolution%, %A_ScriptDir%\config.ini, PositionResolution, AcceptGroupButton
 								TextEncrypt := ""
 								FindText().Click(X, Y, "L")
 								try_num := 10
@@ -237,21 +240,24 @@ GroupCharacters(){
 						}
 						if(TextEncrypt){
 							;Alors la detection automatique n'a pas marché. On va alors demander à l'utilisateur de cliquer sur le bouton Accepter pour faire les reglages
-							MsgBox 4096, Detection manuel, "Nous n'avons pas pu cette fois detecté automatiquement la position du bouton Accepter.`n Après avoir appuyer sur le bouton Ok de cette popup, faites un clique gauche sur le bouton accepter sur votre fenêtre de jeu afin que nous enregistrions la position.` Vous avez 10 secondes pour effectuer cette action, après celà le script s'annulera."
-							KeyWait, LButton , D T10
+							MsgBox 4096, Detection manuel, "Nous n'avons pas pu cette fois detecté automatiquement la position du bouton Accepter.`n Après avoir appuyer sur le bouton Ok de cette popup, mettez votre souris sur le bouton accepter sur votre fenêtre de jeu et appuyer sur la touche Z de votre clavier afin que nous enregistrions la position.`n Vous avez 10 secondes pour effectuer cette action, après celà le script s'annulera."
+							KeyWait, z , D T10
 							if(ErrorLevel == 1){
 								;L'utilisateur n'a pas appuyé sur le bon bouton au bon moment
-								MsgBox, 4096, Annulation du script, "Il semblerait que vous n'ayez pas cliqué sur le bouton accepté ! Annulation du script."
+								MsgBox, 4096, Annulation du script, "Il semblerait que vous n'ayez pas appuyé sur la touche Z de votre clavier ! Annulation du script."
 								return
 							}
 							MouseGetPos, MouseX, MouseY, MouseWin, MouseCtl, 2
 							IniWrite, %MouseX%, %A_ScriptDir%\config.ini, Position, AcceptGroupButtonX
 							IniWrite, %MouseY%, %A_ScriptDir%\config.ini, Position, AcceptGroupButtonY
+							;On sauvegarde la résolution utilisé pour cette position
+							resolution := A_ScreenWidth "x" A_ScreenHeight
+							IniWrite, %resolution%, %A_ScriptDir%\config.ini, PositionResolution, AcceptGroupButton
 							TextEncrypt := ""
 							; On va appuyer pour ce cas ici sur le bouton accepter
 							Sleep, 500
 							FindText().Click(MouseX, MouseY, "L")
-							
+							MsgBox,"Nous avons bien enregistré la position du bouton accepté. `n Nous allons finir de grouper le reste de vos personnages. `n Si ça ne le fait pas automatiquement, relancer la fonctionnalité d'ici quelques secondes."
 							
 
 						}
@@ -283,6 +289,7 @@ GroupCharacters(){
 
 	
 	}
+	MsgBox, 4096, Fin du script,"Fin du script pour le groupage automatique."
 	return ""
 }
 
@@ -364,6 +371,9 @@ JoinFightForAllCharacters(){
 						;On sauvegarde la position trouvé
 						IniWrite, %X%, %A_ScriptDir%\config.ini, Position, JoinFightButtonX
 						IniWrite, %Y%, %A_ScriptDir%\config.ini, Position, JoinFightButtonY
+						;On sauvegarde la résolution utilisé pour cette position
+						resolution := A_ScreenWidth "x" A_ScreenHeight
+						IniWrite, %resolution%, %A_ScriptDir%\config.ini, PositionResolution, JoinFightButton
 						TextEncrypt := ""
 						;FindText().Click(X, Y, "L")
 						try_num := 10
@@ -382,21 +392,24 @@ JoinFightForAllCharacters(){
 
 		if(TextEncrypt){
 			;Alors la detection automatique n'a pas marché. On va alors demander à l'utilisateur de cliquer sur le bouton Rejoindre pour faire les reglages
-			MsgBox 4096, Detection manuel, "Nous n'avons pas pu cette fois detecté automatiquement la position du bouton Rejoindre.`n Mettez vous sur une fenêtre où le bouton Rejoindre d'affiche. `n Après avoir appuyer sur le bouton Ok de cette popup, faites un clique gauche sur le bouton Rejoindre sur votre fenêtre de jeu afin que nous enregistrions la position.` Vous avez 10 secondes pour effectuer cette action, après celà le script s'annulera."
-			KeyWait, LButton , D T10
+			MsgBox 4096, Detection manuel, "Nous n'avons pas pu cette fois detecté automatiquement la position du bouton Rejoindre.`n Mettez vous sur une fenêtre où le bouton Rejoindre d'affiche. `n Après avoir appuyer sur le bouton Ok de cette popup, mettez votre souris sur le bouton Rejoindre sur votre fenêtre de jeu et appuyer sur la touche Z de votre clavier afin que nous enregistrions la position.`n Vous avez 10 secondes pour effectuer cette action, après celà le script s'annulera."
+			KeyWait, z , D T10
 			if(ErrorLevel == 1){
 				;L'utilisateur n'a pas appuyé sur le bon bouton au bon moment
-				MsgBox, 4096, Annulation du script, "Il semblerait que vous n'ayez pas cliqué sur le bouton accepté ! Annulation du script."
+				MsgBox, 4096, Annulation du script, "Il semblerait que vous n'ayez pas cliqué sur la touche Z de votre clavier ! Annulation du script."
 				return
 			}
 			MouseGetPos, MouseX, MouseY, MouseWin, MouseCtl, 2
 			IniWrite, %MouseX%, %A_ScriptDir%\config.ini, Position, JoinFightButtonX
 			IniWrite, %MouseY%, %A_ScriptDir%\config.ini, Position, JoinFightButtonY
+			;On sauvegarde la résolution utilisé pour cette position
+			resolution := A_ScreenWidth "x" A_ScreenHeight
+			IniWrite, %resolution%, %A_ScriptDir%\config.ini, PositionResolution, JoinFightButton
 			TextEncrypt := ""
 			; On va appuyer pour ce cas ici sur le bouton accepter
 			Sleep, 500
 			FindText().Click(MouseX, MouseY, "L")
-					
+			MsgBox,"Nous avons bien enregistré la position du bouton Rejoindre. `n Nous allons finir de grouper le reste de vos personnages. `n Si ça ne le fait pas automatiquement, retentez de lancer la fonctionnalité dans quelques secondes."		
 		}
 
 		
@@ -424,6 +437,7 @@ JoinFightForAllCharacters(){
 	}
 
 	return ""
+	MsgBox, 4096, Fin du script,"Fin du script pour Rejoindre le combat automatiquement."
 }
 
 CreateShowCharacterBox(){
