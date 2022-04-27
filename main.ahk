@@ -227,7 +227,7 @@ GroupCharacters(){
 								IniWrite, %Y%, %A_ScriptDir%\config.ini, Position, AcceptGroupButtonY
 								;On sauvegarde la résolution utilisé pour cette position
 								resolution := A_ScreenWidth "x" A_ScreenHeight
-								 IniWrite, %resolution%, %A_ScriptDir%\config.ini, PositionResolution, AcceptGroupButton
+								 IniWrite, %resolution%, %A_ScriptDir%\config.ini, PositionResolution, AcceptGroupButtonResolution
 								TextEncrypt := ""
 								FindText().Click(X, Y, "L")
 								try_num := 10
@@ -252,7 +252,7 @@ GroupCharacters(){
 							IniWrite, %MouseY%, %A_ScriptDir%\config.ini, Position, AcceptGroupButtonY
 							;On sauvegarde la résolution utilisé pour cette position
 							resolution := A_ScreenWidth "x" A_ScreenHeight
-							IniWrite, %resolution%, %A_ScriptDir%\config.ini, PositionResolution, AcceptGroupButton
+							IniWrite, %resolution%, %A_ScriptDir%\config.ini, PositionResolution, AcceptGroupButtonResolution
 							TextEncrypt := ""
 							; On va appuyer pour ce cas ici sur le bouton accepter
 							Sleep, 500
@@ -373,7 +373,7 @@ JoinFightForAllCharacters(){
 						IniWrite, %Y%, %A_ScriptDir%\config.ini, Position, JoinFightButtonY
 						;On sauvegarde la résolution utilisé pour cette position
 						resolution := A_ScreenWidth "x" A_ScreenHeight
-						IniWrite, %resolution%, %A_ScriptDir%\config.ini, PositionResolution, JoinFightButton
+						IniWrite, %resolution%, %A_ScriptDir%\config.ini, PositionResolution, JoinFightButtonResolution
 						TextEncrypt := ""
 						;FindText().Click(X, Y, "L")
 						try_num := 10
@@ -404,7 +404,7 @@ JoinFightForAllCharacters(){
 			IniWrite, %MouseY%, %A_ScriptDir%\config.ini, Position, JoinFightButtonY
 			;On sauvegarde la résolution utilisé pour cette position
 			resolution := A_ScreenWidth "x" A_ScreenHeight
-			IniWrite, %resolution%, %A_ScriptDir%\config.ini, PositionResolution, JoinFightButton
+			IniWrite, %resolution%, %A_ScriptDir%\config.ini, PositionResolution, JoinFightButtonResolution
 			TextEncrypt := ""
 			; On va appuyer pour ce cas ici sur le bouton accepter
 			Sleep, 500
