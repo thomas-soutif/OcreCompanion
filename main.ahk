@@ -120,6 +120,17 @@ GroupCharacters(){
 		return
 	}
 	
+	;;Check si la résolution a changé
+	 IniRead,AcceptGroupButtonResolution,%A_ScriptDir%\config.ini,PositionResolution, AcceptGroupButtonResolution
+	 if(AcceptGroupButtonResolution != "ERROR"){
+               currentRes :=  A_ScreenWidth "x" A_ScreenHeight
+			   if(AcceptGroupButtonResolution != currentRes){
+				   	MsgBox,4097, Résolution différente detecté, "Attention, il semblerait que vous ayez changer de résolution.`n `n Si vous rencontrez des problèmes, il est vivement conseillé de réinitialiser vos positions dans les options avancées.`n `n Appuyer sur Ok si vous souhaitez tout de même continuer." 
+					IfMsgBox Cancel
+						return
+			   }
+            }
+
 	;On va choisir un personnage qui sera le meneur
 	groupChefCharacter := List(characterNames,1)
 	iddWindowsMainCharacter := DetectWindowsByName(groupChefCharacter)
@@ -304,6 +315,18 @@ JoinFightForAllCharacters(){
 		return
 	}
 	
+	; Check si la résolution est différente
+	IniRead,JoinFightButtonResolution,%A_ScriptDir%\config.ini,PositionResolution, JoinFightButtonResolution
+	 if(JoinFightButtonResolution != "ERROR"){
+               currentRes :=  A_ScreenWidth "x" A_ScreenHeight
+			   if(JoinFightButtonResolution != currentRes){
+				   MsgBox,4097, Résolution différente detecté, "Attention, il semblerait que vous ayez changer de résolution.`n `n Si vous rencontrez des problèmes, il est vivement conseillé de réinitialiser vos positions dans les options avancées.`n `n Appuyez sur Ok si vous souhaitez tout de même continuer."
+				   IfMsgBox Cancel
+						return
+			   }
+            }
+
+
 	;On va vérifier si le timer setting qu'on a besoin est disponible
 	ifexist, %A_ScriptDir%\config.ini
 	{
