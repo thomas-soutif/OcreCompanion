@@ -122,7 +122,7 @@ GroupCharacters(){
 	
 	;;Check si la résolution a changé
 	 IniRead,AcceptGroupButtonResolution,%A_ScriptDir%\config.ini,PositionResolution, AcceptGroupButtonResolution
-	 if(AcceptGroupButtonResolution != "ERROR"){
+	 if(AcceptGroupButtonResolution != "ERROR" and AcceptGroupButtonResolution != "" ){
                currentRes :=  A_ScreenWidth "x" A_ScreenHeight
 			   if(AcceptGroupButtonResolution != currentRes){
 				   	MsgBox,4097, Résolution différente detecté, "Attention, il semblerait que vous ayez changer de résolution.`n `n Si vous rencontrez des problèmes, il est vivement conseillé de réinitialiser vos positions dans les options avancées.`n `n Appuyer sur Ok si vous souhaitez tout de même continuer." 
@@ -317,7 +317,7 @@ JoinFightForAllCharacters(){
 	
 	; Check si la résolution est différente
 	IniRead,JoinFightButtonResolution,%A_ScriptDir%\config.ini,PositionResolution, JoinFightButtonResolution
-	 if(JoinFightButtonResolution != "ERROR"){
+	 if(JoinFightButtonResolution != "ERROR" and AcceptGroupButtonResolution != ""){
                currentRes :=  A_ScreenWidth "x" A_ScreenHeight
 			   if(JoinFightButtonResolution != currentRes){
 				   MsgBox,4097, Résolution différente detecté, "Attention, il semblerait que vous ayez changer de résolution.`n `n Si vous rencontrez des problèmes, il est vivement conseillé de réinitialiser vos positions dans les options avancées.`n `n Appuyez sur Ok si vous souhaitez tout de même continuer."

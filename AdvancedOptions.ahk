@@ -216,6 +216,13 @@ if(ConfirmCharactersAllReady == 1){
             IniWrite, "", %A_ScriptDir%\config.ini, Position, %A_LoopField%
             GuiControl, focus, %DetectAutomatically%
         }
+        Loop,Parse, allVNamePositionResolution, "|"
+        {
+             IniWrite,"",%A_ScriptDir%\config.ini,PositionResolution, %A_LoopField%
+             %A_LoopField% := ""
+
+        }
+        Gui, Main:Submit, NoHide
         return
 
 }
