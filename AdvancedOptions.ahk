@@ -97,7 +97,7 @@ Gui, Add, Edit, x392 y85 w50 h20 vJoinFightButtonY, %JoinFightButtonY%
 Gui, Add, Text, x448 y87 w72 h20 , (%JoinFightButtonResolution%)
 Gui, Add, Text, x272 y49 w60 h30 , Accepter (Groupe)
 Gui, Add, Text, x272 y85 w60 h30 , Rejoindre (Fight)
-Gui, Add, Button, x262 y179 w210 h30 gDetectAutomatically, Detecter automatiquement
+Gui, Add, Button, x262 y170 w270 h30 gDetectAutomatically, Detecter automatiquement les positions
 Gui, Add, Edit, x572 y69 w-594 h-200 , Edit
 Gui, Add, Button, x22 y179 w100 h40 , Reset Default
 Gui, Add, GroupBox, x262 y219 w210 h160 , Follow auto position
@@ -222,7 +222,7 @@ if(ConfirmCharactersAllReady == 1){
              %A_LoopField% := ""
 
         }
-        Gui, Main:Submit, NoHide
+        Gui, Submit, NoHide
         return
 
 }
