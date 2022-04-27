@@ -51,13 +51,8 @@ Gui, Main:Add, GroupBox, x10 y160 w240 h155 , Personnages detectés en jeu
 Gui, Main:Add, CheckBox, x52 y350 w125 h20 vFollowAutoActive , %FollowAutoText%
 Gui, Main:Add, Text, x180 y392 , Detecter les 
 Gui, Main:Add, Text, x180 y405 , personnages
-;Gui, Main:Add, Button,disabled x100 y180 w70 h40 , PERSONNAGE2
-;Gui, Main:Add, Button,hide x22 y180 w70 h40 , PERSONNAGE1START
-;Gui, Main:Add, Button,disabled x178 y180 w70 h40 , PERSONNAGE3
-;Gui, Main:Add, Button,disabled x22 y240 w70 h40 , PERSONNAGE4
-;Gui, Main:Add, Button, x180 y77 w75 h75 gGroupCharacters gGroupCharacters , GROUPER
-;Gui, Main:Add, Button,disabled x22 y179 w100 h40 , PRET
 Gui, Main:Add, CheckBox, x52 y370 w90 h30 vFightModeActive ,%FightModeText%
+
 Gui, Add, Picture, x180 y350 w50 h40 gReloadGui, %dofus_icon_imageLocation%
 Gui, Add, Picture, x180 y77 w75 h75 gGroupCharacters, %group_icon_imageLocation%
 Gui, Add, Picture, x100 y80 w70 h70 gJoinFightForAllCharacters, %join_fight_icon_imageLocation%

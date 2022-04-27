@@ -130,7 +130,7 @@ if(ConfirmCharactersAllReady == 1){
 
 
     Gui, +AlwaysOnTop
-    Gui, Show, w750 h430, Options avancees - DofusMultiAccountTool
+    Gui, AdvancedOptions:Show, w750 h430, Options avancees - DofusMultiAccountTool
 
 
 
@@ -222,7 +222,7 @@ if(ConfirmCharactersAllReady == 1){
              %A_LoopField% := ""
 
         }
-        Gui, Submit, NoHide
+        Gui, AdvancedOptions:Submit, NoHide
         return
 
 }
