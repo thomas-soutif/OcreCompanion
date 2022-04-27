@@ -435,9 +435,9 @@ JoinFightForAllCharacters(){
 		Sleep timerValue
 
 	}
-
-	return ""
 	MsgBox, 4096, Fin du script,"Fin du script pour Rejoindre le combat automatiquement."
+	return ""
+	
 }
 
 CreateShowCharacterBox(){
