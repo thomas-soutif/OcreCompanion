@@ -29,6 +29,7 @@ SetDefaults(void)
 	DictPositionFollowCharacterTick := New DictCustom
 	VerifyNewPositionFollowAutoLock := 0
 	timerVerifyNewPosition := 1000
+	ignoreNoDelayWarningForThisSession := 0
 START:
 
 if !FileExist("%A_ScriptDir%\config.ini"){
@@ -36,7 +37,7 @@ if !FileExist("%A_ScriptDir%\config.ini"){
 
 }
 TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
-
+ignoreNoDelayWarningForThisSession := 0
 IfNotExist, %TempLocationForCharacter%
    FileCreateDir, %TempLocationForCharacter%
 Gui, Main:Hide
@@ -54,12 +55,11 @@ Gui, Main:Add, CheckBox, x40 y350 w125 h20 vFollowAutoActive gFollowAutoActiveCl
 Gui, Main:Add, Text, x180 y392 , Detecter les 
 Gui, Main:Add, Text, x180 y405 , personnages
 Gui, Main:Add, CheckBox, x40 y375 w90 h20 vFightModeActive ,%FightModeText%
-Gui, Main:Add, CheckBox, disabled x40 y400 w125 h20 vNoDelayActive gNoDelayClick ,%NoDelayText%
+Gui, Main:Add, CheckBox, x40 y400 w125 h20 vNoDelayActive gNoDelayClick ,%NoDelayText%
 Gui, Add, Picture, x180 y350 w50 h40 gReloadGui, %dofus_icon_imageLocation%
 Gui, Add, Picture, x180 y77 w75 h75 gGroupCharacters, %group_icon_imageLocation%
 Gui, Add, Picture, x100 y80 w70 h70 gJoinFightForAllCharacters, %join_fight_icon_imageLocation%
 Gui, Add, Picture, x20 y80 w70 h70  gFightReadyForAllCharacters, %ready_fight_imageLocation%
-idd := DetectWindowsByName("Ankama")
 
 ;Check ou non Follow Auto lorsqu'on affiche pour la première fois le menu
 
@@ -84,8 +84,7 @@ if(NoDelayActive == 1){
 }else{
     GuiControl,, %NoDelayText%, 0
 }
-
-
+ 
 DetectHiddenWindows, On
 Script_Hwnd := WinExist("ahk_class AutoHotkey ahk_pid " DllCall("GetCurrentProcessId"))
 DetectHiddenWindows, Off
@@ -93,7 +92,6 @@ DetectHiddenWindows, Off
 DllCall("RegisterShellHookWindow", "uint", Script_Hwnd)
 OnMessage(DllCall("RegisterWindowMessage", "str", "SHELLHOOK"), "ShellEvent")
 ;...
-
 CreateShowCharacterBox()
 
 ;MsgBox, "Stop"
@@ -657,7 +655,7 @@ SelectCharacter(){
 
 ~LButton::
 Gui, Main:Submit, NoHide
-if (FollowAutoActive == 0){
+if (FollowAutoActive == 0 and NoDelayActive == 0 ){
 	return
 }
 MouseGetPos, xpos, ypos
@@ -690,28 +688,33 @@ if(windowsFinId){
 	{
 		characterWindowsId := DetectWindowsByName(A_LoopField)
 		if( characterWindowsId != winid){
-			if (WinExist(A_LoopField)){
-			;Random, timerValue, MinvalueTimer, MaxvalueTimer
-			;Sleep timerValue
-			;ControlClick x%xpos% y%ypos%, %A_LoopField%
 
-			;On va écrire dans le dictionnaire la prochaine position 
-			
-			currentPositionsWaiting := DictPositionFollowCharacter.Get(A_LoopField)
-			customList := New ListCustom
-			if(currentPositionsWaiting != ""){
-				customList.SetList(currentPositionsWaiting)
-			}
+			if(FollowAutoActive == 1){
+
+				if (WinExist(A_LoopField)){
+					currentPositionsWaiting := DictPositionFollowCharacter.Get(A_LoopField)
+					customList := New ListCustom
+					if(currentPositionsWaiting != ""){
+						customList.SetList(currentPositionsWaiting)
+					}
 				
-			;MsgBox, %customList%
-			positionScreen := New PositionScreen
-			positionScreen.SavePosition(xpos,ypos)
-			positionToWrite:= positionScreen.GetPosition()
-			customList.Add(positionToWrite)
+					positionScreen := New PositionScreen
+					positionScreen.SavePosition(xpos,ypos)
+					positionToWrite:= positionScreen.GetPosition()
+					customList.Add(positionToWrite)
 
-			customListPosition := customList.GetAll()
-			DictPositionFollowCharacter.Add(A_LoopField,customListPosition)
-		}
+					customListPosition := customList.GetAll()
+					DictPositionFollowCharacter.Add(A_LoopField,customListPosition)
+
+				}
+			
+			}
+			else if(NoDelayActive == 1){
+				if (WinExist(A_LoopField)){
+					ControlClick x%xpos% y%ypos%,%A_LoopField%
+				}
+
+			}
 		}
 
 		
@@ -852,6 +855,13 @@ VerifyNewPositionFollowAuto(){
 FollowAutoActiveClick(){
 	global
 	Gui, Main:Submit, NoHide
+	if(FollowAutoActive == 1 and NoDelayActive == 1){
+		MsgBox,4096, "Action impossible", "Vous ne pouvez pas activer Follow Auto et No Delay en même temps"
+		GuiControl, focus, %FollowAutoText%,
+		ControlClick, %FollowAutoText%, A
+		return
+
+	}
 	if(FollowAutoActive == 0)
 	{
 		
@@ -869,8 +879,17 @@ FollowAutoActiveClick(){
 NoDelayClick(){
 	global
 	Gui, Main:Submit, NoHide
-	if(NoDelayActive == 1){
-		MsgBox,4096, Mode no delay prévention, "Attention, le mode delay permet de reproduire instantanément tout vos clicks sur vos autres personnages. `n Utilisez le pour accepter vos quetes,les valider, mais évitez de vous déplacer avec car c'est passible de bannissement. "
-}
-}
+	if(FollowAutoActive == 1 and NoDelayActive == 1){
+		MsgBox,4096, "Action impossible", "Vous ne pouvez pas activer Follow Auto et No Delay en même temps"
+		 GuiControl, focus, %NoDelayText%,
+		 ControlClick, %NoDelayText%, A
+		 return
+		 
+	}
 
+	if(NoDelayActive == 1 and ignoreNoDelayWarningForThisSession == 0){
+		MsgBox,4096, Mode no delay prévention, "Attention, le mode delay permet de reproduire instantanément tout vos clicks sur vos autres personnages. `n Utilisez le pour accepter vos quetes,les valider, mais évitez de vous déplacer avec car c'est passible de bannissement. "
+		ignoreNoDelayWarningForThisSession := 1
+	}
+
+}
