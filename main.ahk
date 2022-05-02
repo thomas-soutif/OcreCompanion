@@ -22,9 +22,9 @@ SetDefaults(void)
 	FollowAutoActive := 0
 	FightModeActive := 0
 	NoDelayActive :=0
-	FollowAutoText = Follow Auto (R click)
+	FollowAutoText = Follow Auto (Tab + Lclick)
 	FightModeText = Mode combat
-	NoDelayText = No Delay (R click)
+	NoDelayText = No Delay (Alt + Lclick)
 	DictPositionFollowCharacter := New DictCustom
 	DictPositionFollowCharacterTick := New DictCustom
 	VerifyNewPositionFollowAutoLock := 0
@@ -51,11 +51,11 @@ Gui, Main:Add, Button, x12 y19 w110 h30 gAccountManagment , Personnages
 Gui, Main:Add, Button, x150 y19 w110 h30 gAdvancedOptionsGui , Options avancées
 Gui, Main:Add, GroupBox, x22 y320 w150 h110 , Options rapide
 Gui, Main:Add, GroupBox, x10 y160 w240 h155 , Personnages detectés en jeu
-Gui, Main:Add, CheckBox, x40 y350 w125 h20 vFollowAutoActive gFollowAutoActiveClick , %FollowAutoText%
+Gui, Main:Add, CheckBox, x27 y350 w145 h20 vFollowAutoActive gFollowAutoActiveClick , %FollowAutoText%
 Gui, Main:Add, Text, x180 y392 , Detecter les 
 Gui, Main:Add, Text, x180 y405 , personnages
-Gui, Main:Add, CheckBox, x40 y375 w90 h20 vFightModeActive ,%FightModeText%
-Gui, Main:Add, CheckBox, x40 y400 w125 h20 vNoDelayActive gNoDelayClick ,%NoDelayText%
+Gui, Main:Add, CheckBox, x27 y375 w90 h20 vFightModeActive ,%FightModeText%
+Gui, Main:Add, CheckBox, x27 y400 w145 h20 vNoDelayActive gNoDelayClick ,%NoDelayText%
 Gui, Add, Picture, x180 y350 w50 h40 gReloadGui, %dofus_icon_imageLocation%
 Gui, Add, Picture, x180 y77 w75 h75 gGroupCharacters, %group_icon_imageLocation%
 Gui, Add, Picture, x100 y80 w70 h70 gJoinFightForAllCharacters, %join_fight_icon_imageLocation%
@@ -653,9 +653,23 @@ SelectCharacter(){
 
 ;Des que l'utilisateur fait un clique droit
 
+~!LButton::
 ~LButton::
 Gui, Main:Submit, NoHide
 if (FollowAutoActive == 0 and NoDelayActive == 0 ){
+	return
+}
+;La touche Tab doit être appuyé pour déplacer tout les personnages, et Alt pour le no delay. Sera configurable dans une prochaine version.
+
+if(GetKeyState("Tab","P") and FollowAutoActive == 1 ){
+	;Mode follow auto
+	currentMode :=  "FollowAuto"
+}
+else if(GetKeyState("Alt","P") and NoDelayActive == 1) {
+	;Mode no NoDelay
+	currentMode := "NoDelay"
+}
+else{
 	return
 }
 MouseGetPos, xpos, ypos
@@ -689,7 +703,7 @@ if(windowsFinId){
 		characterWindowsId := DetectWindowsByName(A_LoopField)
 		if( characterWindowsId != winid){
 
-			if(FollowAutoActive == 1){
+			if(currentMode == "FollowAuto"){
 
 				if (WinExist(A_LoopField)){
 					currentPositionsWaiting := DictPositionFollowCharacter.Get(A_LoopField)
@@ -709,8 +723,10 @@ if(windowsFinId){
 				}
 			
 			}
-			else if(NoDelayActive == 1){
+			else if(currentMode == "NoDelay"){
 				if (WinExist(A_LoopField)){
+					Random, timerValue, 100, 200
+					Sleep timerValue
 					ControlClick x%xpos% y%ypos%,%A_LoopField%
 				}
 
