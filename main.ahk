@@ -872,10 +872,10 @@ FollowAutoActiveClick(){
 	global
 	Gui, Main:Submit, NoHide
 	if(FollowAutoActive == 1 and NoDelayActive == 1){
-		MsgBox,4096, "Action impossible", "Vous ne pouvez pas activer Follow Auto et No Delay en même temps"
-		GuiControl, focus, %FollowAutoText%,
-		ControlClick, %FollowAutoText%, A
-		return
+		;MsgBox,4096, "Action impossible", "Vous ne pouvez pas activer Follow Auto et No Delay en même temps"
+		;GuiControl, focus, %FollowAutoText%,
+		;ControlClick, %FollowAutoText%, A
+		;return
 
 	}
 	if(FollowAutoActive == 0)
@@ -896,10 +896,10 @@ NoDelayClick(){
 	global
 	Gui, Main:Submit, NoHide
 	if(FollowAutoActive == 1 and NoDelayActive == 1){
-		MsgBox,4096, "Action impossible", "Vous ne pouvez pas activer Follow Auto et No Delay en même temps"
-		 GuiControl, focus, %NoDelayText%,
-		 ControlClick, %NoDelayText%, A
-		 return
+		;MsgBox,4096, "Action impossible", "Vous ne pouvez pas activer Follow Auto et No Delay en même temps"
+		 ;GuiControl, focus, %NoDelayText%,
+		 ;ControlClick, %NoDelayText%, A
+		 ;return
 		 
 	}
 
