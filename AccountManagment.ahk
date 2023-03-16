@@ -11,6 +11,10 @@ AccountManagment(){
 	;Chargement de la liste des noms de personnage
 	IniRead, listAllCharacterClass, %A_ScriptDir%\defaultConfig\defaultConfig.ini,AllClassCharacter, value
 
+	; Chargement des chemins d'image utilisées
+	arrow_up_image = %A_ScriptDir%\images\up_arrow.png
+	arrow_down_image = %A_ScriptDir%\images\down_arrow.png
+
 	Gui, Add, ListView, x152 y20 w480 h290  LV0x1 vListViewContent 
 	Gui, Add, Text, x12 y20 w130 h20, Pseudo du personnage
 	Gui, Add, Edit, x12 y40 w130 h20 vPseudo,
@@ -19,6 +23,8 @@ AccountManagment(){
 	Gui, Add, Button, x12 y170 w130 h40 gAddCharacter, Add
 	Gui, Add, Button, x12 y220 w130 h40 gRemoveCharacter, Remove
 	Gui, Add, Button, x12 y330 w130 h40 gSaveCharacter, Sauvegarder
+	Gui, Add, Picture, x40 y280 w35 h25 gMooveCharacterUp, %arrow_up_image%
+	Gui, Add, Picture, x80 y280 w35 h25 gMooveCharacterDown, %arrow_down_image%
 	LV_InsertCol(1, 100, "Personnage")
 	LV_InsertCol(2, 100, "Classe")
 
@@ -84,4 +90,50 @@ AccountManagment(){
 		Gui, Hide
 		return
 
+	MooveCharacterUp:
+
+	IndexElement := LV_GetNext()
+	IndexPrevious := IndexElement - 1
+	if (IndexPrevious < 1 || IndexElement == 0){
+		Return
+	}
+	; Échanger les positions des deux éléments
+	LV_GetText(TempCharacterNameCurrent, IndexElement, 1)
+	LV_GetText(TempClassNameCurrent, IndexElement, 2)
+
+	LV_GetText(TempCharacterNamePrevious, IndexPrevious, 1)
+	LV_GetText(TempClassNamePrevious, IndexPrevious, 2)
+
+	LV_Modify(IndexElement, 0, TempCharacterNamePrevious, TempClassNamePrevious)
+	LV_Modify(IndexPrevious, 0, TempCharacterNameCurrent, TempClassNameCurrent)
+	
+	
+	; Sélectionner l'élément déplacé
+	LV_Modify(IndexElement, "-Select")
+	LV_Modify(IndexPrevious, "Select")
+	Return
+
+	MooveCharacterDown:
+
+	IndexElement := LV_GetNext()
+	IndexNext := IndexElement + 1
+	if (IndexNext > LV_GetCount() || IndexElement == 0){
+		Return
+	}
+	; Échanger les positions des deux éléments
+	LV_GetText(TempCharacterNameCurrent, IndexElement, 1)
+	LV_GetText(TempClassNameCurrent, IndexElement, 2)
+
+	LV_GetText(TempCharacterNameNext, IndexNext, 1)
+	LV_GetText(TempClassNameNext, IndexNext, 2)
+
+	LV_Modify(IndexElement, 0, TempCharacterNameNext, TempClassNameNext)
+	LV_Modify(IndexNext, 0, TempCharacterNameCurrent, TempClassNameCurrent)
+	
+	
+	; Sélectionner l'élément déplacé
+	LV_Modify(IndexElement, "-Select")
+	LV_Modify(IndexNext, "Select")
+
+	Return
 }
