@@ -101,6 +101,16 @@ Class ListCustom{
     }
     return This.Get(index + 1)
   }
+  FindAndGetPrevious(value){
+    ;; Cherche une valeur dans la liste, et retourne la valeur de l'élément précédent(n-1).Si l'élément qu'on cherche
+    ;; est le premier de la liste, alors on retourne la valeur du dernier élement
+
+    index := This.Find(value)
+    if(index - 1 < 1){
+      return This.Get(This.GetSize())
+    }
+    return This.Get(index - 1)
+  }
   GetSize(){
     listC := This.listCustomAttr
     size := 0
