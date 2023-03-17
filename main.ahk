@@ -618,6 +618,13 @@ FightReadyForAllCharacters(){
 		
 
 	}
+	sleep 100
+	; On va rebasculer sur le premier personnage qui est censé avoir l'initiative
+	characterNames := GetCharacterDetectedInGame()
+	customListCharacter := New ListCustom
+    customListCharacter.SetList(characterNames)
+	firstCharacter := customListCharacter.Get(1)
+	WinActivate, %firstCharacter%
 
 
 
