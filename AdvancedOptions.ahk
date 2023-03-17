@@ -11,7 +11,7 @@ AdvancedOptionsGui(){
     allVNamePositionFollowAuto = UpDirectionX|UpDirectionY|DownDirectionX|DownDirectionY|LeftDirectionX|LeftDirectionY|RightDirectionX|RightDirectionY
     allVNameAccessibility = ConfirmCharactersAllReady
     allVNamePositionResolution = AcceptGroupButtonResolution|JoinFightButtonResolution
-    allVNameShortcut = ShortcutNextCharacter|ShortcutPreviousCharacter
+    allVNameShortcut = ShortcutNextCharacter|ShortcutPreviousCharacter|ShortcutSkipTurn
     ;Chargement des paramètres
 
     ifexist, %A_ScriptDir%\config.ini
@@ -115,8 +115,10 @@ Gui, Add, GroupBox, x262 y219 w210 h160 , Raccourci
 Gui, Add, Button, x262 y379 w210 h30 disabled, Configurer (pas utilisé)
 Gui, Add, Text, x272 y239 w70 h30 , Personnage suivant
 Gui, Add, Text, x272 y279 w70 h30 , Personnage précédant
+Gui, Add, Text, x272 y319 w70 h30 , Passer le tour
 Gui, Add, Edit, x352 y239 w50 h20 vShortcutNextCharacter, %ShortcutNextCharacter%
 Gui, Add, Edit, x352 y279 w50 h20 vShortcutPreviousCharacter, %ShortcutPreviousCharacter%
+Gui, Add, Edit, x352 y319 w50 h20 vShortcutSkipTurn, %ShortcutSkipTurn%
 Gui, Add, GroupBox, x542 y19 w180 h150 , Accessibilité
 Gui, Add, CheckBox, x552 y49 w160 h40 , %TextConfirmCharactersAllReady%
 
