@@ -129,9 +129,6 @@ Quitter:
 ExitApp
 
 
-ExitSub:
-; Supprime le hook lorsque le script se termine
-DllCall("UnhookWinEvent", "ptr", hWinEventHook)
 
 GroupCharacters(){
 	characterNames := GetCharacterNames()
