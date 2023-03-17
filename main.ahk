@@ -52,7 +52,7 @@ ready_fight_imageLocation = %A_ScriptDir%\images\ready_fight.png
 join_fight_icon_imageLocation = %A_ScriptDir%\images\join_fight_icon.png
 Gui, Main:New, +Resize -MaximizeBox
 Gui, Main:Add, Button, x12 y19 w110 h30 gAccountManagment , Personnages
-Gui, Main:Add, Button, x150 y19 w110 h30 gAdvancedOptionsGui , Options avancées
+Gui, Main:Add, Button, x150 y19 w110 h30 gAdvancedOptionsGui , Options
 Gui, Main:Add, GroupBox, x22 y320 w150 h110 , Options rapide
 Gui, Main:Add, GroupBox, x10 y160 w240 h155 , Personnages detectés en jeu
 Gui, Main:Add, CheckBox, x27 y350 w145 h20 vFollowAutoActive gFollowAutoActiveClick , %FollowAutoText%
