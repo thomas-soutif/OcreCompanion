@@ -114,7 +114,8 @@ Loop
 		KeyPressQueue.Add(Var)
 	}
 	keysQueue := KeyPressQueue.GetAll()
-	keyFirst := KeyPressQueue.Poll()
+	keyFirst := KeyPressQueue.Get(1)
+	KeyPressQueue.SetList("")
 	vkCode := GetKeyVK(KeyFirst)
 	WM_KEYDOWN(vkCode)
 	
