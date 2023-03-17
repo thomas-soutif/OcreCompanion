@@ -1,0 +1,6 @@
+- Lorsqu'on ferme la fenetre des personnagesn utilisé le loop {} principal pour detecter cette fermeture via une variable globale
+- Encadrer en vert dans les personnages detectés en jeu celui qui est actuellement en focus sur le jeu
+- Déplacer l'option Personnages dans le cadre "Personnage detectés en jeu" via une petite image 
+- Sauvegarder les états check des options rapide pour les retrouver à la réouverture du logiciel
+- Faire pareil pour la position du logiciel
+- Avoir un bouton dans les personnages detectés en jeu qui permet d'ouvrir une nouvelle popup avec les personnages affichés, et pourquoi pas les options de base (mettre pret tout le monde, rejoindre le combat)
