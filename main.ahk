@@ -1,7 +1,10 @@
-﻿#include %A_ScriptDir%\CommonFunction.ahk
+﻿
+#include %A_ScriptDir%\CommonFunction.ahk
 #include %A_ScriptDir%\AccountManagment.ahk
 #include %A_ScriptDir%\AdvancedOptions.ahk
 #include %A_ScriptDir%\FollowAutoPosition.ahk
+#include %A_ScriptDir%\Shortcuts.ahk
+
 ;global parameter of Window
 SetDefaults(void)
 {
@@ -30,6 +33,7 @@ SetDefaults(void)
 	VerifyNewPositionFollowAutoLock := 0
 	timerVerifyNewPosition := 1000
 	ignoreNoDelayWarningForThisSession := 0
+	KeyPressQueue := New ListCustom
 START:
 
 if !FileExist("%A_ScriptDir%\config.ini"){
@@ -88,19 +92,34 @@ if(NoDelayActive == 1){
 DetectHiddenWindows, On
 Script_Hwnd := WinExist("ahk_class AutoHotkey ahk_pid " DllCall("GetCurrentProcessId"))
 DetectHiddenWindows, Off
+
 ; Register shell hook to detect flashing windows.
 DllCall("RegisterShellHookWindow", "uint", Script_Hwnd)
-OnMessage(DllCall("RegisterWindowMessage", "str", "SHELLHOOK"), "ShellEvent")
+
+;OnMessage(DllCall("RegisterWindowMessage", "str", "SHELLHOOK"), "ShellEvent")
 ;...
 CreateShowCharacterBox()
-
-;MsgBox, "Stop"
 
 Gui, Main:+AlwaysOnTop
 Gui, Main:Show, x%MainWindowsX% y%MainWindowsY% w%MainWindowsW% h%MainWindowsH% , DofusMultiAccountTool
 
-
 SetTimer,VerifyNewPositionFollowAuto, %timerVerifyNewPosition%
+
+
+; Boucle principale
+Loop
+{
+	Input, Var, L1 V, {F1}{F2}{F3}{F4}{F5}{F6}{F7}{F8}{F9}{F10}{F11}{F12}
+	if(Var != ""){
+		KeyPressQueue.Add(Var)
+	}
+	keysQueue := KeyPressQueue.GetAll()
+	keyFirst := KeyPressQueue.Poll()
+	vkCode := GetKeyVK(KeyFirst)
+	WM_KEYDOWN(vkCode)
+	
+}
+#include %A_ScriptDir%\RegisterAllKey.ahk
 
 Return
 
@@ -110,7 +129,9 @@ Quitter:
 ExitApp
 
 
-
+ExitSub:
+; Supprime le hook lorsque le script se termine
+DllCall("UnhookWinEvent", "ptr", hWinEventHook)
 
 GroupCharacters(){
 	characterNames := GetCharacterNames()
@@ -908,4 +929,13 @@ NoDelayClick(){
 		ignoreNoDelayWarningForThisSession := 1
 	}
 
+}
+
+WM_KEYDOWN(virtualCode)
+{
+	;On vérifie les raccourcis uniquement si la fenetre active est une des personnages connectés
+	if(GetCurrentCharacterFocusing() != ""){
+		VerifyShortcuts(virtualCode)
+	}
+    
 }

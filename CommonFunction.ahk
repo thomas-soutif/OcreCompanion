@@ -80,6 +80,36 @@ Class ListCustom{
       This.listCustomAttr := listCustom
     return
   }
+  Find(value){
+    ;; Retourne l'index de l'élément si il a été trouvé, sinon ""
+    listC := This.listCustomAttr
+    Loop, parse, listC , |
+    {
+      If (A_LoopField == value) {
+        return A_Index
+      }
+    }
+    return ""
+  }
+  FindAndGetNext(value){
+    ;; Cherche une valeur dans la liste, et retourne la valeur de l'élément suivant (n+1).Si l'élément qu'on cherche
+    ;; est le dernier de la liste, alors on retourne la valeur de l'élément 1
+
+    index := This.Find(value)
+    if(index + 1 > This.GetSize()){
+      return This.Get(1)
+    }
+    return This.Get(index + 1)
+  }
+  GetSize(){
+    listC := This.listCustomAttr
+    size := 0
+    Loop, parse, listC , |
+    {
+      size := size + 1
+    }
+    return size -1
+  }
 }
 
 
@@ -151,6 +181,22 @@ GetCharacterNames(){
 
 }
 
+GetCurrentCharacterFocusing(){
+
+  characters := GetCharacterDetectedInGame()
+  SetTitleMatchMode 2
+  WinGetTitle, title, A
+  Loop, Parse, characters, "|"
+		{
+      
+      if InStr(title, A_LoopField){
+        return A_LoopField
+      }
+    }
+    return ""
+
+}
+
 DetectWindowsByName(str)
 {
 	; Prend en paramètre une string, et retourne l'id de la fenêtre si cette string est inclue dans l'un des noms de fenêtre Windows. 
@@ -198,7 +244,6 @@ PositionScreen(positionX=0, positionY=0){
 
 
 }
-
 
 ;/*
 ;===========================================

@@ -11,6 +11,7 @@ AdvancedOptionsGui(){
     allVNamePositionFollowAuto = UpDirectionX|UpDirectionY|DownDirectionX|DownDirectionY|LeftDirectionX|LeftDirectionY|RightDirectionX|RightDirectionY
     allVNameAccessibility = ConfirmCharactersAllReady
     allVNamePositionResolution = AcceptGroupButtonResolution|JoinFightButtonResolution
+    allVNameShortcut = ShortcutNextCharacter|ShortcutPreviousCharacter
     ;Chargement des paramètres
 
     ifexist, %A_ScriptDir%\config.ini
@@ -61,6 +62,16 @@ AdvancedOptionsGui(){
             }
 
         }
+        Loop,Parse, allVNameShortcut, "|"
+        {
+             IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Shortcut, %A_LoopField%
+             if(%A_LoopField% == "ERROR"){
+                IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Shortcut, %A_LoopField%
+                IniWrite, %value%, %A_ScriptDir%\config.ini, Shortcut, %A_LoopField%
+                IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Shortcut, %A_LoopField%
+            }
+
+        }
 
 	}
 
@@ -100,22 +111,12 @@ Gui, Add, Text, x272 y85 w60 h30 , Rejoindre (Fight)
 Gui, Add, Button, x262 y170 w270 h30 gDetectAutomatically, Detecter automatiquement les positions
 Gui, Add, Edit, x572 y69 w-594 h-200 , Edit
 Gui, Add, Button, x22 y179 w100 h40 , Reset Default
-Gui, Add, GroupBox, x262 y219 w210 h160 , Follow auto position
+Gui, Add, GroupBox, x262 y219 w210 h160 , Raccourci
 Gui, Add, Button, x262 y379 w210 h30 disabled, Configurer (pas utilisé)
-Gui, Add, Text, x272 y259 w60 h20 , Haut
-Gui, Add, Text, x272 y289 w60 h20 , Bas
-Gui, Add, Text, x272 y319 w60 h20 , Gauche
-Gui, Add, Text, x362 y239 w30 h20 , X
-Gui, Add, Text, x412 y239 w30 h20 , Y
-Gui, Add, Text, x272 y349 w60 h20 , Droite
-Gui, Add, Edit, x352 y259 w50 h20 disabled vUpDirectionX, %UpDirectionX%
-Gui, Add, Edit, x402 y259 w50 h20 disabled vUpDirectionY, %UpDirectionY%
-Gui, Add, Edit, x352 y289 w50 h20 disabled vDownDirectionX, %DownDirectionX%
-Gui, Add, Edit, x402 y289 w50 h20 disabled vDownDirectionY, %DownDirectionY%
-Gui, Add, Edit, x352 y319 w50 h20 disabled vLeftDirectionX, %LeftDirectionX%
-Gui, Add, Edit, x402 y319 w50 h20 disabled vLeftDirectionY, %LeftDirectionY%
-Gui, Add, Edit, x352 y349 w50 h20 disabled vRightDirectionX, %RightDirectionX%
-Gui, Add, Edit, x402 y349 w50 h20 disabled vRightDirectionY, %RightDirectionY%
+Gui, Add, Text, x272 y239 w70 h30 , Personnage suivant
+Gui, Add, Text, x272 y279 w70 h30 , Personnage précédant
+Gui, Add, Edit, x352 y239 w50 h20 vShortcutNextCharacter, %ShortcutNextCharacter%
+Gui, Add, Edit, x352 y279 w50 h20 vShortcutPreviousCharacter, %ShortcutPreviousCharacter%
 Gui, Add, GroupBox, x542 y19 w180 h150 , Accessibilité
 Gui, Add, CheckBox, x552 y49 w160 h40 , %TextConfirmCharactersAllReady%
 
@@ -190,6 +191,18 @@ if(ConfirmCharactersAllReady == 1){
             
         }
 
+        Loop, Parse, allVNameShortcut, "|"
+        {   
+            value := %A_LoopField%
+            
+            if(value == "")
+                IniWrite, "", %A_ScriptDir%\config.ini, Shortcut, %A_LoopField%
+            else
+                IniWrite, %value%, %A_ScriptDir%\config.ini, Shortcut, %A_LoopField%
+            
+        }
+
+
         Gui, Hide
         return
 
@@ -226,4 +239,8 @@ if(ConfirmCharactersAllReady == 1){
         return
 
 }
-       
+
+AnyKeyWait() {
+   Input, SingleKey, L1, {LControl}{RControl}{LAlt}{RAlt}{LShift}{RShift}{LWin}{RWin}{AppsKey}{F1}{F2}{F3}{F4}{F5}{F6}{F7}{F8}{F9}{F10}{F11}{F12}{Left}{Right}{Up}{Down}{Home}{End}{PgUp}{PgDn}{Del}{Ins}{BS}{CapsLock}{NumLock}{PrintScreen}{Pause}
+   
+}
