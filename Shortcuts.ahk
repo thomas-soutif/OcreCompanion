@@ -55,7 +55,7 @@ SkipTheTurn(){
         return
     }
 
-    sleep 100
+    sleep 500
     SwitchToNextCharacter()
 
 }
