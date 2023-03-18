@@ -205,7 +205,7 @@ if(ConfirmCharactersAllReady == 1){
         }
 
 
-        Gui, Hide
+        Gui, Destroy
         return
 
     ResetDefault:

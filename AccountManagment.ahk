@@ -86,8 +86,7 @@ AccountManagment(){
 		IniWrite, %listCharacters%, %A_ScriptDir%\config.ini, CharactersList, listCharacters
 	}
 		listCharacters := ""
-	
-		Gui, Hide
+		Gui, Destroy
 		return
 
 	MooveCharacterUp:
