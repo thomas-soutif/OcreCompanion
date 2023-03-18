@@ -18,8 +18,9 @@ SetDefaults(void)
 	return
 }
 
-	MainWindowsX :=500 
-	MainWindowsY :=361 
+	OldMainWindowsX :=500 
+	OldMainWindowsY :=361 
+	LoadPositionWindowXandY()
 	MainWindowsW :=269 
 	MainWindowsH :=454
 	TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
@@ -35,7 +36,7 @@ SetDefaults(void)
 	timerVerifyNewPosition := 1000
 	ignoreNoDelayWarningForThisSession := 0
 	KeyPressQueue := New ListCustom
-	NameOfWindows = "DofusMultiAccountTool"
+	NameOfWindows = DofusMultiAccountTool 1.0 TM
 START:
 
 if !FileExist("%A_ScriptDir%\config.ini"){
@@ -104,7 +105,7 @@ CreateShowCharacterBox()
 
 
 Gui, Main:+AlwaysOnTop
-Gui, Main:Show, x%MainWindowsX% y%MainWindowsY% w%MainWindowsW% h%MainWindowsH% , DofusMultiAccountTool
+Gui, Main:Show, x%MainWindowsX% y%MainWindowsY% w%MainWindowsW% h%MainWindowsH% , %NameOfWindows%
 
 SetTimer,VerifyNewPositionFollowAuto, %timerVerifyNewPosition%
 
@@ -138,6 +139,7 @@ ReloadGui:
 	WinGetPos, xPos,yPos,wPos,hPos
 	MainWindowsX :=xPos 
 	MainWindowsY :=yPos
+	VerificationPositionMainWindows() ; Save new position
 	Gui, Main:Destroy
 	;MsgBox , stop
 	goto start
@@ -147,6 +149,10 @@ ReloadGui:
 
 ~!LButton::
 ~LButton::
+
+;Verifier si la fenetre à changer de position afin d'enregistrer les coordonnées
+VerificationPositionMainWindows()
+
 Gui, Main:Submit, NoHide
 if (FollowAutoActive == 0 and NoDelayActive == 0 ){
 	return
@@ -346,4 +352,41 @@ LoadQuickOptionsState(){
 	
 	
 
+}
+
+VerificationPositionMainWindows(){
+	global
+	; On vérifie qu'il s'agit de la fenêtre principale du Script
+  	WinGetTitle, title, A
+	if(title != NameOfWindows){
+		return
+	}
+	WinGetPos, x, y, w, h, A ; récupérer la position actuelle de la fenêtre active
+	if (x != MainWindowsX or y != MainWindowsX) ; vérifier si la position a changé
+	{
+		IniWrite, %x%, %A_ScriptDir%\config.ini, PositionMainWindow, MainWindowsX
+		IniWrite, %y%, %A_ScriptDir%\config.ini, PositionMainWindow, MainWindowsY
+
+		OldMainWindowsX := x
+		OldMainWindowsY := y
+	}
+}
+
+LoadPositionWindowXandY()
+{
+
+	global
+	IniRead, x, %A_ScriptDir%\config.ini, PositionMainWindow, MainWindowsX
+	IniRead, y, %A_ScriptDir%\config.ini, PositionMainWindow, MainWindowsY
+	MainWindowsX := 500
+	MainWindowsY := 361
+	if(x != "")
+	{
+		MainWindowsX := x
+	}
+	if(y != ""){
+		MainWindowsY := y
+	}
+
+	
 }
