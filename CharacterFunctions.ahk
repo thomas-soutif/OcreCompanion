@@ -308,7 +308,7 @@ JoinFightForAllCharacters(){
 
 
 GroupCharacters(){
-	characterNames := GetCharacterNames()
+	characterNames := GetCharacterDetectedInGame()
 	characterNames = %characterNames%  
 	
 	if !(List(characterNames,2)){
