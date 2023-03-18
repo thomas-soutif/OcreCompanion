@@ -156,7 +156,6 @@ ReloadGui:
 
 ;Verifier si la fenetre à changer de position afin d'enregistrer les coordonnées
 VerificationPositionMainWindows()
-
 Gui, Main:Submit, NoHide
 if (FollowAutoActive == 0 and NoDelayActive == 0 ){
 	return
@@ -266,6 +265,7 @@ ShellEvent(wParam, lParam) {
 			}
 		}
     }
+	return
 }
 
 
@@ -285,7 +285,7 @@ NoDelayClick(){
 		ignoreNoDelayWarningForThisSession := 1
 	}
 	IniWrite, %NoDelayActive%, %A_ScriptDir%\config.ini, QuickOptionsState, NoDelayActive
-
+	return
 }
 
 
@@ -295,6 +295,7 @@ FightActiveClick(){
 	global
 	Gui, Main:Submit, NoHide
 	IniWrite, %FightModeActive%, %A_ScriptDir%\config.ini, QuickOptionsState, FightModeActive
+	return
 }
 
 WM_KEYDOWN(virtualCode)
@@ -303,7 +304,7 @@ WM_KEYDOWN(virtualCode)
 	if(GetCurrentCharacterFocusing() != ""){
 		VerifyShortcuts(virtualCode)
 	}
-    
+    return
 }
 
 LoadQuickOptionsState(){
@@ -353,7 +354,7 @@ LoadQuickOptionsState(){
  
 	Gui, Main:Submit, NoHide
 
-	
+	return
 	
 
 }
@@ -374,6 +375,7 @@ VerificationPositionMainWindows(){
 		OldMainWindowsX := x
 		OldMainWindowsY := y
 	}
+	return
 }
 
 LoadPositionWindowXandY()
@@ -391,6 +393,6 @@ LoadPositionWindowXandY()
 	if(y != ""){
 		MainWindowsY := y
 	}
-
+	return
 	
 }
