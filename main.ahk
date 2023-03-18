@@ -53,8 +53,9 @@ dofus_icon_imageLocation = %A_ScriptDir%\images\dofus_icon.png
 group_icon_imageLocation = %A_ScriptDir%\images\group_icon.png
 ready_fight_imageLocation = %A_ScriptDir%\images\ready_fight.png
 join_fight_icon_imageLocation = %A_ScriptDir%\images\join_fight_icon.png
+config_icon_imageLocation = %A_ScriptDir%\images\config_icon.png
 Gui, Main:New, +Resize -MaximizeBox
-Gui, Main:Add, Button, x12 y19 w110 h30 gAccountManagment , Personnages
+;Gui, Main:Add, Button, x12 y19 w110 h30 gAccountManagment , Personnages
 Gui, Main:Add, Button, x150 y19 w110 h30 gAdvancedOptionsGui , Options
 Gui, Main:Add, GroupBox, x22 y320 w150 h110 , Options rapide
 Gui, Main:Add, GroupBox, x10 y160 w240 h155 , Personnages detectés en jeu
@@ -63,6 +64,7 @@ Gui, Main:Add, Text, x180 y392 , Detecter les
 Gui, Main:Add, Text, x180 y405 , personnages
 Gui, Main:Add, CheckBox, x27 y375 w90 h20 vFightModeActive gFightActiveClick ,%FightModeText%
 Gui, Main:Add, CheckBox, x27 y400 w145 h20 vNoDelayActive gNoDelayClick ,%NoDelayText%
+Gui, Add, Picture, x223 y287 w25 h25 gAccountManagment , %config_icon_imageLocation%
 Gui, Add, Picture, x180 y350 w50 h40 gReloadGui, %dofus_icon_imageLocation%
 Gui, Add, Picture, x180 y77 w75 h75 gGroupCharacters, %group_icon_imageLocation%
 Gui, Add, Picture, x100 y80 w70 h70 gJoinFightForAllCharacters, %join_fight_icon_imageLocation%
