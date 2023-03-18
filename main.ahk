@@ -35,6 +35,7 @@ SetDefaults(void)
 	timerVerifyNewPosition := 1000
 	ignoreNoDelayWarningForThisSession := 0
 	KeyPressQueue := New ListCustom
+	NameOfWindows = "DofusMultiAccountTool"
 START:
 
 if !FileExist("%A_ScriptDir%\config.ini"){
@@ -59,7 +60,7 @@ Gui, Main:Add, GroupBox, x10 y160 w240 h155 , Personnages detectés en jeu
 Gui, Main:Add, CheckBox, x27 y350 w145 h20 vFollowAutoActive gFollowAutoActiveClick , %FollowAutoText%
 Gui, Main:Add, Text, x180 y392 , Detecter les 
 Gui, Main:Add, Text, x180 y405 , personnages
-Gui, Main:Add, CheckBox, x27 y375 w90 h20 vFightModeActive ,%FightModeText%
+Gui, Main:Add, CheckBox, x27 y375 w90 h20 vFightModeActive gFightActiveClick ,%FightModeText%
 Gui, Main:Add, CheckBox, x27 y400 w145 h20 vNoDelayActive gNoDelayClick ,%NoDelayText%
 Gui, Add, Picture, x180 y350 w50 h40 gReloadGui, %dofus_icon_imageLocation%
 Gui, Add, Picture, x180 y77 w75 h75 gGroupCharacters, %group_icon_imageLocation%
@@ -101,12 +102,13 @@ DllCall("RegisterShellHookWindow", "uint", Script_Hwnd)
 ;...
 CreateShowCharacterBox()
 
+
 Gui, Main:+AlwaysOnTop
 Gui, Main:Show, x%MainWindowsX% y%MainWindowsY% w%MainWindowsW% h%MainWindowsH% , DofusMultiAccountTool
 
 SetTimer,VerifyNewPositionFollowAuto, %timerVerifyNewPosition%
 
-
+LoadQuickOptionsState()
 ; Boucle principale
 Loop
 {
@@ -122,6 +124,8 @@ Loop
 	
 }
 #include %A_ScriptDir%\RegisterAllKey.ahk
+
+
 
 Return
 
@@ -226,6 +230,7 @@ if(windowsFinId){
 	}
 	
 }
+
 return
 
 ShellEvent(wParam, lParam) {
@@ -269,7 +274,17 @@ NoDelayClick(){
 		MsgBox,4096, Mode no delay prévention, "Attention, le mode delay permet de reproduire instantanément tout vos clicks sur vos autres personnages. `n Utilisez le pour accepter vos quetes,les valider, mais évitez de vous déplacer avec car c'est passible de bannissement. "
 		ignoreNoDelayWarningForThisSession := 1
 	}
+	IniWrite, %NoDelayActive%, %A_ScriptDir%\config.ini, QuickOptionsState, NoDelayActive
 
+}
+
+
+
+
+FightActiveClick(){
+	global
+	Gui, Main:Submit, NoHide
+	IniWrite, %FightModeActive%, %A_ScriptDir%\config.ini, QuickOptionsState, FightModeActive
 }
 
 WM_KEYDOWN(virtualCode)
@@ -281,24 +296,54 @@ WM_KEYDOWN(virtualCode)
     
 }
 
-
-SaveQuickOptionsState(){
-
+LoadQuickOptionsState(){
+	global
+	
+	Gui, Main:Submit, NoHide
 	ifexist, %A_ScriptDir%\config.ini
 	{
-        
-		IniRead,value,%A_ScriptDir%\config.ini,[QuickOptionsState], JoinFightMin
-		if(value == "ERROR"){
-			IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Timers, JoinFightMin
-			IniWrite, %value%, %A_ScriptDir%\config.ini, Timers, JoinFightMin
-		}
-
-		IniRead,value,%A_ScriptDir%\config.ini,Timers, JoinFightMax
-		if(value == "ERROR"){
-			IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Timers, JoinFightMax
-			IniWrite, %value%, %A_ScriptDir%\config.ini, Timers, JoinFightMax
-		}
+		IniRead, FollowAutoActiveTemp, %A_ScriptDir%\config.ini, QuickOptionsState, FollowAutoActive
+		IniRead, FightModeActiveTemp, %A_ScriptDir%\config.ini, QuickOptionsState, FightModeActive
+		IniRead, NoDelayActiveTemp, %A_ScriptDir%\config.ini, QuickOptionsState, NoDelayActive
+		
         
 	}
+	
+	if(FollowAutoActiveTemp == 1){
+		GuiControl, focus, %FollowAutoText%,
+		Loop 10 {
+			ControlClick, %FollowAutoText%, A
+			if(FollowAutoActive == 1){
+				break
+			}
+		}
+ 		
+	}
+
+	if(FightModeActiveTemp == 1){
+		GuiControl, focus, %FightModeText%,
+		Loop 10 {
+			ControlClick, %FightModeText%, A
+			if(FightModeActive == 1){
+				break
+			}
+		}
+	}
+
+	if(NoDelayActiveTemp == 1){
+		GuiControl, focus, %NoDelayText%,
+		Loop 10 {
+			ControlClick, %NoDelayText%, A
+			if(NoDelayActive == 1){
+				break
+		}
+	}
+ 	
+	}
+ 
+	Gui, Main:Submit, NoHide
+
+	
+	
 
 }

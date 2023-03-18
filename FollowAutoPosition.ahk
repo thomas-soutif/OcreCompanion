@@ -124,6 +124,7 @@ FollowAutoActiveClick(){
 		}
 
 	}
+    IniWrite, %FollowAutoActive%, %A_ScriptDir%\config.ini, QuickOptionsState, FollowAutoActive
 }
 
 
