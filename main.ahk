@@ -107,7 +107,9 @@ CreateShowCharacterBox()
 
 
 Gui, Main:+AlwaysOnTop
-Gui, Main:Show, x%MainWindowsX% y%MainWindowsY% w%MainWindowsW% h%MainWindowsH% , %NameOfWindows%
+Gui, Main: +E0x20
+Gui, Main:Color, 729799
+Gui, Main:Show, x%MainWindowsX% y%MainWindowsY% w%MainWindowsW% h%MainWindowsH% , %NameOfWindows% 
 
 SetTimer,VerifyNewPositionFollowAuto, %timerVerifyNewPosition%
 
