@@ -20,9 +20,7 @@ SetDefaults(void)
 
 	OldMainWindowsX :=500 
 	OldMainWindowsY :=361 
-	LoadPositionWindowXandY()
-	MainWindowsW :=269 
-	MainWindowsH :=454
+	
 	TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
 	FollowAutoActive := 0
 	FightModeActive := 0
@@ -44,7 +42,9 @@ SetDefaults(void)
 	LastCharactersRegistered := New ListCustom
 	LastCharactersRegistered.SetList("")
 START:
-
+LoadPositionWindowXandY()
+	MainWindowsW :=269 
+	MainWindowsH :=454
 if !FileExist("%A_ScriptDir%\config.ini"){
 	FileAppend,, %A_ScriptDir%\config.ini
 
@@ -161,7 +161,7 @@ ExitApp
 ~LButton::
 
 ;Verifier si la fenetre à changer de position afin d'enregistrer les coordonnées
-VerificationPositionMainWindows()
+SetTimer,VerificationPositionMainWindows, 1000
 Gui, Main:Submit, NoHide,
 if (FollowAutoActive == 0 and NoDelayActive == 0 ){
 	return
@@ -400,11 +400,15 @@ VerificationPositionMainWindows(){
 	WinGetPos, x, y, w, h, A ; récupérer la position actuelle de la fenêtre active
 	if (x != MainWindowsX or y != MainWindowsX) ; vérifier si la position a changé
 	{
+		;Verifier que les nouvelles positions ne soient pas vide
+		if(x =="" or y == ""){
+			return
+		}
 		IniWrite, %x%, %A_ScriptDir%\config.ini, PositionMainWindow, MainWindowsX
 		IniWrite, %y%, %A_ScriptDir%\config.ini, PositionMainWindow, MainWindowsY
 
-		OldMainWindowsX := x
-		OldMainWindowsY := y
+		MainWindowsX := x
+		MainWindowsY := y
 	}
 	return
 }
