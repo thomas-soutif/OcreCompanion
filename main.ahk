@@ -42,6 +42,7 @@ SetDefaults(void)
 	LastCharacterFocusPath := ""
 	loopCharacterCreationRun := 1
 	LastCharactersRegistered := New ListCustom
+	LastCharactersRegistered.SetList("")
 START:
 
 if !FileExist("%A_ScriptDir%\config.ini"){
@@ -71,7 +72,7 @@ Gui, Main:Add, Text, x180 y405 , personnages
 Gui, Main:Add, CheckBox, x27 y375 w90 h20 vFightModeActive gFightActiveClick ,%FightModeText%
 Gui, Main:Add, CheckBox, x27 y400 w145 h20 vNoDelayActive gNoDelayClick ,%NoDelayText%
 Gui, Add, Picture, x223 y287 w25 h25 gAccountManagment , %config_icon_imageLocation%
-Gui, Add, Picture, x180 y350 w50 h40 gReloadGui, %dofus_icon_imageLocation%
+Gui, Add, Picture, x180 y350 w50 h40 gCreateShowCharacterBox, %dofus_icon_imageLocation%
 Gui, Add, Picture, x180 y77 w75 h75 gGroupCharacters, %group_icon_imageLocation%
 Gui, Add, Picture, x100 y80 w70 h70 gJoinFightForAllCharacters, %join_fight_icon_imageLocation%
 Gui, Add, Picture, x20 y80 w70 h70  gFightReadyForAllCharacters, %ready_fight_imageLocation%
@@ -146,36 +147,14 @@ GuiClose:
 Quitter:
 ExitApp
 
-ReloadGui:
+;ReloadGui:
 
 	;WinGetPos, xPos,yPos,wPos,hPos
 	;MainWindowsX :=xPos 
 	;MainWindowsY :=yPos
 	;MsgBox, %MainWindowsX%
 	;VerificationPositionMainWindows() ; Save new position
-	allCharacterFocus := FocusCharactersPath.GetAll()
-	allCharacters :=  CharactersPath.GetAll()
-	Loop, Parse, allCharacterFocus, | 
-	{
-		GuiControl,Hide, %A_LoopField%
-	}
-	;MsgBox, %allCharacters%
-	Loop, Parse, allCharacters, | 
-	{
-		GuiControl,Hide, %A_LoopField%
-	}
-	
-	CreateShowCharacterBox()
-	if(loopCharacterCreationRun < 10)
-	{
-		return
-	}
-	loopCharacterCreationRun := 1
-	
-	Gui, Main:Destroy
-	;MsgBox , stop
-	goto start
-	return
+	;return
 ;Des que l'utilisateur fait un clique droit
 
 ~!LButton::
@@ -452,16 +431,25 @@ LoadPositionWindowXandY()
 VerifyIfCharacterOrderChanged(){
 
 	global
-	if(LastCharactersRegistered.GetSize() == 1)
+	lo := LastCharactersRegistered.GetSize()
+
+	;MsgBox, %lo%
+	if(LastCharactersRegistered.GetSize() == 0)
 	{
 		; On remplie
-		LastCharactersRegistered.SetList(GetCharacterDetectedInGame())
+		characCustomList := New ListCustom
+		characCustomList.SetList(GetCharacterDetectedInGame())
+		if(characCustomList.GetSize() > 0){
+			CreateShowCharacterBox()
+		}
+		
+		
 		return
 	}
 	
 	if(LastCharactersRegistered.GetAll() != GetCharacterDetectedInGame() ){
 		;La liste , l'ordre n'est plus le même, on met à jour
-		Gosub, reloadGui
+		CreateShowCharacterBox()
 		return
 	}
 	

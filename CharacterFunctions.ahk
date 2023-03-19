@@ -84,7 +84,17 @@ CreateShowCharacterBox(){
 		height:=40
 	
 	
-	
+	allCharacterFocus := FocusCharactersPath.GetAll()
+	allCharacters :=  CharactersPath.GetAll()
+	Loop, Parse, allCharacterFocus, | 
+	{
+		GuiControl,Hide, %A_LoopField%
+	}
+	;MsgBox, %allCharacters%
+	Loop, Parse, allCharacters, | 
+	{
+		GuiControl,Hide, %A_LoopField%
+	}
 
 
 	characterNames := GetCharacterDetectedInGame()
@@ -167,9 +177,19 @@ CreateShowCharacterBox(){
 
 		
 	}
-	Gui, Main:Show
-	loopCharacterCreationRun := loopCharacterCreationRun + 1
-	LastCharactersRegistered.SetList(GetCharacterDetectedInGame())
+	
+	if(loopCharacterCreationRun < 10)
+	{
+		Gui, Main:Show
+		loopCharacterCreationRun := loopCharacterCreationRun + 1
+		LastCharactersRegistered.SetList(GetCharacterDetectedInGame())
+	}else{
+		loopCharacterCreationRun := 1
+		Gui, Main:Destroy
+		Gosub, start
+	}
+
+
 	return
 }
 

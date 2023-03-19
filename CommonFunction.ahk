@@ -113,6 +113,10 @@ Class ListCustom{
   }
   GetSize(){
     listC := This.listCustomAttr
+    if(listC == "|")
+    {
+      return 0
+    }
     size := 0
     Loop, parse, listC , |
     {
