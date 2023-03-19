@@ -39,7 +39,6 @@ SetDefaults(void)
 	NameOfWindows = DofusMultiAccountTool 1.0 TM
 	FocusCharactersPath := New ListCustom
 	CharactersPath := New ListCustom
-
 	LastCharacterFocusPath := ""
 
 START:
@@ -109,7 +108,6 @@ DllCall("RegisterShellHookWindow", "uint", Script_Hwnd)
 ;OnMessage(DllCall("RegisterWindowMessage", "str", "SHELLHOOK"), "ShellEvent")
 ;...
 CreateShowCharacterBox()
-OnMessage(0x0011, "OnFocus")
 
 Gui, Main:+AlwaysOnTop
 Gui, Main: +E0x20
@@ -121,8 +119,9 @@ SetTimer,VerifyNewPositionFollowAuto, %timerVerifyNewPosition%
 LoadQuickOptionsState()
 ; Boucle principale
 Loop
-{
-	Input, Var, L1 V, {F1}{F2}{F3}{F4}{F5}{F6}{F7}{F8}{F9}{F10}{F11}{F12}
+{	
+	
+	Input, Var, V L1 T0.5,{F1}{F2}{F3}{F4}{F5}{F6}{F7}{F8}{F9}{F10}{F11}{F12}
 	if(Var != ""){
 		KeyPressQueue.Add(Var)
 	}
@@ -131,7 +130,7 @@ Loop
 	KeyPressQueue.SetList("")
 	vkCode := GetKeyVK(KeyFirst)
 	WM_KEYDOWN(vkCode)
-	
+	;MsgBox, "test"
 }
 #include %A_ScriptDir%\RegisterAllKey.ahk
 
@@ -319,7 +318,7 @@ WM_KEYDOWN(virtualCode)
 
 VerifyFocusCharacter(){
 	global
-	
+
 	if(GetCurrentCharacterFocusing() == ""){
 		return
 	}
