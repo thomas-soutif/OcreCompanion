@@ -332,7 +332,6 @@ VerifyFocusCharacter(){
 	GuiControl, Show, %focusCharacterImagePath%
 	LastCharacterFocusPath := focusCharacterImagePath
 	
-	
 }
 
 LoadQuickOptionsState(){

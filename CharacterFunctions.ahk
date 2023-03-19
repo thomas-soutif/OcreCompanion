@@ -111,41 +111,49 @@ CreateShowCharacterBox(){
 		;MsgBox, % CountItems
 		folder = %A_ScriptDir%\images\characters_bank_images\%classCharacter%
 		listFiles := list_files(folder)
+
+		TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
 		
 		fileSelectToShow := get_element_in_list_file(1,listFiles) ; Pour le moment on prend tjrs la première image
+		characterName := StrReplace(fileSelectToShow, ".png")
+		CharacterFocusNameFile := StrReplace(fileSelectToShow, ".png", "_focus") ; On récupére l'image focus de ce fichier
+		
+		pictureFocusToTempPath = %TempLocationForCharacter%%A_LoopField%.png ; Sera le chemin TempPath\NomDuPersonnage.png
 		fullPathPicture = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%fileSelectToShow%
 		fullPathPictureFocus := StrReplace(fullPathPicture, ".png", "_focus.png")
+		FileCopy, %fullPathPictureFocus%,%pictureFocusToTempPath%, 1 ; On va enregister sous le nomDuPersonnage
+		
 		;classCharacterImageLocation = %A_ScriptDir%\images\%classCharacter%.png
 		;MsgBox, %classCharacterImageLocation%
 		;MsgBox, %classCharacter%
-		;TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
+		
 		;fullPathPicture = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%fileSelectToShow%
-		;pictureToTempPath = %TempLocationForCharacter%%A_LoopField%.png
-		;FileCopy, %fullPathPicture%,%pictureToTempPath%, 1
+		
+		
 		if(i < 4){
 			;GUI, Main:Add, Button, X+5 w70 h40 gSelectCharacter, % A_LoopField
 			Gui,Add, Picture, X+15 w60 h60 vCharacterPic_%A_Index%, %fullPathPicture%
-			Gui,Add, Picture, XP w60 h60 vCharacterPic_focus_%A_Index%, %fullPathPictureFocus%
+			Gui,Add, Picture, XP w60 h60 vCharacterPic_focus_%A_Index%, %pictureFocusToTempPath%
 			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%
 		}
 			
 		if(i ==4){
 			;GUI, Main:Add, Button, xm+10 ym+10 w10 h0, Section
 			GUI, Main:Add, Picture, ym+70 xm+10 w60 h60 vCharacterPic_%A_Index% ,%fullPathPicture%
-			Gui,Add, Picture, XP YP w60 h60 vCharacterPic_focus_%A_Index%, %fullPathPictureFocus%
+			Gui,Add, Picture, XP YP w60 h60 vCharacterPic_focus_%A_Index%, %pictureFocusToTempPath%
 			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%
 		}
 			
 		if(i > 4){
 			GUI, Main:Add, Picture,X+15 w60 h60 vCharacterPic_%A_Index% ,%fullPathPicture%
-			Gui,Add, Picture, XP w60 h60 vCharacterPic_focus_%A_Index%, %fullPathPictureFocus%
+			Gui,Add, Picture, XP w60 h60 vCharacterPic_focus_%A_Index%, %pictureFocusToTempPath%
 			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%
 		}
 			
 
 		i := i+1
-		GuiControl, Hide, %fullPathPictureFocus%
-		FocusCharactersPath.Add(fullPathPictureFocus)
+		GuiControl, Hide, %pictureFocusToTempPath%
+		FocusCharactersPath.Add(pictureFocusToTempPath)
 
 		CharacterSelect_%A_Index%: 
 		CurrentCharacterSelect = %A_LoopField%
