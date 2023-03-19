@@ -37,6 +37,11 @@ SetDefaults(void)
 	ignoreNoDelayWarningForThisSession := 0
 	KeyPressQueue := New ListCustom
 	NameOfWindows = DofusMultiAccountTool 1.0 TM
+	FocusCharactersPath := New ListCustom
+	CharactersPath := New ListCustom
+
+	LastCharacterFocusPath := ""
+
 START:
 
 if !FileExist("%A_ScriptDir%\config.ini"){
@@ -104,7 +109,7 @@ DllCall("RegisterShellHookWindow", "uint", Script_Hwnd)
 ;OnMessage(DllCall("RegisterWindowMessage", "str", "SHELLHOOK"), "ShellEvent")
 ;...
 CreateShowCharacterBox()
-
+OnMessage(0x0011, "OnFocus")
 
 Gui, Main:+AlwaysOnTop
 Gui, Main: +E0x20
@@ -156,7 +161,7 @@ ReloadGui:
 
 ;Verifier si la fenetre à changer de position afin d'enregistrer les coordonnées
 VerificationPositionMainWindows()
-Gui, Main:Submit, NoHide
+Gui, Main:Submit, NoHide,
 if (FollowAutoActive == 0 and NoDelayActive == 0 ){
 	return
 }
@@ -300,11 +305,38 @@ FightActiveClick(){
 
 WM_KEYDOWN(virtualCode)
 {
+	
 	;On vérifie les raccourcis uniquement si la fenetre active est une des personnages connectés
 	if(GetCurrentCharacterFocusing() != ""){
 		VerifyShortcuts(virtualCode)
+		; On vérifie le focus personnage
+		VerifyFocusCharacter()
 	}
+
+	
     return
+}
+
+VerifyFocusCharacter(){
+	global
+	
+	if(GetCurrentCharacterFocusing() == ""){
+		return
+	}
+	
+    currentFocusCharacterIndex := GetCurrentCharacterFocusingIndex()
+	focusCharactersAllPath := FocusCharactersPath.GetAll()
+	focusCharacterImagePath := FocusCharactersPath.Get(currentFocusCharacterIndex)
+	if(focusCharacterImagePath == LastCharacterFocusPath){
+		return
+	}
+
+	CharacterImagePath := CharactersPath.Get(currentFocusCharacterIndex)
+	GuiControl, Hide, %LastCharacterFocusPath%
+	GuiControl, Show, %focusCharacterImagePath%
+	LastCharacterFocusPath := focusCharacterImagePath
+	
+	
 }
 
 LoadQuickOptionsState(){
@@ -342,6 +374,7 @@ LoadQuickOptionsState(){
 	}
 
 	if(NoDelayActiveTemp == 1){
+		ignoreNoDelayWarningForThisSession := 1
 		GuiControl, focus, %NoDelayText%,
 		Loop 10 {
 			ControlClick, %NoDelayText%, A
@@ -396,3 +429,4 @@ LoadPositionWindowXandY()
 	return
 	
 }
+

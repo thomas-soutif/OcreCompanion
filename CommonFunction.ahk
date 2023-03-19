@@ -206,6 +206,22 @@ GetCurrentCharacterFocusing(){
     return ""
 
 }
+GetCurrentCharacterFocusingIndex(){
+
+  characters := GetCharacterDetectedInGame()
+  SetTitleMatchMode 2
+  WinGetTitle, title, A
+  Loop, Parse, characters, "|"
+		{
+      
+      if InStr(title, A_LoopField){
+        return A_Index
+      }
+    }
+    return ""
+
+}
+
 
 DetectWindowsByName(str)
 {

@@ -90,6 +90,7 @@ CreateShowCharacterBox(){
 	GUI, Main:Margin, 22,180
 	i := 1
 	listCharacterNotDetect := ""
+	FocusCharactersPath.SetList("")
 	
 	Loop, Parse, characterNames, "|"
 	{
@@ -113,6 +114,7 @@ CreateShowCharacterBox(){
 		
 		fileSelectToShow := get_element_in_list_file(1,listFiles) ; Pour le moment on prend tjrs la première image
 		fullPathPicture = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%fileSelectToShow%
+		fullPathPictureFocus := StrReplace(fullPathPicture, ".png", "_focus.png")
 		;classCharacterImageLocation = %A_ScriptDir%\images\%classCharacter%.png
 		;MsgBox, %classCharacterImageLocation%
 		;MsgBox, %classCharacter%
@@ -123,6 +125,7 @@ CreateShowCharacterBox(){
 		if(i < 4)
 			;GUI, Main:Add, Button, X+5 w70 h40 gSelectCharacter, % A_LoopField
 			Gui,Add, Picture, X+15 w60 h60 vCharacterPic_%A_Index%, %fullPathPicture%
+			Gui,Add, Picture, XP w60 h60 vCharacterPic_focus_%A_Index%, %fullPathPictureFocus%
 			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%
 		if(i ==4)
 			;GUI, Main:Add, Button, xm+10 ym+10 w10 h0, Section
@@ -133,7 +136,9 @@ CreateShowCharacterBox(){
 			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%
 
 		i := i+1
-
+		GuiControl, Hide, %fullPathPictureFocus%
+		FocusCharactersPath.Add(fullPathPictureFocus)
+		CharactersPath.Add(fullPathPicture)
 
 		CharacterSelect_%A_Index%: 
 		CurrentCharacterSelect = %A_LoopField%
@@ -526,6 +531,6 @@ SelectCharacter(){
 		}
 	}
 	
-	
+	VerifyFocusCharacter()
 	return
 }
