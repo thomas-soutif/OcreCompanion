@@ -118,7 +118,7 @@ CreateShowCharacterBox(){
 		characterName := StrReplace(fileSelectToShow, ".png")
 		CharacterFocusNameFile := StrReplace(fileSelectToShow, ".png", "_focus") ; On récupére l'image focus de ce fichier
 		
-		pictureFocusToTempPath = %TempLocationForCharacter%%A_LoopField%.png ; Sera le chemin TempPath\NomDuPersonnage.png
+		pictureFocusToTempPath = %TempLocationForCharacter%%A_LoopField%_%loopCharacterCreationRun%.png ; Sera le chemin TempPath\NomDuPersonnage.png
 		fullPathPicture = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%fileSelectToShow%
 		fullPathPictureFocus := StrReplace(fullPathPicture, ".png", "_focus.png")
 		FileCopy, %fullPathPictureFocus%,%pictureFocusToTempPath%, 1 ; On va enregister sous le nomDuPersonnage
@@ -129,25 +129,25 @@ CreateShowCharacterBox(){
 		
 		;fullPathPicture = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%fileSelectToShow%
 		
-		
+		Random,varRandom,1,100
 		if(i < 4){
 			;GUI, Main:Add, Button, X+5 w70 h40 gSelectCharacter, % A_LoopField
-			Gui,Add, Picture, X+15 w60 h60 vCharacterPic_%A_Index%, %fullPathPicture%
-			Gui,Add, Picture, XP w60 h60 vCharacterPic_focus_%A_Index%, %pictureFocusToTempPath%
-			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%
+			Gui,Add, Picture, X+15 w60 h60 vCharacterPic_%A_Index%_%loopCharacterCreationRun%, %fullPathPicture%
+			Gui,Add, Picture, XP w60 h60 , %pictureFocusToTempPath%
+			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%_%loopCharacterCreationRun%
 		}
 			
 		if(i ==4){
 			;GUI, Main:Add, Button, xm+10 ym+10 w10 h0, Section
-			GUI, Main:Add, Picture, ym+70 xm+10 w60 h60 vCharacterPic_%A_Index% ,%fullPathPicture%
-			Gui,Add, Picture, XP YP w60 h60 vCharacterPic_focus_%A_Index%, %pictureFocusToTempPath%
-			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%
+			GUI, Main:Add, Picture, ym+70 xm+10 w60 h60 vCharacterPic_%A_Index%_%loopCharacterCreationRun% ,%fullPathPicture%
+			Gui,Add, Picture, XP YP w60 h60 , %pictureFocusToTempPath%
+			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%_%loopCharacterCreationRun%
 		}
 			
 		if(i > 4){
-			GUI, Main:Add, Picture,X+15 w60 h60 vCharacterPic_%A_Index% ,%fullPathPicture%
-			Gui,Add, Picture, XP w60 h60 vCharacterPic_focus_%A_Index%, %pictureFocusToTempPath%
-			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%
+			GUI, Main:Add, Picture,X+15 w60 h60 vCharacterPic_%A_Index%_%loopCharacterCreationRun% ,%fullPathPicture%
+			Gui,Add, Picture, XP w60 h60, %pictureFocusToTempPath%
+			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%_%loopCharacterCreationRun%
 		}
 			
 
@@ -161,6 +161,7 @@ CreateShowCharacterBox(){
 		
 	}
 	Gui, Main:Show
+	loopCharacterCreationRun := loopCharacterCreationRun + 1
 	return
 }
 

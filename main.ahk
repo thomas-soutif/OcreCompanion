@@ -39,7 +39,7 @@ SetDefaults(void)
 	NameOfWindows = DofusMultiAccountTool 1.0 TM
 	FocusCharactersPath := New ListCustom
 	LastCharacterFocusPath := ""
-
+	loopCharacterCreationRun := 1
 START:
 
 if !FileExist("%A_ScriptDir%\config.ini"){
@@ -50,6 +50,7 @@ TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
 ignoreNoDelayWarningForThisSession := 0
 IfNotExist, %TempLocationForCharacter%
    FileCreateDir, %TempLocationForCharacter%
+FileDelete, %TempLocationForCharacter%\*.*
 Gui, Main:Hide
 ; Chargement des chemins d'image utilisées
 dofus_icon_imageLocation = %A_ScriptDir%\images\dofus_icon.png
@@ -143,15 +144,27 @@ Quitter:
 ExitApp
 
 ReloadGui:
+
 	WinGetPos, xPos,yPos,wPos,hPos
+	VerificationPositionMainWindows() ; Save new position
 	MainWindowsX :=xPos 
 	MainWindowsY :=yPos
-	VerificationPositionMainWindows() ; Save new position
+	allCharacterFocus := FocusCharactersPath.GetAll()
+	Loop, Parse, allCharacterFocus, | 
+	{
+		GuiControl,Hide, %A_LoopField%
+	}
+	CreateShowCharacterBox()
+	if(loopCharacterCreationRun < 10)
+	{
+		return
+	}
+	loopCharacterCreationRun := 1
+	
 	Gui, Main:Destroy
 	;MsgBox , stop
 	goto start
 	return
-
 ;Des que l'utilisateur fait un clique droit
 
 ~!LButton::
