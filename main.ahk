@@ -38,8 +38,10 @@ SetDefaults(void)
 	KeyPressQueue := New ListCustom
 	NameOfWindows = DofusMultiAccountTool 1.0 TM
 	FocusCharactersPath := New ListCustom
+	CharactersPath := New ListCustom
 	LastCharacterFocusPath := ""
 	loopCharacterCreationRun := 1
+	LastCharactersRegistered := New ListCustom
 START:
 
 if !FileExist("%A_ScriptDir%\config.ini"){
@@ -130,7 +132,8 @@ Loop
 	KeyPressQueue.SetList("")
 	vkCode := GetKeyVK(KeyFirst)
 	WM_KEYDOWN(vkCode)
-	;MsgBox, "test"
+	VerifyIfCharacterOrderChanged()
+	
 }
 #include %A_ScriptDir%\RegisterAllKey.ahk
 
@@ -145,15 +148,23 @@ ExitApp
 
 ReloadGui:
 
-	WinGetPos, xPos,yPos,wPos,hPos
-	VerificationPositionMainWindows() ; Save new position
-	MainWindowsX :=xPos 
-	MainWindowsY :=yPos
+	;WinGetPos, xPos,yPos,wPos,hPos
+	;MainWindowsX :=xPos 
+	;MainWindowsY :=yPos
+	;MsgBox, %MainWindowsX%
+	;VerificationPositionMainWindows() ; Save new position
 	allCharacterFocus := FocusCharactersPath.GetAll()
+	allCharacters :=  CharactersPath.GetAll()
 	Loop, Parse, allCharacterFocus, | 
 	{
 		GuiControl,Hide, %A_LoopField%
 	}
+	;MsgBox, %allCharacters%
+	Loop, Parse, allCharacters, | 
+	{
+		GuiControl,Hide, %A_LoopField%
+	}
+	
 	CreateShowCharacterBox()
 	if(loopCharacterCreationRun < 10)
 	{
@@ -438,3 +449,20 @@ LoadPositionWindowXandY()
 	
 }
 
+VerifyIfCharacterOrderChanged(){
+
+	global
+	if(LastCharactersRegistered.GetSize() == 1)
+	{
+		; On remplie
+		LastCharactersRegistered.SetList(GetCharacterDetectedInGame())
+		return
+	}
+	
+	if(LastCharactersRegistered.GetAll() != GetCharacterDetectedInGame() ){
+		;La liste , l'ordre n'est plus le même, on met à jour
+		Gosub, reloadGui
+		return
+	}
+	
+}
