@@ -5,7 +5,7 @@
 #include %A_ScriptDir%\FollowAutoPosition.ahk
 #include %A_ScriptDir%\CharacterFunctions.ahk
 #include %A_ScriptDir%\Shortcuts.ahk
-
+#include %A_ScriptDir%\ShortcutsInterface.ahk
 ;global parameter of Window
 SetDefaults(void)
 {
@@ -58,7 +58,7 @@ ready_fight_imageLocation = %A_ScriptDir%\images\ready_fight.png
 join_fight_icon_imageLocation = %A_ScriptDir%\images\join_fight_icon.png
 config_icon_imageLocation = %A_ScriptDir%\images\config_icon.png
 Gui, Main:New, +Resize -MaximizeBox
-;Gui, Main:Add, Button, x12 y19 w110 h30 gAccountManagment , Personnages
+Gui, Main:Add, Button, x12 y19 w110 h30 gShortcutManagementGui , Raccourcis
 Gui, Main:Add, Button, x150 y19 w110 h30 gAdvancedOptionsGui , Options
 Gui, Main:Add, GroupBox, x22 y320 w150 h110 , Options rapide
 Gui, Main:Add, GroupBox, x10 y160 w240 h155 , Personnages detectés en jeu

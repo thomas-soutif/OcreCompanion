@@ -11,7 +11,6 @@ AdvancedOptionsGui(){
     allVNamePositionFollowAuto = UpDirectionX|UpDirectionY|DownDirectionX|DownDirectionY|LeftDirectionX|LeftDirectionY|RightDirectionX|RightDirectionY
     allVNameAccessibility = ConfirmCharactersAllReady
     allVNamePositionResolution = AcceptGroupButtonResolution|JoinFightButtonResolution
-    allVNameShortcut = ShortcutNextCharacter|ShortcutPreviousCharacter|ShortcutSkipTurn
     ;Chargement des paramètres
 
     ifexist, %A_ScriptDir%\config.ini
@@ -62,16 +61,6 @@ AdvancedOptionsGui(){
             }
 
         }
-        Loop,Parse, allVNameShortcut, "|"
-        {
-             IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Shortcut, %A_LoopField%
-             if(%A_LoopField% == "ERROR"){
-                IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Shortcut, %A_LoopField%
-                IniWrite, %value%, %A_ScriptDir%\config.ini, Shortcut, %A_LoopField%
-                IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Shortcut, %A_LoopField%
-            }
-
-        }
 
 	}
 
@@ -111,14 +100,8 @@ Gui, Add, Text, x272 y85 w60 h30 , Rejoindre (Fight)
 Gui, Add, Button, x262 y170 w270 h30 gDetectAutomatically, Detecter automatiquement les positions
 Gui, Add, Edit, x572 y69 w-594 h-200 , Edit
 Gui, Add, Button, x22 y179 w100 h40 , Reset Default
-Gui, Add, GroupBox, x262 y219 w210 h160 , Raccourci
-Gui, Add, Button, x262 y379 w210 h30 disabled, Configurer (pas utilisé)
-Gui, Add, Text, x272 y239 w70 h30 , Personnage suivant
-Gui, Add, Text, x272 y279 w70 h30 , Personnage précédant
-Gui, Add, Text, x272 y319 w70 h30 , Passer le tour
-Gui, Add, Edit, x352 y239 w50 h20 vShortcutNextCharacter, %ShortcutNextCharacter%
-Gui, Add, Edit, x352 y279 w50 h20 vShortcutPreviousCharacter, %ShortcutPreviousCharacter%
-Gui, Add, Edit, x352 y319 w50 h20 vShortcutSkipTurn, %ShortcutSkipTurn%
+;Gui, Add, GroupBox, x262 y219 w210 h160 , Raccourci
+;Gui, Add, Button, x262 y379 w210 h30 disabled, Configurer (pas utilisé)
 Gui, Add, GroupBox, x542 y19 w180 h150 , Accessibilité
 Gui, Add, CheckBox, x552 y49 w160 h40 , %TextConfirmCharactersAllReady%
 
