@@ -122,30 +122,37 @@ CreateShowCharacterBox(){
 		;fullPathPicture = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%fileSelectToShow%
 		;pictureToTempPath = %TempLocationForCharacter%%A_LoopField%.png
 		;FileCopy, %fullPathPicture%,%pictureToTempPath%, 1
-		if(i < 4)
+		if(i < 4){
 			;GUI, Main:Add, Button, X+5 w70 h40 gSelectCharacter, % A_LoopField
 			Gui,Add, Picture, X+15 w60 h60 vCharacterPic_%A_Index%, %fullPathPicture%
 			Gui,Add, Picture, XP w60 h60 vCharacterPic_focus_%A_Index%, %fullPathPictureFocus%
 			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%
-		if(i ==4)
+		}
+			
+		if(i ==4){
 			;GUI, Main:Add, Button, xm+10 ym+10 w10 h0, Section
 			GUI, Main:Add, Picture, ym+70 xm+10 w60 h60 vCharacterPic_%A_Index% ,%fullPathPicture%
+			Gui,Add, Picture, XP YP w60 h60 vCharacterPic_focus_%A_Index%, %fullPathPictureFocus%
 			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%
-		if(i > 4)
+		}
+			
+		if(i > 4){
 			GUI, Main:Add, Picture,X+15 w60 h60 vCharacterPic_%A_Index% ,%fullPathPicture%
+			Gui,Add, Picture, XP w60 h60 vCharacterPic_focus_%A_Index%, %fullPathPictureFocus%
 			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%
+		}
+			
 
 		i := i+1
 		GuiControl, Hide, %fullPathPictureFocus%
 		FocusCharactersPath.Add(fullPathPictureFocus)
-		CharactersPath.Add(fullPathPicture)
 
 		CharacterSelect_%A_Index%: 
 		CurrentCharacterSelect = %A_LoopField%
 
-		Gui, Main:Show
+		
 	}
-
+	Gui, Main:Show
 	return
 }
 

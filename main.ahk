@@ -38,7 +38,6 @@ SetDefaults(void)
 	KeyPressQueue := New ListCustom
 	NameOfWindows = DofusMultiAccountTool 1.0 TM
 	FocusCharactersPath := New ListCustom
-	CharactersPath := New ListCustom
 	LastCharacterFocusPath := ""
 
 START:
@@ -329,8 +328,6 @@ VerifyFocusCharacter(){
 	if(focusCharacterImagePath == LastCharacterFocusPath){
 		return
 	}
-
-	CharacterImagePath := CharactersPath.Get(currentFocusCharacterIndex)
 	GuiControl, Hide, %LastCharacterFocusPath%
 	GuiControl, Show, %focusCharacterImagePath%
 	LastCharacterFocusPath := focusCharacterImagePath
