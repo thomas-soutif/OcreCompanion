@@ -435,9 +435,6 @@ LoadPositionWindowXandY()
 VerifyIfCharacterOrderChanged(){
 
 	global
-	lo := LastCharactersRegistered.GetSize()
-
-	;MsgBox, %lo%
 	if(LastCharactersRegistered.GetSize() == 0)
 	{
 		; On remplie
@@ -446,8 +443,6 @@ VerifyIfCharacterOrderChanged(){
 		if(characCustomList.GetSize() > 0){
 			CreateShowCharacterBox()
 		}
-		
-		
 		return
 	}
 	
