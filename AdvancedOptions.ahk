@@ -103,122 +103,112 @@ Gui, Add, Button, x22 y179 w100 h40 gResetDefaultTimerOption , Reset Default
 ;Gui, Add, GroupBox, x262 y219 w210 h160 , Raccourci
 ;Gui, Add, Button, x262 y379 w210 h30 disabled, Configurer (pas utilisé)
 Gui, Add, GroupBox, x542 y19 w180 h150 , Accessibilité
-Gui, Add, CheckBox, x552 y49 w160 h40 , %TextConfirmCharactersAllReady%
+Gui, Add, CheckBox, x552 y49 w160 h40 vConfirmCharactersAllReady , %TextConfirmCharactersAllReady%
+GuiControl,, %TextConfirmCharactersAllReady%, %ConfirmCharactersAllReady%
 
-if(ConfirmCharactersAllReady == 1){
-        GuiControl,, %TextConfirmCharactersAllReady%, 1
-        
-}else{
-    GuiControl,, %TextConfirmCharactersAllReady%, 0
-}
+Gui, +AlwaysOnTop
+Gui, AdvancedOptions:Show, w750 h430, Options avancees - DofusMultiAccountTool
 
+return
 
 
-
-    Gui, +AlwaysOnTop
-    Gui, AdvancedOptions:Show, w750 h430, Options avancees - DofusMultiAccountTool
-
-
-
-    return
-
-
-    SaveAdvancedOptions:
-        Gui, Submit, NoHide
-        Loop, Parse, allVNameTimerOption, "|"
-        {   
-            value := %A_LoopField%
-            valueRound := floor(value)
-            if !(valueRound == 0)
-            {
-                IniWrite, %valueRound%, %A_ScriptDir%\config.ini, Timers, %A_LoopField%
-            }
-            else{
-                GuiControl, focus, %A_LoopField%,
-                send {Ctrl Down}a{Ctrl Up}
-                send {BackSpace}
-                IniRead, oldValue, %A_ScriptDir%\config.ini,Timers, %A_LoopField%
-
-
-                send %oldValue%
-               
-            }
-        }
-        Loop, Parse, allVNamePositionOption, "|"
-        {   
-            value := %A_LoopField%
-            valueRound := floor(value)
-            if(valueRound == 0)
-                IniWrite, "", %A_ScriptDir%\config.ini, Position, %A_LoopField%
-            else
-                IniWrite, %valueRound%, %A_ScriptDir%\config.ini, Position, %A_LoopField%
-            
-        }
-
-        Loop, Parse, allVNameAccessibility, "|"
-        {   
-            value := %A_LoopField%
-            if (value == 0 || value == 1)
-            {
-                IniWrite, %value%, %A_ScriptDir%\config.ini, Accessibility, %A_LoopField%
-            }
-        }
-
-
-        Loop, Parse, allVNamePositionFollowAuto, "|"
-        {   
-            value := %A_LoopField%
-            valueRound := floor(value)
-            if(valueRound == 0)
-                IniWrite, "", %A_ScriptDir%\config.ini, PositionFollowAuto, %A_LoopField%
-            else
-                IniWrite, %valueRound%, %A_ScriptDir%\config.ini, PositionFollowAuto, %A_LoopField%
-            
-        }
-
-        Loop, Parse, allVNameShortcut, "|"
-        {   
-            value := %A_LoopField%
-            
-            if(value == "")
-                IniWrite, "", %A_ScriptDir%\config.ini, Shortcut, %A_LoopField%
-            else
-                IniWrite, %value%, %A_ScriptDir%\config.ini, Shortcut, %A_LoopField%
-            
-        }
-
-
-        Gui, Destroy
-        return
-
-    ResetDefaultTimerOption:
-        Loop, Parse, allVNameTimerOption, "|"
+SaveAdvancedOptions:
+    Gui, Submit, NoHide
+    Loop, Parse, allVNameTimerOption, "|"
+    {   
+        value := %A_LoopField%
+        valueRound := floor(value)
+        if !(valueRound == 0)
         {
-        IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Timers, %A_LoopField%
-        IniWrite, %value%, %A_ScriptDir%\config.ini, Timers, %A_LoopField%
-        
+            IniWrite, %valueRound%, %A_ScriptDir%\config.ini, Timers, %A_LoopField%
         }
-        Gui, Destroy
-        AdvancedOptionsGui()
-        return
-
-    DetectAutomatically:
-        MsgBox, 4096,Detection Automatique, "Au prochain lancement d'une fonctionnalité, le programme essayera de detecter les positions des différents éléments et le sauvegarder.`n Vous pourrez toujours le modifier par la suite"
-        Loop, Parse, allVNamePositionOption, "|"
-        {
+        else{
             GuiControl, focus, %A_LoopField%,
             send {Ctrl Down}a{Ctrl Up}
             send {BackSpace}
-            IniWrite, "", %A_ScriptDir%\config.ini, Position, %A_LoopField%
-            GuiControl, focus, %DetectAutomatically%
-        }
-        Loop,Parse, allVNamePositionResolution, "|"
-        {
-             IniWrite,"",%A_ScriptDir%\config.ini,PositionResolution, %A_LoopField%
-             %A_LoopField% := ""
+            IniRead, oldValue, %A_ScriptDir%\config.ini,Timers, %A_LoopField%
 
+
+            send %oldValue%
+            
         }
-        Gui, AdvancedOptions:Submit, NoHide
-        return
+    }
+    Loop, Parse, allVNamePositionOption, "|"
+    {   
+        value := %A_LoopField%
+        valueRound := floor(value)
+        if(valueRound == 0)
+            IniWrite, "", %A_ScriptDir%\config.ini, Position, %A_LoopField%
+        else
+            IniWrite, %valueRound%, %A_ScriptDir%\config.ini, Position, %A_LoopField%
+        
+    }
+
+    Loop, Parse, allVNameAccessibility, "|"
+    {   
+        GuiControlGet, value,, %A_LoopField%
+        if (value == 0 || value == 1)
+        {
+            
+            IniWrite, %value%, %A_ScriptDir%\config.ini, Accessibility, %A_LoopField%
+        }
+    }
+
+
+    Loop, Parse, allVNamePositionFollowAuto, "|"
+    {   
+        value := %A_LoopField%
+        valueRound := floor(value)
+        if(valueRound == 0)
+            IniWrite, "", %A_ScriptDir%\config.ini, PositionFollowAuto, %A_LoopField%
+        else
+            IniWrite, %valueRound%, %A_ScriptDir%\config.ini, PositionFollowAuto, %A_LoopField%
+        
+    }
+
+    Loop, Parse, allVNameShortcut, "|"
+    {   
+        value := %A_LoopField%
+        
+        if(value == "")
+            IniWrite, "", %A_ScriptDir%\config.ini, Shortcut, %A_LoopField%
+        else
+            IniWrite, %value%, %A_ScriptDir%\config.ini, Shortcut, %A_LoopField%
+        
+    }
+
+
+    Gui, Destroy
+    return
+
+ResetDefaultTimerOption:
+    Loop, Parse, allVNameTimerOption, "|"
+    {
+    IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Timers, %A_LoopField%
+    IniWrite, %value%, %A_ScriptDir%\config.ini, Timers, %A_LoopField%
+    
+    }
+    Gui, Destroy
+    AdvancedOptionsGui()
+    return
+
+DetectAutomatically:
+    MsgBox, 4096,Detection Automatique, "Au prochain lancement d'une fonctionnalité, le programme essayera de detecter les positions des différents éléments et le sauvegarder.`n Vous pourrez toujours le modifier par la suite"
+    Loop, Parse, allVNamePositionOption, "|"
+    {
+        GuiControl, focus, %A_LoopField%,
+        send {Ctrl Down}a{Ctrl Up}
+        send {BackSpace}
+        IniWrite, "", %A_ScriptDir%\config.ini, Position, %A_LoopField%
+        GuiControl, focus, %DetectAutomatically%
+    }
+    Loop,Parse, allVNamePositionResolution, "|"
+    {
+            IniWrite,"",%A_ScriptDir%\config.ini,PositionResolution, %A_LoopField%
+            %A_LoopField% := ""
+
+    }
+    Gui, AdvancedOptions:Submit, NoHide
+    return
 
 }
