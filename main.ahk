@@ -73,9 +73,9 @@ Gui, Main:Add, CheckBox, x27 y375 w90 h20 vFightModeActive gFightActiveClick ,%F
 Gui, Main:Add, CheckBox, x27 y400 w145 h20 vNoDelayActive gNoDelayClick ,%NoDelayText%
 Gui, Add, Picture, x223 y287 w25 h25 gAccountManagment , %config_icon_imageLocation%
 Gui, Add, Picture, x180 y350 w50 h40 gCreateShowCharacterBox, %dofus_icon_imageLocation%
-Gui, Add, Picture, x180 y77 w75 h75 gGroupCharacters, %group_icon_imageLocation%
-Gui, Add, Picture, x100 y80 w70 h70 gJoinFightForAllCharacters, %join_fight_icon_imageLocation%
-Gui, Add, Picture, x20 y80 w70 h70  gFightReadyForAllCharacters, %ready_fight_imageLocation%
+Gui, Add, Picture, x180 y68 w75 h75 gGroupCharacters, %group_icon_imageLocation%
+Gui, Add, Picture, x100 y73 w70 h70 gJoinFightForAllCharacters, %join_fight_icon_imageLocation%
+Gui, Add, Picture, x20 y73 w70 h70  gFightReadyForAllCharacters, %ready_fight_imageLocation%
 
 ;Check ou non Follow Auto lorsqu'on affiche pour la première fois le menu
 
