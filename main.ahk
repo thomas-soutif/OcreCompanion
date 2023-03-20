@@ -18,11 +18,7 @@ SetDefaults(void)
 	MainWindowsH :=454
 	TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
 	return
-}
-
-	OldMainWindowsX :=500 
-	OldMainWindowsY :=361 
-	
+}	
 	TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
 	FollowAutoActive := 0
 	FightModeActive := 0
@@ -113,7 +109,6 @@ DllCall("RegisterShellHookWindow", "uint", Script_Hwnd)
 ;OnMessage(DllCall("RegisterWindowMessage", "str", "SHELLHOOK"), "ShellEvent")
 ;...
 CreateShowCharacterBox()
-
 Gui, Main:+AlwaysOnTop
 Gui, Main: +E0x20
 Gui, Main:Color, 729799
@@ -425,11 +420,11 @@ LoadPositionWindowXandY()
 	IniRead, y, %A_ScriptDir%\config.ini, PositionMainWindow, MainWindowsY
 	MainWindowsX := 500
 	MainWindowsY := 361
-	if(x != "")
+	if(x != "ERROR" and x != "")
 	{
 		MainWindowsX := x
 	}
-	if(y != ""){
+	if(y != "ERROR" and y != ""){
 		MainWindowsY := y
 	}
 	return
