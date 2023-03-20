@@ -48,8 +48,6 @@ FightReadyForAllCharacters(){
 	IniRead,SkipMaxTimer,%A_ScriptDir%\config.ini,Timers, SkipMax
 	Loop, Parse, characterNames, "|"
 	{
-			
-			MsgBox, %A_LoopField%
 		if(WinExist(A_LoopField)){
 		
 			
