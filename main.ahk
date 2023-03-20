@@ -130,6 +130,9 @@ Loop
 	if(Var != ""){
 		KeyPressQueue.Add(Var)
 	}
+	IfWinNotExist, %NameOfWindows%,
+	ExitApp
+
 	keysQueue := KeyPressQueue.GetAll()
 	keyFirst := KeyPressQueue.Get(1)
 	KeyPressQueue.SetList("")
@@ -143,7 +146,6 @@ Loop
 
 
 Return
-
 GuiEscape:
 GuiClose:
 Quitter:
