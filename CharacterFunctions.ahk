@@ -5,7 +5,7 @@ SetWorkingDir, %A_ScriptDir%
 
 FightReadyForAllCharacters(){
 	SetTitleMatchMode 2
-	characterNames := GetCharacterNames()
+	characterNames := GetCharacterDetectedInGame()
 	characterNames = %characterNames% 
 
 	;On va vérifier si le timer setting qu'on a besoin est disponible
@@ -49,19 +49,19 @@ FightReadyForAllCharacters(){
 	Loop, Parse, characterNames, "|"
 	{
 			
-			
+			MsgBox, %A_LoopField%
 		if(WinExist(A_LoopField)){
 		
 			
 			;A rajouter plus tard, récupérer le raccourcie depuis la configuration
-			IniRead,skipMyTurnShortcut,%A_ScriptDir%\config.ini,Shortcut, SkipMyTurn
-			if(skipMyTurnShortcut == "ERROR"){
-				IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Shortcut, SkipMyTurn
-				IniWrite,%value%,%A_ScriptDir%\config.ini,Shortcut, SkipMyTurn
-				IniRead,skipMyTurnShortcut,%A_ScriptDir%\config.ini,Shortcut, SkipMyTurn
+			IniRead,ShortcutSkipTurn,%A_ScriptDir%\config.ini,Shortcut, ShortcutSkipTurn
+			if(ShortcutSkipTurn == "ERROR"){
+				IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Shortcut, ShortcutSkipTurn
+				IniWrite,%value%,%A_ScriptDir%\config.ini,Shortcut, ShortcutSkipTurn
+				IniRead,ShortcutSkipTurn,%A_ScriptDir%\config.ini,Shortcut, ShortcutSkipTurn
 			}
-
-			ControlSend, ahk_parent, {%skipMyTurnShortcut%}, %A_LoopField%
+			
+			ControlSend, ahk_parent, {%ShortcutSkipTurn%}, %A_LoopField%
 			Random, timerValue, SkipMinTimer, SkipMaxTimer
 			Sleep timerValue
 		}

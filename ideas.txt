@@ -1,5 +1,1 @@
 - Avoir un bouton dans les personnages detectés en jeu qui permet d'ouvrir une nouvelle popup avec les personnages affichés, et pourquoi pas les options de base (mettre pret tout le monde, rejoindre le combat)
-
-corrections bugs :
-
--Investiguer le bug lorsqu'on essaye de mettre prêt tout les personnages (ne fonctionne pas)
