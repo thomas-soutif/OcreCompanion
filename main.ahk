@@ -71,7 +71,7 @@ Gui, Main:Add, GroupBox, x10 y160 w240 h155 , Personnages detectés en jeu
 Gui, Main:Add, CheckBox, x27 y350 w145 h20 vFollowAutoActive gFollowAutoActiveClick , %FollowAutoText%
 Gui, Main:Add, Text, x180 y392 , Detecter les 
 Gui, Main:Add, Text, x180 y405 , personnages
-Gui, Main:Add, CheckBox, x27 y375 w90 h20 vFightModeActive gFightActiveClick ,%FightModeText%
+Gui, Main:Add, CheckBox,Disabled x27 y375 w90 h20 vFightModeActive gFightActiveClick ,%FightModeText%
 Gui, Main:Add, CheckBox, x27 y400 w145 h20 vNoDelayActive gNoDelayClick ,%NoDelayText%
 Gui, Add, Picture, x223 y287 w25 h25 gAccountManagment , %config_icon_imageLocation%
 Gui, Add, Picture, x180 y350 w50 h40 gCreateShowCharacterBox, %dofus_icon_imageLocation%
