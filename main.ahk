@@ -6,6 +6,8 @@
 #include %A_ScriptDir%\CharacterFunctions.ahk
 #include %A_ScriptDir%\Shortcuts.ahk
 #include %A_ScriptDir%\ShortcutsInterface.ahk
+#include <FindText>
+    
 ;global parameter of Window
 SetDefaults(void)
 {
