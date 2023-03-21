@@ -140,6 +140,13 @@ Class DictCustom{
     This.dictCustom := This.dictCustom.Delete(key)
     return This.dictCustom
   }
+  Update(key,value){
+    if(This.Get(key) != ""){
+       This.Remove(key)
+    }
+    This.Add(key,value)
+    return This.dictCustom
+  }
 
   Get(key){
     return This.dictCustom[key]

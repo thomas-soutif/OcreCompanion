@@ -2,50 +2,6 @@
 SendMode Input
 SetWorkingDir, %A_ScriptDir%
 
-VerifyShortcuts(virtualKey){
-
-
-    ; Verify the shortcut for next Character 
-    IniRead,shortcut,%A_ScriptDir%\config.ini,Shortcut, ShortcutNextCharacter
-    if(shortcut == "ERROR"){
-        IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Shortcut, ShortcutNextCharacter
-        IniWrite, %value%, %A_ScriptDir%\config.ini, Shortcut, ShortcutNextCharacter
-        IniRead,shortcut,%A_ScriptDir%\config.ini,Shortcut, ShortcutNextCharacter
-    }
-
-    if(virtualKey == GetKeyVK(shortcut)){
-        SwitchToNextCharacter()
-        Return
-    }
-
-    ; or previous Character
-    IniRead,shortcut,%A_ScriptDir%\config.ini,Shortcut, ShortcutPreviousCharacter
-    if(shortcut == "ERROR"){
-        IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Shortcut, ShortcutPreviousCharacter
-        IniWrite, %value%, %A_ScriptDir%\config.ini, Shortcut, ShortcutPreviousCharacter
-        IniRead,shortcut,%A_ScriptDir%\config.ini,Shortcut, ShortcutPreviousCharacter
-    }
-
-    if(virtualKey == GetKeyVK(shortcut)){
-        SwitchToPreviousCharacter()
-        Return
-    }
-
-    ; Shortcut to skip the tour
-    IniRead,shortcut,%A_ScriptDir%\config.ini,Shortcut, ShortcutSkipTurn
-    if(shortcut == "ERROR"){
-        IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Shortcut, ShortcutSkipTurn
-        IniWrite, %value%, %A_ScriptDir%\config.ini, Shortcut, ShortcutSkipTurn
-        IniRead,shortcut,%A_ScriptDir%\config.ini,Shortcut, ShortcutSkipTurn
-    }
-
-    if(virtualKey == GetKeyVK(shortcut)){
-        SkipTheTurn()
-        Return
-    }
-}
-
-
 SkipTheTurn(){
 
     characterNames := GetCharacterDetectedInGame()
@@ -54,14 +10,27 @@ SkipTheTurn(){
         MsgBox, 4096,Attention, "Il vous faut au moins 2 personnages connectes en jeu pour pouvoir utiliser le raccourci qui permet de passer son tour et passer au personnage suivant"
         return
     }
-
-    sleep 500
+    currentFocusCharacter := GetCurrentCharacterFocusing()
+    SetTitleMatchMode, 2
+    ;On charge le raccourcie qui permet de passer le tour
+    IniRead,key,%A_ScriptDir%\config.ini,Shortcut, ShortcutSkipTurn
+    if(key == "ERROR"){
+        IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Shortcut, ShortcutSkipTurn
+        IniWrite, %value%, %A_ScriptDir%\config.ini, Shortcut, ShortcutSkipTurn
+        IniRead,key,%A_ScriptDir%\config.ini,Shortcut, ShortcutSkipTurn
+    }
+    key := HotkeyToSend(key)
+    Send, %key%
+    sleep 100
     SwitchToNextCharacter()
 
 }
 
-
 SwitchToNextCharacter(){
+    ;On vérifie les raccourcis uniquement si la fenetre active est une des personnages connectés
+    if(GetCurrentCharacterFocusing() == ""){
+        return
+    }
 
     characterNames := GetCharacterDetectedInGame()
     if !(List(characterNames,2)){
@@ -74,12 +43,16 @@ SwitchToNextCharacter(){
     customListCharacter := New ListCustom
     customListCharacter.SetList(characterNames)
     nextCharacter := customListCharacter.FindAndGetNext(currentFocusCharacter)
+  
     ;;On active la fenêtre pour le personnage
     WinActivate, %nextCharacter%
 }
 
 SwitchToPreviousCharacter(){
-
+    ;On vérifie les raccourcis uniquement si la fenetre active est une des personnages connectés
+    if(GetCurrentCharacterFocusing() == ""){
+        return
+    }
     characterNames := GetCharacterDetectedInGame()
     if !(List(characterNames,2)){
         ;Si il n'y a pas au moins 2 personnages, alors on arrête
@@ -97,7 +70,10 @@ SwitchToPreviousCharacter(){
 }
 
 switchToFirstCharacter(){
-
+    ;On vérifie les raccourcis uniquement si la fenetre active est une des personnages connectés
+    if(GetCurrentCharacterFocusing() == ""){
+        return
+    }
 	; On va rebasculer sur le premier personnage qui est censé avoir l'initiative
 	characterNames := GetCharacterDetectedInGame()
 	customListCharacter := New ListCustom
@@ -105,3 +81,4 @@ switchToFirstCharacter(){
 	firstCharacter := customListCharacter.Get(1)
 	WinActivate, %firstCharacter%
 }
+

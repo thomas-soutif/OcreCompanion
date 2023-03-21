@@ -7,7 +7,7 @@
 #include %A_ScriptDir%\Shortcuts.ahk
 #include %A_ScriptDir%\ShortcutsInterface.ahk
 #include <FindText>
-    
+#include <HotKeyManager>
 ;global parameter of Window
 SetDefaults(void)
 {
@@ -32,13 +32,15 @@ SetDefaults(void)
 	timerVerifyNewPosition := 1000
 	ignoreNoDelayWarningForThisSession := 0
 	KeyPressQueue := New ListCustom
-	NameOfWindows = DofusMultiAccountTool 1.0 TM
+	NameOfWindows = DofusMultiAccountTool 2.1 TM
 	FocusCharactersPath := New ListCustom
 	CharactersPath := New ListCustom
 	LastCharacterFocusPath := ""
 	loopCharacterCreationRun := 1
 	LastCharactersRegistered := New ListCustom
 	LastCharactersRegistered.SetList("")
+	verifyFocusCharacterLock := 0
+	
 START:
 LoadPositionWindowXandY()
 	MainWindowsW :=269 
@@ -117,44 +119,31 @@ Gui, Main:Show, x%MainWindowsX% y%MainWindowsY% w%MainWindowsW% h%MainWindowsH% 
 SetTimer,VerifyNewPositionFollowAuto, %timerVerifyNewPosition%
 
 LoadQuickOptionsState()
+;Initialisation des Hotkeys 
+HotkeyManager := New HotkeyManager()
 ; Boucle principale
 Loop
 {	
 	
-	Input, Var, V L1 T0.5,{LControl}{RControl}{LAlt}{RAlt}{LShift}{RShift}{LWin}{RWin}{AppsKey}{F1}{F2}{F3}{F4}{F5}{F6}{F7}{F8}{F9}{F10}{F11}{F12}{Left}{Right}{Up}{Down}{Home}{End}{PgUp}{PgDn}{Del}{Ins}{BS}{CapsLock}{NumLock}{PrintScreen}{Pause}
-	if(Var != ""){
-		KeyPressQueue.Add(Var)
-	}
 	IfWinNotExist, %NameOfWindows%,
 	ExitApp
-
-	keysQueue := KeyPressQueue.GetAll()
-	keyFirst := KeyPressQueue.Get(1)
-	KeyPressQueue.SetList("")
-	vkCode := GetKeyVK(KeyFirst)
-	WM_KEYDOWN(vkCode)
 	VerifyIfCharacterOrderChanged()
+	VerifyFocusCharacter()
+	sleep 200
+	
 	
 }
 #include %A_ScriptDir%\RegisterAllKey.ahk
 
-
-
 Return
 GuiEscape:
-GuiClose:
 Quitter:
 ExitApp
 
-;ReloadGui:
+;; LABEL ;;
+#include %A_ScriptDir%\ShortcutsLabel.ahk
+;; ;;
 
-	;WinGetPos, xPos,yPos,wPos,hPos
-	;MainWindowsX :=xPos 
-	;MainWindowsY :=yPos
-	;MsgBox, %MainWindowsX%
-	;VerificationPositionMainWindows() ; Save new position
-	;return
-;Des que l'utilisateur fait un clique droit
 
 ~!LButton::
 ~LButton::
@@ -198,7 +187,6 @@ Loop, Parse, characterNames, "|"
 	}
 
 }
-
 
 
 if(windowsFinId){
@@ -303,28 +291,13 @@ FightActiveClick(){
 	return
 }
 
-WM_KEYDOWN(virtualCode)
-{
-	
-	;On vérifie les raccourcis uniquement si la fenetre active est une des personnages connectés
-	if(GetCurrentCharacterFocusing() != ""){
-		VerifyShortcuts(virtualCode)
-		; On vérifie le focus personnage
-		VerifyFocusCharacter()
-	}
-
-	
-    return
-}
-
 VerifyFocusCharacter(){
 	global
-
 	if(GetCurrentCharacterFocusing() == ""){
 		return
 	}
-	
-    currentFocusCharacterIndex := GetCurrentCharacterFocusingIndex()
+
+	currentFocusCharacterIndex := GetCurrentCharacterFocusingIndex()
 	focusCharactersAllPath := FocusCharactersPath.GetAll()
 	focusCharacterImagePath := FocusCharactersPath.Get(currentFocusCharacterIndex)
 	if(focusCharacterImagePath == LastCharacterFocusPath){
@@ -334,7 +307,9 @@ VerifyFocusCharacter(){
 	GuiControl, Show, %focusCharacterImagePath%
 	LastCharacterFocusPath := focusCharacterImagePath
 	
+	
 }
+
 
 LoadQuickOptionsState(){
 	global
