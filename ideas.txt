@@ -1,1 +1,5 @@
 - Avoir un bouton dans les personnages detectés en jeu qui permet d'ouvrir une nouvelle popup avec les personnages affichés, et pourquoi pas les options de base (mettre pret tout le monde, rejoindre le combat)
+
+bug à corriger:
+
+lorsqu'on groupe les personnages, il y'a tjrs un qui va vers la gauche

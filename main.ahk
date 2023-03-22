@@ -1,4 +1,4 @@
-﻿
+﻿#include <ScriptGuard1>
 #include %A_ScriptDir%\CommonFunction.ahk
 #include %A_ScriptDir%\AccountManagment.ahk
 #include %A_ScriptDir%\AdvancedOptions.ahk
@@ -8,6 +8,7 @@
 #include %A_ScriptDir%\ShortcutsInterface.ahk
 #include <FindText>
 #include <HotKeyManager>
+
 ;global parameter of Window
 SetDefaults(void)
 {
