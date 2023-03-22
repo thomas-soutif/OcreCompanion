@@ -67,9 +67,10 @@ AdvancedOptionsGui(){
 
     TextConfirmCharactersAllReady := "Confirmer avant de mettre Prêt tout les persos"
 
-    
-Gui, Add, GroupBox, x22 y19 w210 h160 , Timer
-Gui, Font, S8 CTeal, Verdana
+Gui, Font, Bold s8    
+Gui, Add, GroupBox, x22 y19 w210 h160  , Timer
+Gui, Font, Normal s8
+Gui, Font,S8 CTeal, Verdana
 Gui, Add, Text, x132 y29 w30 h20 , Min
 Gui, Add, Text, x182 y29 w30 h20 , Max
 Gui, Font, S8 C, Verdana
@@ -86,9 +87,13 @@ Gui, Add, Text, x32 y140 w80 h30 , Rejoindre (fight)
 Gui, Add, Edit, x122 y140 w50 h20 vJoinFightMin, %JoinFightMin%
 Gui, Add, Edit, x172 y140 w50 h20 vJoinFightMax, %JoinFightMax%
 Gui, Add, Button, x32 y309 w100 h40 gSaveAdvancedOptions, Sauvegarder
+Gui, Font, Bold s8
 Gui, Add, GroupBox, x262 y19 w270 h150 , Position
+Gui, Font, Normal s8
+Gui, Font,S8 CTeal, Verdana
 Gui, Add, Text, x352 y29 w30 h20 , X
 Gui, Add, Text, x402 y29 w30 h20 , Y
+Gui, Font, S8 C, Verdana
 Gui, Add, Edit, x342 y49 w50 h20 vAcceptGroupButtonX, %AcceptGroupButtonX%
 Gui, Add, Edit, x392 y49 w50 h20 vAcceptGroupButtonY, %AcceptGroupButtonY%
 Gui, Add, Text, x448 y52 w72 h20 , (%AcceptGroupButtonResolution%)
@@ -97,12 +102,14 @@ Gui, Add, Edit, x392 y85 w50 h20 vJoinFightButtonY, %JoinFightButtonY%
 Gui, Add, Text, x448 y87 w72 h20 , (%JoinFightButtonResolution%)
 Gui, Add, Text, x272 y49 w60 h30 , Accepter (Groupe)
 Gui, Add, Text, x272 y85 w60 h30 , Rejoindre (Fight)
-Gui, Add, Button, x262 y170 w270 h30 gDetectAutomatically, Detecter automatiquement les positions
+Gui, Add, Button, x262 y170 w270 h30 gDetectAutomatically, Détecter automatiquement les positions
 Gui, Add, Edit, x572 y69 w-594 h-200 , Edit
 Gui, Add, Button, x22 y179 w100 h40 gResetDefaultTimerOption , Reset Default
 ;Gui, Add, GroupBox, x262 y219 w210 h160 , Raccourci
 ;Gui, Add, Button, x262 y379 w210 h30 disabled, Configurer (pas utilisé)
+Gui, Font, Bold s8  
 Gui, Add, GroupBox, x542 y19 w180 h150 , Accessibilité
+Gui, Font, Normal s8
 Gui, Add, CheckBox, x552 y49 w160 h40 vConfirmCharactersAllReady , %TextConfirmCharactersAllReady%
 GuiControl,, %TextConfirmCharactersAllReady%, %ConfirmCharactersAllReady%
 

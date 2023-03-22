@@ -31,8 +31,7 @@ SetDefaults(void)
 	VerifyNewPositionFollowAutoLock := 0
 	timerVerifyNewPosition := 1000
 	ignoreNoDelayWarningForThisSession := 0
-	KeyPressQueue := New ListCustom
-	NameOfWindows = DofusMultiAccountTool 2.1 TM
+	NameOfWindows = DofusMultiAccountTool 2.1.1 TM
 	FocusCharactersPath := New ListCustom
 	CharactersPath := New ListCustom
 	LastCharacterFocusPath := ""
@@ -61,18 +60,23 @@ group_icon_imageLocation = %A_ScriptDir%\images\group_icon.png
 ready_fight_imageLocation = %A_ScriptDir%\images\ready_fight.png
 join_fight_icon_imageLocation = %A_ScriptDir%\images\join_fight_icon.png
 config_icon_imageLocation = %A_ScriptDir%\images\config_icon.png
+
 Gui, Main:New, +Resize -MaximizeBox
+;Gui, Font, S8, Verdana
+;Gui, Font, s12, CharSet:0x201
+;Gui, Font, SVerdana8 C, 
+
 Gui, Main:Add, Button, x12 y19 w110 h30 gShortcutManagementGui , Raccourcis
 Gui, Main:Add, Button, x150 y19 w110 h30 gAdvancedOptionsGui , Options
 Gui, Main:Add, GroupBox, x22 y320 w150 h110 , Options rapide
 Gui, Main:Add, GroupBox, x10 y160 w240 h155 , Personnages detectés en jeu
 Gui, Main:Add, CheckBox, x27 y350 w145 h20 vFollowAutoActive gFollowAutoActiveClick , %FollowAutoText%
-Gui, Main:Add, Text, x180 y392 , Detecter les 
-Gui, Main:Add, Text, x180 y405 , personnages
+Gui, Main:Add, Text, x190 y393 , Détecter les 
+Gui, Main:Add, Text, x190 y406 , personnages
 Gui, Main:Add, CheckBox,Disabled x27 y375 w90 h20 vFightModeActive gFightActiveClick ,%FightModeText%
 Gui, Main:Add, CheckBox, x27 y400 w145 h20 vNoDelayActive gNoDelayClick ,%NoDelayText%
 Gui, Add, Picture, x223 y287 w25 h25 gAccountManagment , %config_icon_imageLocation%
-Gui, Add, Picture, x180 y350 w50 h40 gCreateShowCharacterBox, %dofus_icon_imageLocation%
+Gui, Add, Picture, x190 y350 w50 h40 gCreateShowCharacterBox, %dofus_icon_imageLocation%
 Gui, Add, Picture, x180 y68 w75 h75 gGroupCharacters, %group_icon_imageLocation%
 Gui, Add, Picture, x100 y73 w70 h70 gJoinFightForAllCharacters, %join_fight_icon_imageLocation%
 Gui, Add, Picture, x20 y73 w70 h70  gFightReadyForAllCharacters, %ready_fight_imageLocation%
@@ -133,7 +137,6 @@ Loop
 	
 	
 }
-#include %A_ScriptDir%\RegisterAllKey.ahk
 
 Return
 GuiEscape:

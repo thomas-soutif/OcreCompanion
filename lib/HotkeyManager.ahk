@@ -39,7 +39,7 @@ class HotkeyManager{
         }
     }
     InitHotkeys(){
-        allVNameShortcut = ShortcutNextCharacter|ShortcutPreviousCharacter|ShortcutSkipTurn
+        allVNameShortcut = ShortcutNextCharacter|ShortcutPreviousCharacter|ShortcutSkipTurn|ShortcutJoinFight|ShortcutGroup|ShortcutFightReady
 
         ifexist, %A_ScriptDir%\config.ini
 	    {

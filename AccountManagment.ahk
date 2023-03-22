@@ -7,7 +7,7 @@ AccountManagment(){
 	Gui, AccountManagment:New,+Resize -MaximizeBox
 	
 
-	
+	Gui, Font, S8 Normal
 	;Chargement de la liste des noms de personnage
 	IniRead, listAllCharacterClass, %A_ScriptDir%\defaultConfig\defaultConfig.ini,AllClassCharacter, value
 
