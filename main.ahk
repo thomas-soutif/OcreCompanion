@@ -223,8 +223,8 @@ if(windowsFinId){
 			}
 			else if(currentMode == "NoDelay"){
 				if (WinExist(A_LoopField)){
-					Random, timerValue, 100, 200
-					Sleep timerValue
+					;Random, timerValue, 100, 200
+					;Sleep 10
 					ControlClick x%xpos% y%ypos%,%A_LoopField%
 				}
 
