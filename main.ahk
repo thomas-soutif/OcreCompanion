@@ -32,7 +32,7 @@ SetDefaults(void)
 	VerifyNewPositionFollowAutoLock := 0
 	timerVerifyNewPosition := 1000
 	ignoreNoDelayWarningForThisSession := 0
-	NameOfWindows = DofusMultiAccountTool 2.1.1 TM
+	NameOfWindows = DofusMultiAccountTool 2.1.2 TM
 	FocusCharactersPath := New ListCustom
 	CharactersPath := New ListCustom
 	LastCharacterFocusPath := ""

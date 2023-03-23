@@ -376,7 +376,7 @@ GroupCharacters(){
             }
 
 	;On va choisir un personnage qui sera le meneur
-	groupChefCharacter := List(characterNames,1)
+	groupChefCharacter := GetCurrentCharacterFocusing()
 	iddWindowsMainCharacter := DetectWindowsByName(groupChefCharacter)
 
 	;On va vérifier si le timer setting qu'on a besoin est disponible
@@ -438,8 +438,8 @@ GroupCharacters(){
 					Continue
 				; On va les inviter dans le groupe après avoir focus la zone de tchat du personnage en question  
 				
-
-				
+				if(A_LoopField == "")
+					Continue
 				
 				Send {Space}
 				send {Ctrl Down}a{Ctrl Up}
@@ -462,7 +462,8 @@ GroupCharacters(){
 				;Pour chaque personnage qui n'est pas le chef de groupe
 				if(A_LoopField == groupChefCharacter)
 					Continue
-				
+				if(A_LoopField == "")
+					Continue
 				;On focus
 				if(WinExist(A_LoopField)){
 					t1:=A_TickCount, X:=Y:=""
