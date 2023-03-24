@@ -9,7 +9,7 @@ AdvancedOptionsGui(){
     allVNameTimerOption = FollowMin|FollowMax|GroupMin|GroupMax|SkipMin|SkipMax|JoinFightMin|JoinFightMax
     allVNamePositionOption = AcceptGroupButtonX|AcceptGroupButtonY|JoinFightButtonX|JoinFightButtonY
     allVNamePositionFollowAuto = UpDirectionX|UpDirectionY|DownDirectionX|DownDirectionY|LeftDirectionX|LeftDirectionY|RightDirectionX|RightDirectionY
-    allVNameAccessibility = ConfirmCharactersAllReady
+    allVNameAccessibility = ConfirmCharactersAllReady|ShowCharacterSmallBoxStartup
     allVNamePositionResolution = AcceptGroupButtonResolution|JoinFightButtonResolution
     ;Chargement des paramètres
 
@@ -36,12 +36,8 @@ AdvancedOptionsGui(){
 
         Loop, Parse, allVNameAccessibility, "|"
         {
-            IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Accessibility, %A_LoopField%
-             if(%A_LoopField% == "ERROR"){
-                IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Accessibility, %A_LoopField%
-                IniWrite, %value%, %A_ScriptDir%\config.ini, Accessibility, %A_LoopField%
-                IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Accessibility, %A_LoopField%
-            }
+            %A_LoopField% := SETTING.GetSetting("Accessibility",A_LoopField)
+            
         }
 
         Loop,Parse, allVNamePositionFollowAuto, "|"
@@ -66,7 +62,7 @@ AdvancedOptionsGui(){
 
 
     TextConfirmCharactersAllReady := "Confirmer avant de mettre Prêt tout les persos"
-
+    TextShowCharacterSmallBoxStartup := "Ouvrir la popup des personnages au démarrage"
 Gui, Font, Bold s8    
 Gui, Add, GroupBox, x22 y19 w210 h160  , Timer
 Gui, Font, Normal s8
@@ -111,8 +107,9 @@ Gui, Font, Bold s8
 Gui, Add, GroupBox, x542 y19 w180 h150 , Accessibilité
 Gui, Font, Normal s8
 Gui, Add, CheckBox, x552 y49 w160 h40 vConfirmCharactersAllReady , %TextConfirmCharactersAllReady%
+Gui, Add, CheckBox, x552 y+15 w160 h40 vShowCharacterSmallBoxStartup , %TextShowCharacterSmallBoxStartup%
 GuiControl,, %TextConfirmCharactersAllReady%, %ConfirmCharactersAllReady%
-
+GuiControl,, %TextShowCharacterSmallBoxStartup%, %ShowCharacterSmallBoxStartup%
 Gui, +AlwaysOnTop
 Gui, AdvancedOptions:Show, w750 h430, Options avancees - DofusMultiAccountTool
 
@@ -156,8 +153,7 @@ SaveAdvancedOptions:
         GuiControlGet, value,, %A_LoopField%
         if (value == 0 || value == 1)
         {
-            
-            IniWrite, %value%, %A_ScriptDir%\config.ini, Accessibility, %A_LoopField%
+            SETTING.setSetting("Accessibility", A_LoopField, value)
         }
     }
 

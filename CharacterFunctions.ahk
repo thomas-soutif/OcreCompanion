@@ -73,6 +73,7 @@ FightReadyForAllCharacters(){
 
 }
 
+
 CreateShowCharacterBox(){
     global
 
@@ -82,27 +83,28 @@ CreateShowCharacterBox(){
 		height:=40
 	
 	
-	allCharacterFocus := FocusCharactersPath.GetAll()
-	allCharacters :=  CharactersPath.GetAll()
-	Loop, Parse, allCharacterFocus, | 
-	{
-		GuiControl,Hide, %A_LoopField%
-	}
+	;allCharacterFocus := FocusCharactersPath.GetAll()
+	
+	;Loop, Parse, allCharacterFocus, | 
+	;{
+		;GuiControl,Hide, %A_LoopField%
+	;}
 	;MsgBox, %allCharacters%
+	allCharacters :=  NormalBoxCharactersPath.GetAll()
 	Loop, Parse, allCharacters, | 
 	{
 		GuiControl,Hide, %A_LoopField%
 	}
+	NormalBoxCharactersPath.SetList("")
 
 
 	characterNames := GetCharacterDetectedInGame()
 	characterNames = %characterNames%  
-	Gui, Main:Add, Button,hide x14 y180 w0 h0 ; Permet de définir le début où sera positionné les boutons
+	Gui, Main:Add, Button,hide x0 y185 w0 h0 ; Permet de définir le début où sera positionné les boutons
 	GUI, Main:Margin, 22,180
 	i := 1
 	listCharacterNotDetect := ""
-	FocusCharactersPath.SetList("")
-	CharactersPath.SetList("")
+	
 	Loop, Parse, characterNames, "|"
 	{
 		
@@ -126,56 +128,57 @@ CreateShowCharacterBox(){
 		TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
 		
 		fileSelectToShow := get_element_in_list_file(1,listFiles) ; Pour le moment on prend tjrs la première image
-		characterName := StrReplace(fileSelectToShow, ".png")
-		CharacterFocusNameFile := StrReplace(fileSelectToShow, ".png", "_focus") ; On récupére l'image focus de ce fichier
+		;characterName := StrReplace(fileSelectToShow, ".png")
+		;CharacterFocusNameFile := StrReplace(fileSelectToShow, ".png", "_focus") ; On récupére l'image focus de ce fichier
 		
-		pictureFocusToTempPath = %TempLocationForCharacter%%A_LoopField%_%loopCharacterCreationRun%_focus.png ; Sera le chemin TempPath\NomDuPersonnage.png
+		pictureNormalBoxFocusToTempPath = %TempLocationForCharacter%%A_LoopField%_%loopCharacterCreationRun%_focus_normalBox.png ; Sera le chemin TempPath\NomDuPersonnage.png
 		fullPathPictureClass = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%fileSelectToShow%
-		pictureToTempPath = %TempLocationForCharacter%%A_LoopField%_%loopCharacterCreationRun%.png
+		;pictureToTempPath = %TempLocationForCharacter%%A_LoopField%_%loopCharacterCreationRun%.png
 		fullPathPictureFocus := StrReplace(fullPathPictureClass, ".png", "_focus.png")
 		;MsgBox, %fullPathPictureFocus%
-		FileCopy, %fullPathPictureFocus%,%pictureFocusToTempPath%, 1 ; On va enregister sous le nomDuPersonnage
-		FileCopy, %fullPathPictureClass%, %pictureToTempPath%, 1
+		FileCopy, %fullPathPictureFocus%,%pictureNormalBoxFocusToTempPath%, 1 ; On va enregister sous le nomDuPersonnage
+		;FileCopy, %fullPathPictureClass%, %pictureToTempPath%, 1
 		;classCharacterImageLocation = %A_ScriptDir%\images\%classCharacter%.png
 		;MsgBox, %classCharacterImageLocation%
 		;MsgBox, %classCharacter%
 		
 		;fullPathPicture = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%fileSelectToShow%
 		;MsgBox, %pictureToTempPath%, %fullPathPictureClass%
-		Random,varRandom,1,100
 		if(i < 4){
 			;GUI, Main:Add, Button, X+5 w70 h40 gSelectCharacter, % A_LoopField
-			Gui,Add, Picture, X+15 w60 h60 vCharacterPic_%A_Index%_%loopCharacterCreationRun%, %pictureToTempPath%
-			Gui,Add, Picture, XP w60 h60 , %pictureFocusToTempPath%
-			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%_%loopCharacterCreationRun%
+			Gui,Add, Picture, X+15 w60 h60 vCharacterPic_%A_Index%_%loopCharacterCreationRun%, %pictureNormalBoxFocusToTempPath%
+			;Gui,Add, Picture, XP w60 h60 , %pictureFocusToTempPath%
+			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%_%loopCharacterCreationRun% 
 			
 		}
 			
 		if(i ==4){
 			;GUI, Main:Add, Button, xm+10 ym+10 w10 h0, Section
-			GUI, Main:Add, Picture, ym+70 xm+10 w60 h60 vCharacterPic_%A_Index%_%loopCharacterCreationRun% ,%pictureToTempPath%
-			Gui,Add, Picture, XP YP w60 h60 , %pictureFocusToTempPath%
+			Gui, Main:Add, Picture, ym+75 xm-5 w60 h60 vCharacterPic_%A_Index%_%loopCharacterCreationRun% ,%pictureNormalBoxFocusToTempPath%
+			;Gui,Add, Picture, XP YP w60 h60 , %pictureFocusToTempPath%
 			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%_%loopCharacterCreationRun%
 		}
 			
 		if(i > 4){
-			GUI, Main:Add, Picture,X+15 w60 h60 vCharacterPic_%A_Index%_%loopCharacterCreationRun% ,%pictureToTempPath%
-			Gui,Add, Picture, XP w60 h60, %pictureFocusToTempPath%
+			Gui, Main:Add, Picture,X+15 w60 h60 vCharacterPic_%A_Index%_%loopCharacterCreationRun% ,%pictureNormalBoxFocusToTempPath%
+			;Gui,Add, Picture, XP w60 h60, %pictureFocusToTempPath%
 			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%_%loopCharacterCreationRun%
 		}
 			
-
 		i := i+1
-		GuiControl, Hide, %pictureFocusToTempPath%
-		FocusCharactersPath.Add(pictureFocusToTempPath)
-		CharactersPath.Add(pictureToTempPath)
+		;GuiControl, Hide, %pictureFocusToTempPath%
+		;FocusCharactersPath.Add(pictureFocusToTempPath)
+		NormalBoxCharactersPath.Add(pictureNormalBoxFocusToTempPath)
 
-		CharacterSelect_%A_Index%: 
-		CurrentCharacterSelect = %A_LoopField%
+		;CharacterSelect_%A_Index%: 
+		;CurrentCharacterSelect = %A_LoopField%
 
 		
 	}
-	
+	;always on Top
+	GuiControl,Main:Hide, %character_box_imageLocation%
+	Gui, Main:Add, Picture, x223 y166 w26 h22 gCreateShowCharacterSmallBox vCreateShowCharacterSmallBox%loopCharacterCreationRun%, %character_box_imageLocation%
+	GuiControl,Main:Show, %character_box_imageLocation%
 	if(loopCharacterCreationRun < 10)
 	{
 		Gui, Main:Show
@@ -573,7 +576,5 @@ SelectCharacter(){
 			}
 		}
 	}
-	
-	VerifyFocusCharacter()
 	return
 }

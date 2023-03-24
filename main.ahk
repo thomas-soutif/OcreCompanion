@@ -6,9 +6,11 @@
 #include %A_ScriptDir%\CharacterFunctions.ahk
 #include %A_ScriptDir%\Shortcuts.ahk
 #include %A_ScriptDir%\ShortcutsInterface.ahk
+#include %A_ScriptDir%\CharacterViewSmallBox.ahk
 #include <FindText>
 #include <HotKeyManager>
-
+#include <GraphicGui>
+#include <Setting>
 ;global parameter of Window
 SetDefaults(void)
 {
@@ -32,15 +34,21 @@ SetDefaults(void)
 	VerifyNewPositionFollowAutoLock := 0
 	timerVerifyNewPosition := 1000
 	ignoreNoDelayWarningForThisSession := 0
-	NameOfWindows = DofusMultiAccountTool 2.1.2 TM
+	NameOfWindows = DofusMultiAccountTool 2.2.0 TM
 	FocusCharactersPath := New ListCustom
 	CharactersPath := New ListCustom
+	NormalBoxCharactersPath := New ListCustom
 	LastCharacterFocusPath := ""
 	loopCharacterCreationRun := 1
 	LastCharactersRegistered := New ListCustom
 	LastCharactersRegistered.SetList("")
 	verifyFocusCharacterLock := 0
-	
+	smallBoxCharacterShow := -1
+	smallBoxCharacterWindowTitle = SmallBoxCharacter DofusMultiCompte
+	configPath = %A_ScriptDir%\config.ini 
+	defaultConfigPath = %A_ScriptDir%\defaultConfig\defaultConfig.ini 
+
+	SETTING := New SETTING(configPath,defaultConfigPath)
 START:
 LoadPositionWindowXandY()
 	MainWindowsW :=269 
@@ -61,7 +69,7 @@ group_icon_imageLocation = %A_ScriptDir%\images\group_icon.png
 ready_fight_imageLocation = %A_ScriptDir%\images\ready_fight.png
 join_fight_icon_imageLocation = %A_ScriptDir%\images\join_fight_icon.png
 config_icon_imageLocation = %A_ScriptDir%\images\config_icon.png
-
+character_box_imageLocation = %A_ScriptDir%\images\open_character_panel.jpg
 Gui, Main:New, +Resize -MaximizeBox
 ;Gui, Font, S8, Verdana
 ;Gui, Font, s12, CharSet:0x201
@@ -69,18 +77,22 @@ Gui, Main:New, +Resize -MaximizeBox
 
 Gui, Main:Add, Button, x12 y19 w110 h30 gShortcutManagementGui , Raccourcis
 Gui, Main:Add, Button, x150 y19 w110 h30 gAdvancedOptionsGui , Options
-Gui, Main:Add, GroupBox, x22 y320 w150 h110 , Options rapide
-Gui, Main:Add, GroupBox, x10 y160 w240 h155 , Personnages detectés en jeu
-Gui, Main:Add, CheckBox, x27 y350 w145 h20 vFollowAutoActive gFollowAutoActiveClick , %FollowAutoText%
-Gui, Main:Add, Text, x190 y393 , Détecter les 
-Gui, Main:Add, Text, x190 y406 , personnages
-Gui, Main:Add, CheckBox,Disabled x27 y375 w90 h20 vFightModeActive gFightActiveClick ,%FightModeText%
-Gui, Main:Add, CheckBox, x27 y400 w145 h20 vNoDelayActive gNoDelayClick ,%NoDelayText%
-Gui, Add, Picture, x223 y287 w25 h25 gAccountManagment , %config_icon_imageLocation%
-Gui, Add, Picture, x190 y350 w50 h40 gCreateShowCharacterBox, %dofus_icon_imageLocation%
+
 Gui, Add, Picture, x180 y68 w75 h75 gGroupCharacters, %group_icon_imageLocation%
 Gui, Add, Picture, x100 y73 w70 h70 gJoinFightForAllCharacters, %join_fight_icon_imageLocation%
 Gui, Add, Picture, x20 y73 w70 h70  gFightReadyForAllCharacters, %ready_fight_imageLocation%
+
+Gui, Main:Add, GroupBox, x10 y160 w240 h165 , Personnages detectés en jeu
+Gui, Add, Picture, x190 y360 w50 h40 gCreateShowCharacterBox, %dofus_icon_imageLocation%
+
+Gui, Main:Add, GroupBox, x22 y330 w150 h110 , Options rapide
+Gui, Main:Add, CheckBox, x27 y360 w145 h20 vFollowAutoActive gFollowAutoActiveClick , %FollowAutoText%
+Gui, Main:Add, CheckBox,Disabled x27 y385 w90 h20 vFightModeActive gFightActiveClick ,%FightModeText%
+Gui, Main:Add, CheckBox, x27 y410 w145 h20 vNoDelayActive gNoDelayClick ,%NoDelayText%
+Gui, Add, Picture, x223 y297 w25 h25 gAccountManagment , %config_icon_imageLocation%
+
+Gui, Main:Add, Text, x190 y403 , Détecter les 
+Gui, Main:Add, Text, x190 y416 , personnages
 
 ;Check ou non Follow Auto lorsqu'on affiche pour la première fois le menu
 
@@ -115,7 +127,14 @@ DllCall("RegisterShellHookWindow", "uint", Script_Hwnd)
 
 ;OnMessage(DllCall("RegisterWindowMessage", "str", "SHELLHOOK"), "ShellEvent")
 ;...
+OnMessage(0x201, "WM_LBUTTONDOWN") ;
 CreateShowCharacterBox()
+if(SETTING.getSetting("Accessibility","ShowCharacterSmallBoxStartup") == 1)
+	CreateShowCharacterSmallBox()
+
+
+
+
 Gui, Main:+AlwaysOnTop
 Gui, Main: +E0x20
 Gui, Main:Color, 729799
@@ -131,9 +150,10 @@ Loop
 {	
 	
 	IfWinNotExist, %NameOfWindows%,
-	ExitApp
+		BeforeExitApp()
 	VerifyIfCharacterOrderChanged()
 	VerifyFocusCharacter()
+	VerifyDofusWindows()
 	sleep 200
 	
 	
@@ -154,6 +174,7 @@ ExitApp
 
 ;Verifier si la fenetre à changer de position afin d'enregistrer les coordonnées
 SetTimer,VerificationPositionMainWindows, 1000
+SetTimer,VerifyPositionSmallCharacterBox,1000
 Gui, Main:Submit, NoHide,
 if (FollowAutoActive == 0 and NoDelayActive == 0 ){
 	return
@@ -302,6 +323,7 @@ VerifyFocusCharacter(){
 	}
 
 	currentFocusCharacterIndex := GetCurrentCharacterFocusingIndex()
+	
 	focusCharactersAllPath := FocusCharactersPath.GetAll()
 	focusCharacterImagePath := FocusCharactersPath.Get(currentFocusCharacterIndex)
 	if(focusCharacterImagePath == LastCharacterFocusPath){
@@ -411,7 +433,7 @@ LoadPositionWindowXandY()
 }
 
 VerifyIfCharacterOrderChanged(){
-
+	
 	global
 	if(LastCharactersRegistered.GetSize() == 0)
 	{
@@ -419,15 +441,71 @@ VerifyIfCharacterOrderChanged(){
 		characCustomList := New ListCustom
 		characCustomList.SetList(GetCharacterDetectedInGame())
 		if(characCustomList.GetSize() > 0){
-			CreateShowCharacterBox()
+			if(WinExist(NameOfWindows))
+				WinActivate
+			ControlClick, %dofus_icon_imageLocation%,,, Left, 1
+			CreateShowCharacterSmallBox()
 		}
 		return
 	}
 	
 	if(LastCharactersRegistered.GetAll() != GetCharacterDetectedInGame() ){
 		;La liste , l'ordre n'est plus le même, on met à jour
-		CreateShowCharacterBox()
+		if(WinExist(NameOfWindows))
+			WinActivate
+		ControlClick, %dofus_icon_imageLocation%,,, Left, 1
+		CreateShowCharacterSmallBox()
 		return
 	}
 	
+}
+
+
+WM_LBUTTONDOWN()
+{
+	;On ne veut permettre de déplacer que la fenêtre SmallBoxCharacter
+	;MsgBox, %A_Gui%
+	If (A_Gui == "CharacterSmallBox" and A_GuiControl == "MoveSmallCharacterBoxImage"){
+		;MsgBox, %A_GuiControl%
+		PostMessage, 0xA1, 2 ; 0xA1 = WM_NCLBUTTONDOWN
+		
+	}
+	;SetTimer, VerifyPositionSmallCharacterBox, 200
+	;VerifyPositionSmallCharacterBox()
+}
+
+
+VerifyDofusWindows(){
+	global
+	Gui, Submit,NoHide
+	SetTitleMatchMode, 2
+	WinGetActiveTitle, activeWinTitle  ; gets the title of active window
+	isDofusWindow := 0
+	
+	if (activeWinTitle == smallBoxCharacterWindowTitle)
+		isDofusWindow := 1
+
+	IfWinActive, ahk_exe Dofus.exe
+		isDofusWindow := 1
+	if (isDofusWindow){
+		if(smallBoxCharacterShow == 0){
+			smallBoxCharacterShow := 1
+			WinSet, Transparent, 255, %smallBoxCharacterWindowTitle%
+			WinSet, ExStyle, 0x20, %smallBoxCharacterWindowTitle%
+			;MsgBox, "Transparent set"
+		}	
+		return
+			
+    }
+	if(smallBoxCharacterShow == 1 || smallBoxCharacterShow == -1){
+		smallBoxCharacterShow := 0
+		WinSet, Transparent, 0, %smallBoxCharacterWindowTitle%
+		;MsgBox, "Transparent Unset"
+	}
+	
+	
+}
+
+BeforeExitApp(){
+	ExitApp
 }
