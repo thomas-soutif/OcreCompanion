@@ -17,45 +17,21 @@ AdvancedOptionsGui(){
 	{
         Loop, Parse, allVNameTimerOption, "|"
         {
-            IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Timers, %A_LoopField%
-             if(%A_LoopField% == "ERROR"){
-                IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Timers, %A_LoopField%
-                IniWrite, %value%, %A_ScriptDir%\config.ini, Timers, %A_LoopField%
-                IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Timers, %A_LoopField%
-            }
+            %A_LoopField% := SETTING.GetSetting("Timers",A_LoopField)
         }
 
          Loop, Parse, allVNamePositionOption, "|"
         {
-            IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Position, %A_LoopField%
-             if(%A_LoopField% == "ERROR"){
-                IniWrite, "", %A_ScriptDir%\config.ini, Position, %A_LoopField%
-                IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,Position, %A_LoopField%
-            }
+             %A_LoopField% := SETTING.GetSetting("Position",A_LoopField)
         }
 
         Loop, Parse, allVNameAccessibility, "|"
         {
             %A_LoopField% := SETTING.GetSetting("Accessibility",A_LoopField)
-            
-        }
-
-        Loop,Parse, allVNamePositionFollowAuto, "|"
-        {
-             IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,PositionFollowAuto, %A_LoopField%
-             if(%A_LoopField% == "ERROR"){
-                IniWrite, "", %A_ScriptDir%\config.ini, PositionFollowAuto, %A_LoopField%
-                IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,PositionFollowAuto, %A_LoopField%
-            }
-
         }
         Loop,Parse, allVNamePositionResolution, "|"
         {
-             IniRead,%A_LoopField%,%A_ScriptDir%\config.ini,PositionResolution, %A_LoopField%
-             if(%A_LoopField% == "ERROR"){
-                %A_LoopField% := ""
-            }
-
+            %A_LoopField% := SETTING.GetSetting("PositionResolution",A_LoopField)
         }
 
 	}
@@ -124,14 +100,13 @@ SaveAdvancedOptions:
         valueRound := floor(value)
         if !(valueRound == 0)
         {
-            IniWrite, %valueRound%, %A_ScriptDir%\config.ini, Timers, %A_LoopField%
+            SETTING.setSetting("Timers", A_LoopField, valueRound)
         }
         else{
             GuiControl, focus, %A_LoopField%,
             send {Ctrl Down}a{Ctrl Up}
             send {BackSpace}
-            IniRead, oldValue, %A_ScriptDir%\config.ini,Timers, %A_LoopField%
-
+             oldValue := SETTING.getSetting("Timers", A_LoopField)
 
             send %oldValue%
             
@@ -142,9 +117,9 @@ SaveAdvancedOptions:
         value := %A_LoopField%
         valueRound := floor(value)
         if(valueRound == 0)
-            IniWrite, "", %A_ScriptDir%\config.ini, Position, %A_LoopField%
+            SETTING.setSetting("Position", A_LoopField, "")
         else
-            IniWrite, %valueRound%, %A_ScriptDir%\config.ini, Position, %A_LoopField%
+            SETTING.setSetting("Position", A_LoopField, valueRound)
         
     }
 
@@ -157,39 +132,13 @@ SaveAdvancedOptions:
         }
     }
 
-
-    Loop, Parse, allVNamePositionFollowAuto, "|"
-    {   
-        value := %A_LoopField%
-        valueRound := floor(value)
-        if(valueRound == 0)
-            IniWrite, "", %A_ScriptDir%\config.ini, PositionFollowAuto, %A_LoopField%
-        else
-            IniWrite, %valueRound%, %A_ScriptDir%\config.ini, PositionFollowAuto, %A_LoopField%
-        
-    }
-
-    Loop, Parse, allVNameShortcut, "|"
-    {   
-        value := %A_LoopField%
-        
-        if(value == "")
-            IniWrite, "", %A_ScriptDir%\config.ini, Shortcut, %A_LoopField%
-        else
-            IniWrite, %value%, %A_ScriptDir%\config.ini, Shortcut, %A_LoopField%
-        
-    }
-
-
     Gui, Destroy
     return
 
 ResetDefaultTimerOption:
     Loop, Parse, allVNameTimerOption, "|"
     {
-    IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Timers, %A_LoopField%
-    IniWrite, %value%, %A_ScriptDir%\config.ini, Timers, %A_LoopField%
-    
+    SETTING.SetSettingFromDefault("Timers",A_LoopField)
     }
     Gui, Destroy
     AdvancedOptionsGui()
@@ -202,12 +151,14 @@ DetectAutomatically:
         GuiControl, focus, %A_LoopField%,
         send {Ctrl Down}a{Ctrl Up}
         send {BackSpace}
-        IniWrite, "", %A_ScriptDir%\config.ini, Position, %A_LoopField%
+        ;IniWrite, "", %A_ScriptDir%\config.ini, Position, %A_LoopField%
+        SETTING.SetSetting("Position",A_LoopField,"")
         GuiControl, focus, %DetectAutomatically%
     }
     Loop,Parse, allVNamePositionResolution, "|"
     {
-            IniWrite,"",%A_ScriptDir%\config.ini,PositionResolution, %A_LoopField%
+            ;IniWrite,"",%A_ScriptDir%\config.ini,PositionResolution, %A_LoopField%
+            SETTING.SetSetting("PositionResolution",A_LoopField,"")
             %A_LoopField% := ""
 
     }
