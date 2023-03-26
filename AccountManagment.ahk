@@ -61,9 +61,6 @@ AccountManagment(){
 	if !(ListViewContent = Content) ; to prevent storing data when nothing has changed
 	{
 
-
-
-
 		Filedelete,%filePathDestination%
 		;FileMove, %A_ScriptDir%\CharacterConfig.conf, %A_ScriptDir%\CharacterConfig_%a_now%.conf
 		sleep 200
@@ -86,6 +83,7 @@ AccountManagment(){
 		IniWrite, %listCharacters%, %A_ScriptDir%\config.ini, CharactersList, listCharacters
 	}
 		listCharacters := ""
+		CleanConfigOfUselessSettingInAccountManagement()
 		Gui, Destroy
 		return
 
@@ -135,4 +133,27 @@ AccountManagment(){
 	LV_Modify(IndexNext, "Select")
 
 	Return
+
+}
+
+
+
+CleanConfigOfUselessSettingInAccountManagement(){
+
+	;Clean the Character Class Name
+	dict := SETTING.GetAllSettingOfSection("ClassOfCharacter")
+	
+	characterNames := GetCharacterNames()
+	characterNames = %characterNames% 
+	listCharacter :=  New ListCustom
+	listCharacter.SetList(characterNames)
+	dictKeys := dict.GetKeysName()
+	dictKeys := dictKeys.GetAll()
+	Loop,Parse,dictKeys, "|"
+	{
+		if(!listCharacter.find(A_LoopField)){
+			;On supprime le nom qui n'existe plus
+			SETTING.DeleteSetting("ClassOfCharacter",A_LoopField)
+		}
+	}
 }
