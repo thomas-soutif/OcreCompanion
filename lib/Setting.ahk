@@ -18,7 +18,7 @@ class SETTING{
         locSetDefault := This.locationDefaultSetting
         IniRead,value,%locSet%,%groupName%, %labelName%
             if(value == "ERROR"){
-                IniRead, value,%locSetDefault%,%groupName%, %labelName%
+                value := This.GetSettingDefault(groupName, labelName)
                 This.SetSetting(groupName,labelName,value)
             }
         return value
@@ -26,6 +26,9 @@ class SETTING{
     GetSettingDefault(groupName, labelName){
         locSetDefault := This.locationDefaultSetting
         IniRead,value,%locSetDefault%,%groupName%, %labelName%
+        if(value == "ERROR"){
+            return ""
+        }
         return value
     }
 
