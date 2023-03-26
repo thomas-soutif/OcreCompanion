@@ -159,8 +159,25 @@ Class DictCustom{
     final_dict := final_dict "}"
     return final_dict
   }
-}
 
+  FindByKey(key){
+    for itemKey, itemValue in This.dictCustom {
+        if (itemKey = key) {
+            return itemValue
+        }
+    }
+    return ""
+  }
+  GetKeysName(){
+    ; Return a CustomList
+    customList := ListCustom
+    customList.SetList("")
+    for itemKey, itemValue in This.dictCustom {
+        customList.Add(itemKey)
+    }
+    return customList
+  }
+}
 get_element_in_list_file(Index,ListFile){
   Loop, Parse, ListFile, "|"
   {
@@ -172,7 +189,9 @@ get_element_in_list_file(Index,ListFile){
   }
   return ""
 
-}
+  }
+
+
 
 
 GetCharacterDetectedInGame(){
@@ -282,3 +301,33 @@ PositionScreen(positionX=0, positionY=0){
 
 }
 
+
+CloseScript(Name) ; Name should not contain .exe or .ahk, will be detected automatically
+{
+  Name := ConvertFileNameToCorrectScriptType(Name)
+	DetectHiddenWindows On
+	SetTitleMatchMode RegEx
+	IfWinExist, i)%Name%.* ahk_class AutoHotkey
+	{
+		WinClose
+		WinWaitClose, i)%Name%.* ahk_class AutoHotkey, , 2
+		If ErrorLevel
+			return "Unable to close " . Name
+		else
+			return "Closed " . Name
+	}
+	else
+		return Name . " not found"
+}
+
+ConvertFileNameToCorrectScriptType(Name){
+   ModultiScriptType = %A_ScriptName%
+  StringRight, ModultiScriptType, ModultiScriptType, 3
+  if (ModultiScriptType == "ahk"){
+     Name := Name . ".ahk"
+  }
+  else if(ModultiScriptType = "exe"){
+     Name := Name . ".exe"
+  }
+  return Name
+}

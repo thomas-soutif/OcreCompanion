@@ -1,5 +1,4 @@
 ﻿#include <ScriptGuard1>
-#include %A_ScriptDir%\CommonFunction.ahk
 #include %A_ScriptDir%\AccountManagment.ahk
 #include %A_ScriptDir%\AdvancedOptions.ahk
 #include %A_ScriptDir%\FollowAutoPosition.ahk
@@ -11,6 +10,7 @@
 #include <HotKeyManager>
 #include <GraphicGui>
 #include <Setting>
+#include <CommonFunction>
 ;global parameter of Window
 SetDefaults(void)
 {
@@ -34,7 +34,7 @@ SetDefaults(void)
 	VerifyNewPositionFollowAutoLock := 0
 	timerVerifyNewPosition := 1000
 	ignoreNoDelayWarningForThisSession := 0
-	NameOfWindows = DofusMultiAccountTool 2.2.0 TM
+	NameOfWindows = DofusMultiAccountTool 2.3.0 TM
 	FocusCharactersPath := New ListCustom
 	CharactersPath := New ListCustom
 	NormalBoxCharactersPath := New ListCustom
@@ -87,7 +87,7 @@ Gui, Add, Picture, x190 y360 w50 h40 gCreateShowCharacterBox, %dofus_icon_imageL
 
 Gui, Main:Add, GroupBox, x22 y330 w150 h110 , Options rapide
 Gui, Main:Add, CheckBox, x27 y360 w145 h20 vFollowAutoActive gFollowAutoActiveClick , %FollowAutoText%
-Gui, Main:Add, CheckBox,Disabled x27 y385 w90 h20 vFightModeActive gFightActiveClick ,%FightModeText%
+Gui, Main:Add, CheckBox, x27 y385 w90 h20 vFightModeActive gFightActiveClick ,%FightModeText%
 Gui, Main:Add, CheckBox, x27 y410 w145 h20 vNoDelayActive gNoDelayClick ,%NoDelayText%
 Gui, Add, Picture, x223 y297 w25 h25 gAccountManagment , %config_icon_imageLocation%
 
@@ -123,7 +123,7 @@ Script_Hwnd := WinExist("ahk_class AutoHotkey ahk_pid " DllCall("GetCurrentProce
 DetectHiddenWindows, Off
 
 ; Register shell hook to detect flashing windows.
-DllCall("RegisterShellHookWindow", "uint", Script_Hwnd)
+;DllCall("RegisterShellHookWindow", "uint", Script_Hwnd)
 
 ;OnMessage(DllCall("RegisterWindowMessage", "str", "SHELLHOOK"), "ShellEvent")
 ;...
@@ -131,8 +131,6 @@ OnMessage(0x201, "WM_LBUTTONDOWN") ;
 CreateShowCharacterBox()
 if(SETTING.getSetting("Accessibility","ShowCharacterSmallBoxStartup") == 1)
 	CreateShowCharacterSmallBox()
-
-
 
 
 Gui, Main:+AlwaysOnTop
@@ -146,6 +144,7 @@ LoadQuickOptionsState()
 ;Initialisation des Hotkeys 
 HotkeyManager := New HotkeyManager()
 ; Boucle principale
+
 Loop
 {	
 	
@@ -156,10 +155,13 @@ Loop
 	VerifyDofusWindows()
 	sleep 200
 	
-	
+	 
 }
 
 Return
+
+
+
 GuiEscape:
 Quitter:
 ExitApp
@@ -221,7 +223,7 @@ if(windowsFinId){
 	{
 		characterWindowsId := DetectWindowsByName(A_LoopField)
 		if( characterWindowsId != winid){
-
+			
 			if(currentMode == "FollowAuto"){
 
 				if (WinExist(A_LoopField)){
@@ -307,12 +309,30 @@ NoDelayClick(){
 }
 
 
-
-
 FightActiveClick(){
 	global
 	Gui, Main:Submit, NoHide
 	IniWrite, %FightModeActive%, %A_ScriptDir%\config.ini, QuickOptionsState, FightModeActive
+	allVNameIllustrationNamePosition = topLeftX|topLeftY|bottomRightX|bottomRightY
+	Loop,Parse, allVNameIllustrationNamePosition, "|"
+	{
+		value := SETTING.GetSetting("IllustrationNamePosition",A_LoopField)
+		if(value == "" || value ==  "ERROR"){
+			if FightModeActive != 1
+				break
+			MsgBox,4096, Fonctionnalité mode combat, "Vous n'avez pas configuré les positions des noms de vos personnages. La fonctionnalité ne marchera pas. `n Voir 'Position Illustration' dans les options afin de connaitre les instructions.  "
+			break
+		}
+	}
+
+		
+	if(FightModeActive == 1){
+		CloseScript("FightTurnDetection")
+		sleep 100
+		RunFightTurnDetectionFile()
+	}else{
+		CloseScript("FightTurnDetection")
+	}
 	return
 }
 
@@ -506,6 +526,14 @@ VerifyDofusWindows(){
 	
 }
 
+RunFightTurnDetectionFile(){
+	fileDestination := ConvertFileNameToCorrectScriptType(A_ScriptDir . "\bin\FightTurnDetection")
+	dir = %A_ScriptDir%
+	locSett := SETTING.locationSetting
+	Run, %fileDestination% %dir% %locSett%
+}
+
 BeforeExitApp(){
+	CloseScript("FightTurnDetection")
 	ExitApp
 }
