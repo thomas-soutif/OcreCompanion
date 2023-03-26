@@ -1,5 +1,11 @@
+﻿
 SetWorkingDir, %parentRoot%
 parentRoot = %1%
+if(parentRoot == "")
+{
+    MsgBox, 4096,, Le programme ne peut être lancé que par le programme principale. Fermeture.
+    ExitApp
+}
 configPath = %2%
 IniRead, topLeftX, %configPath%, IllustrationNamePosition, topLeftX
 IniRead, topLeftY, %configPath%, IllustrationNamePosition, topLeftY
