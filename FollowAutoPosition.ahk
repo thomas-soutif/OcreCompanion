@@ -19,19 +19,9 @@ VerifyNewPositionFollowAuto(){
 	tickMax := floor(tickMax)
 	SetTitleMatchMode 2
 	characterNames := GetCharacterDetectedInGame()
-	characterNames = %characterNames%  
-	IniRead,FollowMinTimer,%A_ScriptDir%\config.ini,Timers, FollowMin
-	if(FollowMinTimer == "ERROR"){
-			IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Timers, FollowMin
-			IniWrite, %value%, %A_ScriptDir%\config.ini, Timers, FollowMin
-			IniRead,FollowMinTimer,%A_ScriptDir%\config.ini,Timers, FollowMin
-		}
-	IniRead,FollowMaxTimer,%A_ScriptDir%\config.ini,Timers, FollowMax
-	if(FollowMaxTimer == "ERROR"){
-			IniRead, value, %A_ScriptDir%\defaultConfig\defaultConfig.ini,Timers, FollowMax
-			IniWrite, %value%, %A_ScriptDir%\config.ini, Timers, FollowMax
-			IniRead,FollowMinTimer,%A_ScriptDir%\config.ini,Timers, FollowMin
-		}
+	characterNames = %characterNames%
+	FollowMinTimer := SETTING.GetSetting("Timers","FollowMin")
+	FollowMaxTimer := SETTING.GetSetting("Timers", "FollowMax")  
 
 	Loop, Parse, characterNames, "|"
 	{
@@ -124,7 +114,7 @@ FollowAutoActiveClick(){
 		}
 
 	}
-    IniWrite, %FollowAutoActive%, %A_ScriptDir%\config.ini, QuickOptionsState, FollowAutoActive
+	SETTING.setSetting("QuickOptionsState", "FollowAutoActive", FollowAutoActive)
 }
 
 
