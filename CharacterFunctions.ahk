@@ -196,8 +196,8 @@ CreateShowCharacterBox(){
 
 JoinFightForAllCharacters(){
 
-	characterNames := GetCharacterNames()
-	characterNames = %characterNames%  
+	characterNames := GetCharacterDetectedInGame()
+	characterNames = %characterNames%
 	
 	if !(List(characterNames,2)){
 		;Si il n'y a pas au moins 2 personnages, alors on arrête

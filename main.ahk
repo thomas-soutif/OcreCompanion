@@ -34,7 +34,7 @@ SetDefaults(void)
 	VerifyNewPositionFollowAutoLock := 0
 	timerVerifyNewPosition := 1000
 	ignoreNoDelayWarningForThisSession := 0
-	NameOfWindows = DofusMultiAccountTool 2.3.0 TM
+	NameOfWindows = DofusMultiAccountTool 2.3.1 TM
 	FocusCharactersPath := New ListCustom
 	CharactersPath := New ListCustom
 	NormalBoxCharactersPath := New ListCustom
@@ -196,8 +196,8 @@ else{
 }
 MouseGetPos, xpos, ypos
 MouseGetPos, , , winid
-characterNames := GetCharacterNames()
-characterNames = %characterNames%  
+characterNames := GetCharacterDetectedInGame()
+characterNames = %characterNames%
 SetTitleMatchMode 2
 windowsFinId := ""
 IniRead, MinvalueTimer, %A_ScriptDir%\config.ini,Timers, FollowMin
