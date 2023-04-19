@@ -325,6 +325,27 @@ FightActiveClick(){
 		}
 	}
 
+	;Verifier si les noms des personnages sont bien configurés dans le dossier des Illustrations
+
+	characters := GetCharacterNames()
+	illustrationDirectory = %A_ScriptDir%\IllustrationNameCharacter\
+	namesNotConfigure := new ListCustom
+	namesNotConfigure.SetList("")
+	Loop ,Parse, characters, | 
+	{
+		if FightModeActive != 1
+				break
+		fileDestination := illustrationDirectory . A_LoopField . ".png"
+		if !FileExist(fileDestination)
+		{
+			namesNotConfigure.Add(A_LoopField)
+		}
+
+	}
+	if(namesNotConfigure.Get(1) != ""){
+		listChar := namesNotConfigure.GetAll()
+		MsgBox,4096, Illustration du mode combat, Le mode combat n'est pas configuré correctement. Voici la liste des personnages dont le nom n'apparait pas dans le dossier "IllustrationNameCharacter" : `n`n  %listChar%`n`n La fonctionnalité ne marchera pas.
+	}
 		
 	if(FightModeActive == 1){
 		CloseScript("FightTurnDetection")
@@ -532,6 +553,7 @@ RunFightTurnDetectionFile(){
 	locSett := SETTING.locationSetting
 	Run, %fileDestination% %dir% %locSett%
 }
+
 
 BeforeExitApp(){
 	CloseScript("FightTurnDetection")
