@@ -42,7 +42,7 @@ AccountManagment(){
 
 
 	Gui, +AlwaysOnTop
-	Gui, Show, w664 h379, Gestion de vos personnages - DofusMultiAccountTool
+	Gui, Show, w664 h379, Gestion de vos personnages - Ocre Companion
 	GuiControl, Focus, Name
 	return
 

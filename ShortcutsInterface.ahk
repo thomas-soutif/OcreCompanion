@@ -56,7 +56,7 @@ Gui, Add, Edit, x572 y69 w-594 h-200 , Edit
 ;Gui, Add, GroupBox, x542 y19 w180 h150 ,
 
 Gui, +AlwaysOnTop
-Gui, ShortcutInterface:Show, w750 h430, Raccourcis - DofusMultiAccountTool
+Gui, ShortcutInterface:Show, w750 h430, Raccourcis - Ocre Companion
 return
 
 SaveShortcuts:

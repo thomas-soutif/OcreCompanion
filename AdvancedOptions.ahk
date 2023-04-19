@@ -107,7 +107,7 @@ Gui, Add, Edit, x392 y286 w50 h20 vBottomRightY, %bottomRightY%
 Gui, Add, Button, x262 y369 w270 h30 gInstructionsIllustrationFight, Instructions
 ;Gui, Add, Text, x272 y85 w60 h30 , Rejoindre (Fight)
 Gui, +AlwaysOnTop
-Gui, AdvancedOptions:Show, w750 h430, Options avancees - DofusMultiAccountTool
+Gui, AdvancedOptions:Show, w750 h430, Options avancees - Ocre Companion
 
 GuiClose:
     OnGuiCloseForAdvancedOptions()
