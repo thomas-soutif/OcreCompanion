@@ -125,7 +125,7 @@ CreateShowCharacterBox(){
 		folder = %A_ScriptDir%\images\characters_bank_images\%classCharacter%
 		listFiles := list_files(folder)
 
-		TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
+		TempLocationForCharacter = %A_Temp%\OcreCompanion\Characters\
 		
 		fileSelectToShow := get_element_in_list_file(1,listFiles) ; Pour le moment on prend tjrs la première image
 		;characterName := StrReplace(fileSelectToShow, ".png")

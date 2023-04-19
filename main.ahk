@@ -19,10 +19,10 @@ SetDefaults(void)
 	MainWindowsY :=361 
 	MainWindowsW :=269 
 	MainWindowsH :=454
-	TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
+	TempLocationForCharacter = %A_Temp%\OcreCompanion\Characters\
 	return
 }	
-	TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
+	TempLocationForCharacter = %A_Temp%\OcreCompanion\Characters\
 	FollowAutoActive := 0
 	FightModeActive := 0
 	NoDelayActive :=0
@@ -34,7 +34,7 @@ SetDefaults(void)
 	VerifyNewPositionFollowAutoLock := 0
 	timerVerifyNewPosition := 1000
 	ignoreNoDelayWarningForThisSession := 0
-	NameOfWindows = DofusMultiAccountTool 2.3.1 TM
+	NameOfWindows = Ocre Companion 1.0 TM
 	FocusCharactersPath := New ListCustom
 	CharactersPath := New ListCustom
 	NormalBoxCharactersPath := New ListCustom
@@ -44,7 +44,7 @@ SetDefaults(void)
 	LastCharactersRegistered.SetList("")
 	verifyFocusCharacterLock := 0
 	smallBoxCharacterShow := -1
-	smallBoxCharacterWindowTitle = SmallBoxCharacter DofusMultiCompte
+	smallBoxCharacterWindowTitle = SmallBoxCharacter Ocre Companion
 	configPath = %A_ScriptDir%\config.ini 
 	defaultConfigPath = %A_ScriptDir%\defaultConfig\defaultConfig.ini 
 
@@ -57,7 +57,7 @@ if !FileExist("%A_ScriptDir%\config.ini"){
 	FileAppend,, %A_ScriptDir%\config.ini
 
 }
-TempLocationForCharacter = %A_Temp%\DofusMultiAccountTools\Characters\
+TempLocationForCharacter = %A_Temp%\OcreCompanion\Characters\
 ignoreNoDelayWarningForThisSession := 0
 IfNotExist, %TempLocationForCharacter%
    FileCreateDir, %TempLocationForCharacter%
