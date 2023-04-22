@@ -157,4 +157,21 @@ CleanConfigOfUselessSettingInAccountManagement(){
 			SETTING.DeleteSetting("ClassOfCharacter",A_LoopField)
 		}
 	}
+
+	;Clean the Sex setting
+	dict := SETTING.GetAllSettingOfSection("SexOfCharacter")
+	
+	characterNames := GetCharacterNames()
+	characterNames = %characterNames% 
+	listCharacter :=  New ListCustom
+	listCharacter.SetList(characterNames)
+	dictKeys := dict.GetKeysName()
+	dictKeys := dictKeys.GetAll()
+	Loop,Parse,dictKeys, "|"
+	{
+		if(!listCharacter.find(A_LoopField)){
+			;On supprime le sexe qui n'existe plus
+			SETTING.DeleteSetting("SexOfCharacter",A_LoopField)
+		}
+	}
 }
