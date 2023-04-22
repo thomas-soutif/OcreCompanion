@@ -34,12 +34,10 @@ AccountManagment(){
 		IniRead, CharacterNameList, %A_ScriptDir%\config.ini, CharactersList, listCharacters
 	}
 	Loop, Parse, CharacterNameList, "|"
-        {
-			IniRead, ClassCharacter, %A_ScriptDir%\config.ini,ClassOfCharacter,%A_LoopField%
-			LV_Add("",A_LoopField,ClassCharacter)
-		}
-
-
+	{
+		ClassCharacter := SETTING.getSetting("ClassOfCharacter",A_LoopField)
+		LV_Add("",A_LoopField,ClassCharacter)
+	}
 
 	Gui, +AlwaysOnTop
 	Gui, Show, w664 h379, Gestion de vos personnages - Ocre Companion
@@ -76,11 +74,14 @@ AccountManagment(){
 			}
 				
 			IniWrite, %i_2%, %A_ScriptDir%\config.ini, ClassOfCharacter, %i_1%
+			;IniWrite, %i_2%, %A_ScriptDir%\config.ini, ClassOfCharacter, %i_1%
+			SETTING.setSetting("ClassOfCharacter", i_1, i_2)
 		}
 		if(only_one_charact == "False"){
 			listCharacters:=SubStr(listCharacters,1,StrLen(listCharacters)-1)
 		}
 		IniWrite, %listCharacters%, %A_ScriptDir%\config.ini, CharactersList, listCharacters
+		;SETTING.SetSetting("CharactersList",listCharacters", listCharacters)
 	}
 		listCharacters := ""
 		CleanConfigOfUselessSettingInAccountManagement()

@@ -45,7 +45,8 @@ CreateShowCharacterSmallBox(){
 			Continue
 		
 		IniRead, classCharacter,%A_ScriptDir%\config.ini,ClassOfCharacter, %A_LoopField%
-		
+		sex := map_sexe_name.Get(SETTING.getSetting("SexOfCharacter",A_LoopField))
+		sex := map_sexe_name.Get(sex) ; Deuxieme fois au cas où sex est vide
 		;Récupération du nombre de fichiers
 		CountItems := 0
 		Loop,  %A_ScriptDir%\images\characters_bank_images\%classCharacter%\*.*
@@ -53,7 +54,7 @@ CreateShowCharacterSmallBox(){
 			CountItems++
 		}
 		;MsgBox, % CountItems
-		folder = %A_ScriptDir%\images\characters_bank_images\%classCharacter%
+		folder = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%sex%
 		listFiles := list_files(folder)
 
 		TempLocationForCharacter = %A_Temp%\OcreCompanion\Characters\
@@ -63,7 +64,7 @@ CreateShowCharacterSmallBox(){
 		CharacterFocusNameFile := StrReplace(fileSelectToShow, ".png", "_focus") ; On récupére l'image focus de ce fichier
 		
 		pictureFocusToTempPath = %TempLocationForCharacter%%A_LoopField%_%loopCharacterCreationRun%_focus.png ; Sera le chemin TempPath\NomDuPersonnage.png
-		fullPathPictureClass = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%fileSelectToShow%
+		fullPathPictureClass = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%sex%\%fileSelectToShow%
 		pictureToTempPath = %TempLocationForCharacter%%A_LoopField%_%loopCharacterCreationRun%.png
 		fullPathPictureFocus := StrReplace(fullPathPictureClass, ".png", "_focus.png")
 		;MsgBox, %fullPathPictureFocus%

@@ -122,7 +122,10 @@ CreateShowCharacterBox(){
 			CountItems++
 		}
 		;MsgBox, % CountItems
-		folder = %A_ScriptDir%\images\characters_bank_images\%classCharacter%
+		sex := map_sexe_name.Get(SETTING.getSetting("SexOfCharacter",A_LoopField))
+		sex := map_sexe_name.Get(sex) ; Deuxieme fois au cas où sex est vide
+
+		folder = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%sex%
 		listFiles := list_files(folder)
 
 		TempLocationForCharacter = %A_Temp%\OcreCompanion\Characters\
@@ -132,7 +135,7 @@ CreateShowCharacterBox(){
 		;CharacterFocusNameFile := StrReplace(fileSelectToShow, ".png", "_focus") ; On récupére l'image focus de ce fichier
 		
 		pictureNormalBoxFocusToTempPath = %TempLocationForCharacter%%A_LoopField%_%loopCharacterCreationRun%_focus_normalBox.png ; Sera le chemin TempPath\NomDuPersonnage.png
-		fullPathPictureClass = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%fileSelectToShow%
+		fullPathPictureClass = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%sex%\%fileSelectToShow%
 		;pictureToTempPath = %TempLocationForCharacter%%A_LoopField%_%loopCharacterCreationRun%.png
 		fullPathPictureFocus := StrReplace(fullPathPictureClass, ".png", "_focus.png")
 		;MsgBox, %fullPathPictureFocus%
@@ -186,8 +189,7 @@ CreateShowCharacterBox(){
 		LastCharactersRegistered.SetList(GetCharacterDetectedInGame())
 	}else{
 		loopCharacterCreationRun := 1
-		Gui, Main:Destroy
-		Gosub, start
+		Reload
 	}
 
 

@@ -48,6 +48,11 @@ SetDefaults(void)
 	configPath = %A_ScriptDir%\config.ini 
 	defaultConfigPath = %A_ScriptDir%\defaultConfig\defaultConfig.ini 
 
+	map_sexe_name := New DictCustom
+	map_sexe_name.Add("", "male")
+	map_sexe_name.Add("male", "male")
+	map_sexe_name.Add("female", "female")
+
 	SETTING := New SETTING(configPath,defaultConfigPath)
 START:
 LoadPositionWindowXandY()
@@ -144,7 +149,6 @@ LoadQuickOptionsState()
 ;Initialisation des Hotkeys 
 HotkeyManager := New HotkeyManager()
 ; Boucle principale
-
 Loop
 {	
 	
@@ -169,7 +173,6 @@ ExitApp
 ;; LABEL ;;
 #include %A_ScriptDir%\ShortcutsLabel.ahk
 ;; ;;
-
 
 ~!LButton::
 ~LButton::
@@ -474,7 +477,6 @@ LoadPositionWindowXandY()
 }
 
 VerifyIfCharacterOrderChanged(){
-	
 	global
 	if(LastCharactersRegistered.GetSize() == 0)
 	{
@@ -559,3 +561,53 @@ BeforeExitApp(){
 	CloseScript("FightTurnDetection")
 	ExitApp
 }
+
+
+~^s::
+	MouseGetPos, , , window, ctrl
+	ControlGetText, filename, % ctrl, % "ahk_id " window
+	;ToolTip, % "Window's HWND: " window "`nControl's name: " Ctrl "`nControl's text: " text
+	WinGetTitle, titleWin, ahk_id %window%
+	if(titleWin != NameOfWindows){
+		return
+	}
+	; extraire la partie de la chaîne après "Characters\"
+	charactersIndex := InStr(filename, "Characters\") + StrLen("Characters\")
+	charactersSubstring := SubStr(filename, charactersIndex)
+
+	; extraire le premier mot avant le premier "_" dans la sous-chaîne "charactersSubstring"
+	characterName := ""
+	if InStr(charactersSubstring, "_") > 0
+	{
+		characterName := SubStr(charactersSubstring, 1, InStr(charactersSubstring, "_") - 1)
+	}
+	else
+	{
+		characterName := charactersSubstring
+	}
+
+	list := GetCharacterDetectedInGame()
+	custom_list := New ListCustom
+	custom_list.SetList(list)
+	index := custom_list.Find(characterName)
+	if(custom_list.Get(index) == ""){
+		return
+	}
+
+	if(index == ""){
+		return
+	}
+
+	;L'icone correspond bien au nom du personnage, on peut switch de sexe
+	Sexe := SETTING.getSetting("SexOfCharacter",characterName)
+	if(Sexe == "male"){
+		Sexe := "female"
+	}else{
+		Sexe := "male"
+	}
+	SETTING.setSetting("SexOfCharacter",characterName,Sexe)
+	CreateShowCharacterSmallBox()
+	if(WinExist(NameOfWindows))
+		WinActivate
+	ControlClick, %dofus_icon_imageLocation%,,, Left, 1
+return
