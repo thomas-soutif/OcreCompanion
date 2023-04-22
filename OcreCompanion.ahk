@@ -11,6 +11,7 @@
 #include <GraphicGui>
 #include <Setting>
 #include <CommonFunction>
+#include <SexMap>
 ;global parameter of Window
 SetDefaults(void)
 {

@@ -122,8 +122,7 @@ CreateShowCharacterBox(){
 			CountItems++
 		}
 		;MsgBox, % CountItems
-		sex := map_sexe_name.Get(SETTING.getSetting("SexOfCharacter",A_LoopField))
-		sex := map_sexe_name.Get(sex) ; Deuxieme fois au cas où sex est vide
+		sex := (new SexMap).GetCharacterSex(A_LoopField)
 
 		folder = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%sex%
 		listFiles := list_files(folder)

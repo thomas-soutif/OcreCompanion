@@ -45,8 +45,7 @@ CreateShowCharacterSmallBox(){
 			Continue
 		
 		IniRead, classCharacter,%A_ScriptDir%\config.ini,ClassOfCharacter, %A_LoopField%
-		sex := map_sexe_name.Get(SETTING.getSetting("SexOfCharacter",A_LoopField))
-		sex := map_sexe_name.Get(sex) ; Deuxieme fois au cas où sex est vide
+		sex := (new SexMap).GetCharacterSex(A_LoopField)
 		;Récupération du nombre de fichiers
 		CountItems := 0
 		Loop,  %A_ScriptDir%\images\characters_bank_images\%classCharacter%\*.*
