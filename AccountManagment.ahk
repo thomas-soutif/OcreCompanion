@@ -46,6 +46,10 @@ AccountManagment(){
 
 	AddCharacter:
 		Gui, Submit, NoHide
+		if(Pseudo == "" or ClassCharacterChoice == "")
+		{
+			return
+		}
 		LV_Add("", Pseudo,ClassCharacterChoice)
 		return
 
