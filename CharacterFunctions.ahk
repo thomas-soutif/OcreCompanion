@@ -100,11 +100,18 @@ CreateShowCharacterBox(){
 
 	characterNames := GetCharacterDetectedInGame()
 	characterNames = %characterNames%  
-	Gui, Main:Add, Button,hide x0 y185 w0 h0 ; Permet de définir le début où sera positionné les boutons
-	GUI, Main:Margin, 22,180
+	Gui, Main:Add, Button,hide x5 y185 w0 h0 ; Permet de définir le début où sera positionné les boutons
+	GUI, Main:Margin, 24,180
 	i := 1
 	listCharacterNotDetect := ""
 	
+	customList := new ListCustom
+	customList.SetList(characterNames)
+	nbCharacters := customList.GetSize()
+	SmallSize := false
+	if(nbCharacters > 6){
+		SmallSize := true
+	}
 	Loop, Parse, characterNames, "|"
 	{
 		
@@ -146,26 +153,53 @@ CreateShowCharacterBox(){
 		
 		;fullPathPicture = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%fileSelectToShow%
 		;MsgBox, %pictureToTempPath%, %fullPathPictureClass%
-		if(i < 4){
+		if(!SmallSize){
+			if(i < 4){
 			;GUI, Main:Add, Button, X+5 w70 h40 gSelectCharacter, % A_LoopField
 			Gui,Add, Picture, X+15 w60 h60 vCharacterPic_%A_Index%_%loopCharacterCreationRun%, %pictureNormalBoxFocusToTempPath%
 			;Gui,Add, Picture, XP w60 h60 , %pictureFocusToTempPath%
 			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%_%loopCharacterCreationRun% 
 			
-		}
+			}
 			
-		if(i ==4){
-			;GUI, Main:Add, Button, xm+10 ym+10 w10 h0, Section
-			Gui, Main:Add, Picture, ym+75 xm-5 w60 h60 vCharacterPic_%A_Index%_%loopCharacterCreationRun% ,%pictureNormalBoxFocusToTempPath%
-			;Gui,Add, Picture, XP YP w60 h60 , %pictureFocusToTempPath%
-			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%_%loopCharacterCreationRun%
-		}
+			if(i ==4){
+				;GUI, Main:Add, Button, xm+10 ym+10 w10 h0, Section
+				Gui, Main:Add, Picture, ym+75 xm-5 w60 h60 vCharacterPic_%A_Index%_%loopCharacterCreationRun% ,%pictureNormalBoxFocusToTempPath%
+				;Gui,Add, Picture, XP YP w60 h60 , %pictureFocusToTempPath%
+				GuiControl,+gSelectCharacter,CharacterPic_%A_Index%_%loopCharacterCreationRun%
+			}
 			
-		if(i > 4){
-			Gui, Main:Add, Picture,X+15 w60 h60 vCharacterPic_%A_Index%_%loopCharacterCreationRun% ,%pictureNormalBoxFocusToTempPath%
-			;Gui,Add, Picture, XP w60 h60, %pictureFocusToTempPath%
-			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%_%loopCharacterCreationRun%
+			if(i > 4){
+				Gui, Main:Add, Picture,X+15 w60 h60 vCharacterPic_%A_Index%_%loopCharacterCreationRun% ,%pictureNormalBoxFocusToTempPath%
+				;Gui,Add, Picture, XP w60 h60, %pictureFocusToTempPath%
+				GuiControl,+gSelectCharacter,CharacterPic_%A_Index%_%loopCharacterCreationRun%
+			}
+
+			
 		}
+		else {
+			if(i < 5){
+			;GUI, Main:Add, Button, X+5 w70 h40 gSelectCharacter, % A_LoopField
+			Gui,Add, Picture, X+10 w50 h50 vCharacterPic_%A_Index%_%loopCharacterCreationRun%, %pictureNormalBoxFocusToTempPath%
+			;Gui,Add, Picture, XP w60 h60 , %pictureFocusToTempPath%
+			GuiControl,+gSelectCharacter,CharacterPic_%A_Index%_%loopCharacterCreationRun% 
+			
+			}
+			
+			if(i ==5){
+				;GUI, Main:Add, Button, xm+10 ym+10 w10 h0, Section
+				Gui, Main:Add, Picture, ym+75 xm-10 w50 h50 vCharacterPic_%A_Index%_%loopCharacterCreationRun% ,%pictureNormalBoxFocusToTempPath%
+				;Gui,Add, Picture, XP YP w60 h60 , %pictureFocusToTempPath%
+				GuiControl,+gSelectCharacter,CharacterPic_%A_Index%_%loopCharacterCreationRun%
+			}
+			
+			if(i > 5){
+				Gui, Main:Add, Picture,X+10 w50 h50 vCharacterPic_%A_Index%_%loopCharacterCreationRun% ,%pictureNormalBoxFocusToTempPath%
+				;Gui,Add, Picture, XP w60 h60, %pictureFocusToTempPath%
+				GuiControl,+gSelectCharacter,CharacterPic_%A_Index%_%loopCharacterCreationRun%
+			}
+		}
+		
 			
 		i := i+1
 		;GuiControl, Hide, %pictureFocusToTempPath%
