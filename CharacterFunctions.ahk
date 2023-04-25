@@ -112,6 +112,7 @@ CreateShowCharacterBox(){
 	if(nbCharacters > 6){
 		SmallSize := true
 	}
+	
 	Loop, Parse, characterNames, "|"
 	{
 		
@@ -137,6 +138,7 @@ CreateShowCharacterBox(){
 		TempLocationForCharacter = %A_Temp%\OcreCompanion\Characters\
 		
 		fileSelectToShow := get_element_in_list_file(1,listFiles) ; Pour le moment on prend tjrs la première image
+		
 		;characterName := StrReplace(fileSelectToShow, ".png")
 		;CharacterFocusNameFile := StrReplace(fileSelectToShow, ".png", "_focus") ; On récupére l'image focus de ce fichier
 		
@@ -144,6 +146,10 @@ CreateShowCharacterBox(){
 		fullPathPictureClass = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%sex%\%fileSelectToShow%
 		;pictureToTempPath = %TempLocationForCharacter%%A_LoopField%_%loopCharacterCreationRun%.png
 		fullPathPictureFocus := StrReplace(fullPathPictureClass, ".png", "_focus.png")
+		if(!FileExist(fullPathPictureClass)){
+			fullPathPictureClass = %A_ScriptDir%\images\class_missing.png
+			fullPathPictureFocus = %A_ScriptDir%\images\class_missing.png
+		}
 		;MsgBox, %fullPathPictureFocus%
 		FileCopy, %fullPathPictureFocus%,%pictureNormalBoxFocusToTempPath%, 1 ; On va enregister sous le nomDuPersonnage
 		;FileCopy, %fullPathPictureClass%, %pictureToTempPath%, 1

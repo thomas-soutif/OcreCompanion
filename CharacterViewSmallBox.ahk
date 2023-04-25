@@ -66,6 +66,11 @@ CreateShowCharacterSmallBox(){
 		fullPathPictureClass = %A_ScriptDir%\images\characters_bank_images\%classCharacter%\%sex%\%fileSelectToShow%
 		pictureToTempPath = %TempLocationForCharacter%%A_LoopField%_%loopCharacterCreationRun%.png
 		fullPathPictureFocus := StrReplace(fullPathPictureClass, ".png", "_focus.png")
+
+		if(!FileExist(fullPathPictureClass)){
+			fullPathPictureClass = %A_ScriptDir%\images\class_missing.png
+			fullPathPictureFocus = %A_ScriptDir%\images\class_missing.png
+		}
 		;MsgBox, %fullPathPictureFocus%
 		FileCopy, %fullPathPictureFocus%,%pictureFocusToTempPath%, 1 ; On va enregister sous le nomDuPersonnage
 		FileCopy, %fullPathPictureClass%, %pictureToTempPath%, 1
