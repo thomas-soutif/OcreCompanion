@@ -19,7 +19,7 @@ SetDefaults(void)
 	MainWindowsX :=500 
 	MainWindowsY :=361 
 	MainWindowsW :=269 
-	MainWindowsH :=469
+	MainWindowsH :=465
 	TempLocationForCharacter = %A_Temp%\OcreCompanion\Characters\
 	return
 }	
@@ -58,7 +58,7 @@ SetDefaults(void)
 START:
 LoadPositionWindowXandY()
 	MainWindowsW :=269 
-	MainWindowsH :=469
+	MainWindowsH :=465
 if !FileExist("%A_ScriptDir%\config.ini"){
 	FileAppend,, %A_ScriptDir%\config.ini
 
@@ -84,23 +84,23 @@ Gui, Main:New, +Resize -MaximizeBox
 Gui, Main:Add, Button, x12 y19 w110 h30 gShortcutManagementGui , Raccourcis
 Gui, Main:Add, Button, x150 y19 w110 h30 gAdvancedOptionsGui , Options
 
-Gui, Add, Picture, x180 y68 w75 h75 gGroupCharacters, %group_icon_imageLocation%
-Gui, Add, Picture, x100 y73 w70 h70 gJoinFightForAllCharacters, %join_fight_icon_imageLocation%
-Gui, Add, Picture, x20 y73 w70 h70  gFightReadyForAllCharacters, %ready_fight_imageLocation%
+Gui, Add, Picture, x180 y73 w60 h60 gGroupCharacters, %group_icon_imageLocation%
+Gui, Add, Picture, x100 y73 w60 h60 gJoinFightForAllCharacters, %join_fight_icon_imageLocation%
+Gui, Add, Picture, x20 y73 w60 h60  gFightReadyForAllCharacters, %ready_fight_imageLocation%
 
-Gui, Main:Add, GroupBox, x10 y160 w240 h180 , Personnages detectés en jeu
+Gui, Main:Add, GroupBox, x10 y150 w240 h180 , Personnages detectés en jeu
 
 
-Gui, Main:Add, GroupBox, x22 y345 w150 h110 , Options rapide
-Gui, Main:Add, CheckBox, x27 y375 w145 h20 vFollowAutoActive gFollowAutoActiveClick , %FollowAutoText%
-Gui, Main:Add, CheckBox, x27 y400 w90 h20 vFightModeActive gFightActiveClick ,%FightModeText%
-Gui, Main:Add, CheckBox, x27 y425 w145 h20 vNoDelayActive gNoDelayClick ,%NoDelayText%
-Gui, Add, Text, x20 y322, CTRL + S : Changer le sexe de la classe
-Gui, Add, Picture, x223 y312 w25 h25 gAccountManagment , %config_icon_imageLocation%
+Gui, Main:Add, GroupBox, x22 y340 w150 h110 , Options rapide
+Gui, Main:Add, CheckBox, x27 y365 w145 h20 vFollowAutoActive gFollowAutoActiveClick , %FollowAutoText%
+Gui, Main:Add, CheckBox, x27 y390 w90 h20 vFightModeActive gFightActiveClick ,%FightModeText%
+Gui, Main:Add, CheckBox, x27 y415 w145 h20 vNoDelayActive gNoDelayClick ,%NoDelayText%
+Gui, Add, Text, x20 y312, CTRL + S : Changer le sexe de la classe
+Gui, Add, Picture, x223 y302 w25 h25 gAccountManagment , %config_icon_imageLocation%
 
-Gui, Add, Picture, x190 y375 w50 h40 gCreateShowCharacterBox, %dofus_icon_imageLocation%
-Gui, Main:Add, Text, x190 y418 , Détecter les 
-Gui, Main:Add, Text, x190 y431 , personnages
+Gui, Add, Picture, x190 y365 w50 h40 gCreateShowCharacterBox, %dofus_icon_imageLocation%
+Gui, Main:Add, Text, x190 y408 , Détecter les 
+Gui, Main:Add, Text, x190 y421 , personnages
 
 ;Check ou non Follow Auto lorsqu'on affiche pour la première fois le menu
 

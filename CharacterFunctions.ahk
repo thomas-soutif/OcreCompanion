@@ -100,8 +100,8 @@ CreateShowCharacterBox(){
 
 	characterNames := GetCharacterDetectedInGame()
 	characterNames = %characterNames%  
-	Gui, Main:Add, Button,hide x5 y185 w0 h0 ; Permet de définir le début où sera positionné les boutons
-	GUI, Main:Margin, 24,180
+	Gui, Main:Add, Button,hide x5 y175 w0 h0 ; Permet de définir le début où sera positionné les boutons
+	GUI, Main:Margin, 24,170
 	i := 1
 	listCharacterNotDetect := ""
 	
@@ -219,7 +219,7 @@ CreateShowCharacterBox(){
 	}
 	;always on Top
 	GuiControl,Main:Hide, %character_box_imageLocation%
-	Gui, Main:Add, Picture, x223 y166 w26 h22 gCreateShowCharacterSmallBox vCreateShowCharacterSmallBox%loopCharacterCreationRun%, %character_box_imageLocation%
+	Gui, Main:Add, Picture, x223 y156 w26 h22 gCreateShowCharacterSmallBox vCreateShowCharacterSmallBox%loopCharacterCreationRun%, %character_box_imageLocation%
 	GuiControl,Main:Show, %character_box_imageLocation%
 	if(loopCharacterCreationRun < 10)
 	{
