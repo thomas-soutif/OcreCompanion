@@ -530,7 +530,9 @@ VerifyDofusWindows(){
 	
 	if (activeWinTitle == smallBoxCharacterWindowTitle)
 		isDofusWindow := 1
-
+	if(activeWinTitle == NameOfWindows)
+		isDofusWindow :=1
+		
 	IfWinActive, ahk_exe Dofus.exe
 		isDofusWindow := 1
 	if (isDofusWindow){
@@ -553,10 +555,15 @@ VerifyDofusWindows(){
 }
 
 RunFightTurnDetectionFile(){
+	global
 	fileDestination := ConvertFileNameToCorrectScriptType(A_ScriptDir . "\bin\FightTurnDetection")
 	dir = %A_ScriptDir%
 	locSett := SETTING.locationSetting
-	Run, %fileDestination% %dir% %locSett%
+	parameterDict := new DictCustom
+	parameterDict.Add("directory",dir)
+	parameterDict.Add("locationSetting",locSett)
+	parameterString := parameterDict.GetDictRepresentation()
+	Run, %fileDestination% "%parameterString%"
 }
 
 

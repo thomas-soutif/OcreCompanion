@@ -177,6 +177,21 @@ Class DictCustom{
     }
     return customList
   }
+
+  FromDictRepresentation(dictString) {
+        dictString := RegExReplace(dictString, "\{|\}", "") ; remove { and }
+        dictArray := StrSplit(dictString, ",") ; split by comma
+        newDict := new DictCustom
+        for _, keyValue in dictArray {
+			
+            keyValueArray := StrSplit(keyValue, ":",,2)
+            key := Trim(keyValueArray[1])
+            value := Trim(keyValueArray[2])
+            newDict.Add(key, value)
+        }
+        return newDict
+    }
+    
 }
 get_element_in_list_file(Index,ListFile){
   Loop, Parse, ListFile, "|"
