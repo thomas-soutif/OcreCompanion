@@ -420,7 +420,7 @@ GroupCharacters(){
             }
 
 	;On va choisir un personnage qui sera le meneur
-	groupChefCharacter := GetCurrentCharacterFocusing()
+	
 	iddWindowsMainCharacter := DetectWindowsByName(groupChefCharacter)
 
 	;On va vérifier si le timer setting qu'on a besoin est disponible
@@ -441,34 +441,12 @@ GroupCharacters(){
         
 	}
 	
-	;On va tenter de récupérer l'image encrypté sous le format actuel de l'écran si jamais c'est la première fois que le joueur utilise cette fonction
-
 	IniRead, PositionAcceptGroupX, %A_ScriptDir%\config.ini,Position, AcceptGroupButtonX
 	IniRead, PositionAcceptGroupY,%A_ScriptDir%\config.ini,Position, AcceptGroupButtonY
-	TextEncrypt := ""
-	if(not PositionAcceptGroupX or not PositionAcceptGroupY or PositionAcceptGroupX == "ERROR" or PositionAcceptGroupY == "Error"){
-		;On va alors initialiser la procédure de detection du bouton accepter
-
-		IniRead,value,%A_ScriptDir%\defaultConfig\staticTextEncrypt.ini,AcceptGroupButton_%A_ScreenWidth%x%A_ScreenHeight%, Text
-		;AcceptGroupButton_1560x1440
-		if(value == "ERROR"){
-			;Le texte n'existe pas pour la résolution actuel du joueur, on s'arrête là
-			MsgBox, 4096,Detection Automatique de la position, " [Optionnel] Votre résolution actuelle n'est pas supporté pour pouvoir utiliser la reconnaissance d'image du bouton 'Rejoindre le Groupe', vous pouvez envoyer un message au support pour que nous puissions ajouter votre résolution au programme, ceci n'est que du confort. Appuyer sur Ok pour continuer d'executer le script"
-			
-		}else{
-			TextEncrypt := value
-		
-			; Text récupéré
-			MsgBox, 4096, Première initialisation,  "C'est la premiere fois que vous utilisez la fonctionnalite Groupe. Nous allons effectue des reglages automatiquement une fois que vous aurez appuye sur le bouton Ok. `n N'oubliez pas de réinitialiser vos positions d'interface pour chacun de vos personnages avant de continuer. (Option/Interface/Reinitialiser les positions d'interface)"
-			
-		}
-
-		
-
+	groupChefCharacter := GetCurrentCharacterFocusing()
+	if(groupChefCharacter == ""){
+		groupChefCharacter := List(characterNames,1) ; On prend le premier personnage detecté en jeu
 	}
-
-	
-
 	SetTitleMatchMode 2
 	if(WinExist(groupChefCharacter)){
 
@@ -498,9 +476,7 @@ GroupCharacters(){
 
 				Sleep timerValue
 			}
-			; A ce stade, tout les personnages ont été invités
-			; On va à présent accepter les invitations
-
+			;On va faire en sorte de basculer sur un personnage qui a été invité
 			Loop, Parse, characterNames, "|"
 			{
 				;Pour chaque personnage qui n'est pas le chef de groupe
@@ -508,70 +484,54 @@ GroupCharacters(){
 					Continue
 				if(A_LoopField == "")
 					Continue
+				if(WinExist(A_LoopField)){
+					WinActivate
+				}
+			}
+
+			;On va à présent vérifier si on a les coordonnées pour Accepter
+
+			if(not PositionAcceptGroupX or not PositionAcceptGroupY or PositionAcceptGroupX == "ERROR" or PositionAcceptGroupY == "Error"){
+
+				MsgBox 4096, Detection manuel, "Après avoir appuyer sur le bouton Ok de cette popup, mettez votre souris sur le bouton accepter sur votre fenêtre de jeu et appuyer sur la touche Z de votre clavier afin que nous enregistrions la position.`n Vous avez 10 secondes pour effectuer cette action, après celà le script s'annulera."
+				KeyWait, z , D T10
+				if(ErrorLevel == 1){
+					;L'utilisateur n'a pas appuyé sur le bon bouton au bon moment
+					MsgBox, 4096, Annulation du script, "Il semblerait que vous n'ayez pas appuyé sur la touche Z de votre clavier ! Annulation du script."
+					return
+				}
+				MouseGetPos, MouseX, MouseY, MouseWin, MouseCtl, 2
+				IniWrite, %MouseX%, %A_ScriptDir%\config.ini, Position, AcceptGroupButtonX
+				IniWrite, %MouseY%, %A_ScriptDir%\config.ini, Position, AcceptGroupButtonY
+				;On sauvegarde la résolution utilisé pour cette position
+				resolution := A_ScreenWidth "x" A_ScreenHeight
+				IniWrite, %resolution%, %A_ScriptDir%\config.ini, PositionResolution, AcceptGroupButtonResolution
+			}
+			Random, timerValue, 500, 1500
+			Sleep timerValue
+
+			; A ce stade, tout les personnages ont été invités
+			; On va à présent accepter les invitations
+
+			Loop, Parse, characterNames, "|"
+			{
+				;Pour chaque personnage qui n'est pas le chef de groupe
+				if(A_LoopField == groupChefCharacter){
+					
+					Continue
+				}
+					
+				if(A_LoopField == ""){
+					Continue
+				}
+					
 				;On focus
 				if(WinExist(A_LoopField)){
-					t1:=A_TickCount, X:=Y:=""
-					if (TextEncrypt){
-						WinActivate
-						sleep 1000
-						try_num := 1
-						while(try_num < 5){
-							Text := TextEncrypt
-							ok:=FindText(X, Y, A_ScreenWidth, 0, -1, A_ScreenHeight, 0, 0, Text)
-							;MsgBox, %X%,%Y%, %Text%
-							if(ok.Length())
-							{
-								;Le bouton accepté a été trouvé
-								;On sauvegarde la position trouvé
-								IniWrite, %X%, %A_ScriptDir%\config.ini, Position, AcceptGroupButtonX
-								IniWrite, %Y%, %A_ScriptDir%\config.ini, Position, AcceptGroupButtonY
-								;On sauvegarde la résolution utilisé pour cette position
-								resolution := A_ScreenWidth "x" A_ScreenHeight
-								 IniWrite, %resolution%, %A_ScriptDir%\config.ini, PositionResolution, AcceptGroupButtonResolution
-								TextEncrypt := ""
-								FindText().Click(X, Y, "L")
-								try_num := 10
-							}else{
-								try_num := try_num +1
-								sleep 200
-							}
-
-								
-						}
-						if(TextEncrypt){
-							;Alors la detection automatique n'a pas marché. On va alors demander à l'utilisateur de cliquer sur le bouton Accepter pour faire les reglages
-							MsgBox 4096, Detection manuel, "Nous n'avons pas pu cette fois detecté automatiquement la position du bouton Accepter.`n Après avoir appuyer sur le bouton Ok de cette popup, mettez votre souris sur le bouton accepter sur votre fenêtre de jeu et appuyer sur la touche Z de votre clavier afin que nous enregistrions la position.`n Vous avez 10 secondes pour effectuer cette action, après celà le script s'annulera."
-							KeyWait, z , D T10
-							if(ErrorLevel == 1){
-								;L'utilisateur n'a pas appuyé sur le bon bouton au bon moment
-								MsgBox, 4096, Annulation du script, "Il semblerait que vous n'ayez pas appuyé sur la touche Z de votre clavier ! Annulation du script."
-								return
-							}
-							MouseGetPos, MouseX, MouseY, MouseWin, MouseCtl, 2
-							IniWrite, %MouseX%, %A_ScriptDir%\config.ini, Position, AcceptGroupButtonX
-							IniWrite, %MouseY%, %A_ScriptDir%\config.ini, Position, AcceptGroupButtonY
-							;On sauvegarde la résolution utilisé pour cette position
-							resolution := A_ScreenWidth "x" A_ScreenHeight
-							IniWrite, %resolution%, %A_ScriptDir%\config.ini, PositionResolution, AcceptGroupButtonResolution
-							TextEncrypt := ""
-							; On va appuyer pour ce cas ici sur le bouton accepter
-							Sleep, 500
-							FindText().Click(MouseX, MouseY, "L")
-							MsgBox,"Nous avons bien enregistré la position du bouton accepté. `n Nous allons finir de grouper le reste de vos personnages. `n Si ça ne le fait pas automatiquement, relancer la fonctionnalité d'ici quelques secondes."
-							
-
-						}
-						
-					}
-					else{
-						;On connait les coordonnées
-						IniRead, PositionAcceptGroupX, %A_ScriptDir%\config.ini,Position, AcceptGroupButtonX
-						IniRead, PositionAcceptGroupY,%A_ScriptDir%\config.ini,Position, AcceptGroupButtonY
-						;FindText().Click(PositionAcceptGroupX, PositionAcceptGroupY, "L")
-						ControlClick x%PositionAcceptGroupX% y%PositionAcceptGroupY%, %A_LoopField%
-					}
-
-
+					;On connait les coordonnées
+					IniRead, PositionAcceptGroupX, %A_ScriptDir%\config.ini,Position, AcceptGroupButtonX
+					IniRead, PositionAcceptGroupY,%A_ScriptDir%\config.ini,Position, AcceptGroupButtonY
+					;FindText().Click(PositionAcceptGroupX, PositionAcceptGroupY, "L")
+					ControlClick x%PositionAcceptGroupX% y%PositionAcceptGroupY%, %A_LoopField%
 				}
 				Random, timerValue, 500, 1500
 				Sleep timerValue
@@ -579,15 +539,11 @@ GroupCharacters(){
 			}
 
 
-
 	}
 	
 	;On retourne sur la fenetre du chef de groupe
 	if(WinExist(groupChefCharacter)){
-
 		WinActivate
-
-	
 	}
 	MsgBox, 4096, Fin du script,"Fin du script pour le groupage automatique."
 	return ""

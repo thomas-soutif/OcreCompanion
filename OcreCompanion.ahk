@@ -35,7 +35,7 @@ SetDefaults(void)
 	VerifyNewPositionFollowAutoLock := 0
 	timerVerifyNewPosition := 1000
 	ignoreNoDelayWarningForThisSession := 0
-	NameOfWindows = Ocre Companion 1.0 TM
+	NameOfWindows = Ocre Companion 1.0.1 TM
 	FocusCharactersPath := New ListCustom
 	CharactersPath := New ListCustom
 	NormalBoxCharactersPath := New ListCustom
