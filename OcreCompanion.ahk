@@ -326,8 +326,8 @@ FightActiveClick(){
 		if(value == "" || value ==  "ERROR"){
 			if FightModeActive != 1
 				break
-			MsgBox,4096, Fonctionnalité mode combat, "Vous n'avez pas configuré les positions des noms de vos personnages. La fonctionnalité ne marchera pas. `n Voir 'Position Illustration' dans les options afin de connaitre les instructions.  "
-			break
+			;MsgBox,4096, Fonctionnalité mode combat, "Vous n'avez pas configuré les positions des noms de vos personnages. La fonctionnalité ne marchera pas. `n Voir 'Position ;Illustration' dans les options afin de connaitre les instructions.  "
+			;break
 		}
 	}
 
@@ -350,15 +350,17 @@ FightActiveClick(){
 	}
 	if(namesNotConfigure.Get(1) != ""){
 		listChar := namesNotConfigure.GetAll()
-		MsgBox,4096, Illustration du mode combat, Le mode combat n'est pas configuré correctement. Voici la liste des personnages dont le nom n'apparait pas dans le dossier "IllustrationNameCharacter" : `n`n  %listChar%`n`n La fonctionnalité ne marchera pas.
+		;MsgBox,4096, Illustration du mode combat, Le mode combat n'est pas configuré correctement. Voici la liste des personnages dont le nom n'apparait pas dans le dossier "IllustrationNameCharacter" : `n`n  %listChar%`n`n La fonctionnalité ne marchera pas.
 	}
 		
 	if(FightModeActive == 1){
 		CloseScript("FightTurnDetection")
+		WinClose, FightTurnDetection
 		sleep 100
 		RunFightTurnDetectionFile()
 	}else{
 		CloseScript("FightTurnDetection")
+		WinClose, FightTurnDetection
 	}
 	return
 }
@@ -557,18 +559,29 @@ VerifyDofusWindows(){
 RunFightTurnDetectionFile(){
 	global
 	fileDestination := ConvertFileNameToCorrectScriptType(A_ScriptDir . "\bin\FightTurnDetection")
-	dir = %A_ScriptDir%
-	locSett := SETTING.locationSetting
-	parameterDict := new DictCustom
-	parameterDict.Add("directory",dir)
-	parameterDict.Add("locationSetting",locSett)
-	parameterString := parameterDict.GetDictRepresentation()
-	Run, %fileDestination% "%parameterString%"
+	
+	;dir = %A_ScriptDir%
+	;locSett := SETTING.locationSetting
+	;parameterDict := new DictCustom
+	;parameterDict.Add("directory",dir)
+	;parameterString := parameterDict.GetDictRepresentation()
+	
+	characters := GetCharacterNames()
+	;characters := StrReplace(characters, "|", " ")
+	parameterString := """" . fileDestination . """"
+
+	Loop, Parse, characters, "|"
+	{
+	 	parameterString .= " """ . A_LoopField . """"
+	}
+
+	Run, %parameterString%,, Hide
 }
 
 
 BeforeExitApp(){
-	CloseScript("FightTurnDetection")
+	;CloseScript("FightTurnDetection")
+	WinClose, FightTurnDetection
 	ExitApp
 }
 
