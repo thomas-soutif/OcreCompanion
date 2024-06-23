@@ -6,12 +6,14 @@
 #include %A_ScriptDir%\Shortcuts.ahk
 #include %A_ScriptDir%\ShortcutsInterface.ahk
 #include %A_ScriptDir%\CharacterViewSmallBox.ahk
+
 #include <FindText>
 #include <HotKeyManager>
 #include <GraphicGui>
 #include <Setting>
 #include <CommonFunction>
 #include <SexMap>
+#include <CustomMsgBox>
 ;global parameter of Window
 SetDefaults(void)
 {
@@ -315,51 +317,34 @@ NoDelayClick(){
 }
 
 
+
+
 FightActiveClick(){
 	global
 	Gui, Main:Submit, NoHide
 	IniWrite, %FightModeActive%, %A_ScriptDir%\config.ini, QuickOptionsState, FightModeActive
-	allVNameIllustrationNamePosition = topLeftX|topLeftY|bottomRightX|bottomRightY
-	Loop,Parse, allVNameIllustrationNamePosition, "|"
-	{
-		value := SETTING.GetSetting("IllustrationNamePosition",A_LoopField)
+	if (FightModeActive != 0){
+		
+		value := SETTING.GetSetting("DialogMessageHide","FightMode_Illustration")
 		if(value == "" || value ==  "ERROR"){
-			if FightModeActive != 1
-				break
-			;MsgBox,4096, Fonctionnalité mode combat, "Vous n'avez pas configuré les positions des noms de vos personnages. La fonctionnalité ne marchera pas. `n Voir 'Position ;Illustration' dans les options afin de connaitre les instructions.  "
-			;break
-		}
-	}
-
-	;Verifier si les noms des personnages sont bien configurés dans le dossier des Illustrations
-
-	characters := GetCharacterNames()
-	illustrationDirectory = %A_ScriptDir%\IllustrationNameCharacter\
-	namesNotConfigure := new ListCustom
-	namesNotConfigure.SetList("")
-	Loop ,Parse, characters, | 
-	{
-		if FightModeActive != 1
-				break
-		fileDestination := illustrationDirectory . A_LoopField . ".png"
-		if !FileExist(fileDestination)
-		{
-			namesNotConfigure.Add(A_LoopField)
+			SETTING.setSetting("DialogMessageHide","FightMode_Illustration", 0)
+			value := 0
 		}
 
-	}
-	if(namesNotConfigure.Get(1) != ""){
-		listChar := namesNotConfigure.GetAll()
-		;MsgBox,4096, Illustration du mode combat, Le mode combat n'est pas configuré correctement. Voici la liste des personnages dont le nom n'apparait pas dans le dossier "IllustrationNameCharacter" : `n`n  %listChar%`n`n La fonctionnalité ne marchera pas.
+		if(value == 0){
+			clickedButton := ShowCustomMsgBox("Mode combat","Pour que le mode combat fonctionne, n'oubliez pas d'activer les Illustrations de Combats dans les options du jeu.", "Ok", "Ne plus afficher")
+			if(clickedButton == "2"){
+				SETTING.setSetting("DialogMessageHide","FightMode_Illustration", 1)
+			}	
+		}
+		
 	}
 		
 	if(FightModeActive == 1){
-		CloseScript("FightTurnDetection")
 		WinClose, FightTurnDetection
 		sleep 100
 		RunFightTurnDetectionFile()
 	}else{
-		CloseScript("FightTurnDetection")
 		WinClose, FightTurnDetection
 	}
 	return
@@ -558,18 +543,10 @@ VerifyDofusWindows(){
 
 RunFightTurnDetectionFile(){
 	global
-	fileDestination := ConvertFileNameToCorrectScriptType(A_ScriptDir . "\bin\FightTurnDetection")
-	
-	;dir = %A_ScriptDir%
-	;locSett := SETTING.locationSetting
-	;parameterDict := new DictCustom
-	;parameterDict.Add("directory",dir)
-	;parameterString := parameterDict.GetDictRepresentation()
+	fileDestination := A_ScriptDir . "\bin\FightTurnDetection.exe"
+	parameterString := """" . fileDestination . """"
 	
 	characters := GetCharacterNames()
-	;characters := StrReplace(characters, "|", " ")
-	parameterString := """" . fileDestination . """"
-
 	Loop, Parse, characters, "|"
 	{
 	 	parameterString .= " """ . A_LoopField . """"
@@ -580,7 +557,6 @@ RunFightTurnDetectionFile(){
 
 
 BeforeExitApp(){
-	;CloseScript("FightTurnDetection")
 	WinClose, FightTurnDetection
 	ExitApp
 }

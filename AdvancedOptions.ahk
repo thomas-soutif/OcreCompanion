@@ -11,7 +11,6 @@ AdvancedOptionsGui(){
     allVNamePositionFollowAuto = UpDirectionX|UpDirectionY|DownDirectionX|DownDirectionY|LeftDirectionX|LeftDirectionY|RightDirectionX|RightDirectionY
     allVNameAccessibility = ConfirmCharactersAllReady|ShowCharacterSmallBoxStartup
     allVNamePositionResolution = AcceptGroupButtonResolution|JoinFightButtonResolution
-    allVNameIllustrationNamePosition = topLeftX|topLeftY|bottomRightX|bottomRightY
 
     ;Chargement des paramètres
 
@@ -34,10 +33,6 @@ AdvancedOptionsGui(){
         Loop,Parse, allVNamePositionResolution, "|"
         {
             %A_LoopField% := SETTING.GetSetting("PositionResolution",A_LoopField)
-        }
-        Loop,Parse, allVNameIllustrationNamePosition, "|"
-        {
-            %A_LoopField% := SETTING.GetSetting("IllustrationNamePosition",A_LoopField)
         }
 
 	}
@@ -91,20 +86,8 @@ Gui, Add, CheckBox, x552 y49 w160 h40 vConfirmCharactersAllReady , %TextConfirmC
 Gui, Add, CheckBox, x552 y+15 w160 h40 vShowCharacterSmallBoxStartup , %TextShowCharacterSmallBoxStartup%
 GuiControl,, %TextConfirmCharactersAllReady%, %ConfirmCharactersAllReady%
 GuiControl,, %TextShowCharacterSmallBoxStartup%, %ShowCharacterSmallBoxStartup%
-Gui, Font, Bold s8
-Gui, Add, GroupBox, x262 y219 w270 h150 , Position Illustration (Mode combat)
-Gui, Font, Normal s8
-Gui, Font,S8 CTeal, Verdana
-Gui, Add, Text, x352 y237 w30 h20 , X
-Gui, Add, Text, x402 y237 w30 h20 , Y
-Gui, Font, S8 C, Verdana
-Gui, Add, Text, x272 y257 w60 h30 , Top Left
-Gui, Add, Text, x272 y287 w60 h30, Bottom Right
-Gui, Add, Edit, x342 y256 w50 h20 vtopLeftX, %topLeftX%
-Gui, Add, Edit, x392 y256 w50 h20 vtopLeftY, %topLeftY%
-Gui, Add, Edit, x342 y286 w50 h20 vBottomRightX, %bottomRightX%
-Gui, Add, Edit, x392 y286 w50 h20 vBottomRightY, %bottomRightY%
-Gui, Add, Button, x262 y369 w270 h30 gInstructionsIllustrationFight, Instructions
+
+
 ;Gui, Add, Text, x272 y85 w60 h30 , Rejoindre (Fight)
 Gui, +AlwaysOnTop
 Gui, AdvancedOptions:Show, w750 h430, Options avancees - Ocre Companion
@@ -155,17 +138,6 @@ SaveAdvancedOptions:
         }
     }
 
-    Loop,Parse, allVNameIllustrationNamePosition, "|"
-    {
-
-        value := %A_LoopField%
-        valueRound := floor(value)
-        if(valueRound == 0)
-            SETTING.setSetting("IllustrationNamePosition", A_LoopField, "")
-        else
-            SETTING.setSetting("IllustrationNamePosition", A_LoopField, valueRound)
-    }
-
     Gui, Destroy
     return
 
@@ -197,10 +169,6 @@ DetectAutomatically:
 
     }
     Gui, AdvancedOptions:Submit, NoHide
-    return
-
-InstructionsIllustrationFight:
-    MsgBox,4096,Instructions,"Lire le document Instructions.pdf situé dans le dossier IllustrationNameCharacter/"
     return
 }
 
