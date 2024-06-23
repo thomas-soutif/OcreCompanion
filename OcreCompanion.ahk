@@ -37,7 +37,7 @@ SetDefaults(void)
 	VerifyNewPositionFollowAutoLock := 0
 	timerVerifyNewPosition := 1000
 	ignoreNoDelayWarningForThisSession := 0
-	NameOfWindows = Ocre Companion 1.0.1 TM
+	NameOfWindows = Ocre Companion 1.2 TM
 	FocusCharactersPath := New ListCustom
 	CharactersPath := New ListCustom
 	NormalBoxCharactersPath := New ListCustom
@@ -341,10 +341,12 @@ FightActiveClick(){
 	}
 		
 	if(FightModeActive == 1){
+		CloseScript("FightTurnDetection")
 		WinClose, FightTurnDetection
 		sleep 100
 		RunFightTurnDetectionFile()
 	}else{
+		CloseScript("FightTurnDetection")
 		WinClose, FightTurnDetection
 	}
 	return
@@ -543,7 +545,7 @@ VerifyDofusWindows(){
 
 RunFightTurnDetectionFile(){
 	global
-	fileDestination := A_ScriptDir . "\bin\FightTurnDetection.exe"
+	fileDestination := ConvertFileNameToCorrectScriptType(A_ScriptDir . "\bin\FightTurnDetection")
 	parameterString := """" . fileDestination . """"
 	
 	characters := GetCharacterNames()
@@ -557,6 +559,7 @@ RunFightTurnDetectionFile(){
 
 
 BeforeExitApp(){
+	CloseScript("FightTurnDetection")
 	WinClose, FightTurnDetection
 	ExitApp
 }

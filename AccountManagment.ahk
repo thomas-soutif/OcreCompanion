@@ -89,9 +89,6 @@ AccountManagment(){
 	}
 		listCharacters := ""
 		CleanConfigOfUselessSettingInAccountManagement()
-		WinClose, FightTurnDetection
-		sleep 1
-		RunFightTurnDetectionFile()
 		Gui, Destroy
 		return
 

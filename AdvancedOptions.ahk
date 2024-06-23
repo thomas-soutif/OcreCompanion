@@ -92,9 +92,6 @@ GuiControl,, %TextShowCharacterSmallBoxStartup%, %ShowCharacterSmallBoxStartup%
 Gui, +AlwaysOnTop
 Gui, AdvancedOptions:Show, w750 h430, Options avancees - Ocre Companion
 
-GuiClose:
-    OnGuiCloseForAdvancedOptions()
-
 return
 
 
@@ -170,16 +167,4 @@ DetectAutomatically:
     }
     Gui, AdvancedOptions:Submit, NoHide
     return
-}
-
-OnGuiCloseForAdvancedOptions()
-{
-    global
-   ;On va relancer le programme de détection des personnages en combat si l'option est activé
-   Gui, Main:Submit, NoHide
-   if(FightModeActive == 1){
-    CloseScript("FightTurnDetection")
-    sleep 100
-    RunFightTurnDetectionFile()
-   }
 }
